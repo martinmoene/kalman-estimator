@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Kalman Estimator" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="KalmanEstimator" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Unit filename="../../.gitattributes" />
+		<Unit filename="../../.gitignore" />
+		<Unit filename="../../CMakeLists.txt" />
+		<Unit filename="../../LICENSE.txt" />
+		<Unit filename="../../example/CMakeLists.txt" />
+		<Unit filename="../../example/covariance-error.cpp" />
+		<Unit filename="../../example/kalman-class.cpp" />
+		<Unit filename="../../example/kalman-class.out.txt" />
+		<Unit filename="../../example/matlab/kalman-main.m" />
+		<Unit filename="../../example/matlab/kalman.m" />
+		<Unit filename="../../example/mk-kalman-class.bat" />
+		<Unit filename="../../include/num/fixed-point.hpp" />
+		<Unit filename="../../include/num/kalman-io.hpp" />
+		<Unit filename="../../include/num/kalman.hpp" />
+		<Unit filename="../../include/num/matrix-io.hpp" />
+		<Unit filename="../../include/num/matrix.hpp" />
+		<Unit filename="../../include/num/vector-io.hpp" />
+		<Unit filename="../../test/CMakeLists.txt" />
+		<Unit filename="../../test/lest.hpp" />
+		<Unit filename="../../test/main.t.cpp" />
+		<Unit filename="../../test/matrix.t.cpp" />
+		<Unit filename="../../test/t.bat" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
