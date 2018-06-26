@@ -118,7 +118,7 @@ int main()
 
     for ( int i = 0; i*dt < T; ++i )
     {
-        // Use a constant commanded acceleration of 1 meter/s^2:
+        // Use a constant commanded acceleration of 1 [m/s^2]:
         const kalman::u_t u = {1};
 
         // Simulate the linear system:

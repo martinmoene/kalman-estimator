@@ -64,7 +64,7 @@ velecov = [];   % velocity gain estimation error covariance
 % To keep it simple, we use a function in Matlab, hence no object creation.
 
 for t = 0 : dt: T
-    % Use a constant commanded acceleration of 1 meter/s^2:
+    % Use a constant commanded acceleration of 1 [m/s^2]:
     u = [1];
 
     % Simulate the linear system:
