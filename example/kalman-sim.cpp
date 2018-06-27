@@ -6,17 +6,26 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#include "num/fixed-point-io.hpp"
 #include "num/kalman.hpp"
 #include "num/kalman-io.hpp"
 #include "num/vector-io.hpp"
 
 #include <random>
 
+// Fixed point numeric type for Kalman estimator:
+
+using fp32_t = num::fixed_point<int, 15>;
+
 // Kalman estimator type:
 
 using kalman = num::kalman
 <
+#ifdef KE_NUMERIC_TYPE
+    KE_NUMERIC_TYPE
+#else
     double  // numeric type for computations
+#endif
     , 2     // 2d system
     , 1     // single measurement
     , 1     // single control input
@@ -28,14 +37,14 @@ std::default_random_engine generator;
 
 kalman::x_t process_noise( kalman::real_t const dt, kalman::real_t const accelnoise )
 {
-    std::normal_distribution<kalman::real_t> distQ( 0.0, 1.0);
+    std::normal_distribution<double> distQ( 0.0, 1.0);
 
     return accelnoise * kalman::x_t({ (dt * dt / 2)* distQ( generator ), dt * distQ( generator )});
 }
 
 kalman::real_t meas_noise( kalman::real_t const measnoise )
 {
-    std::normal_distribution<kalman::real_t> distR( 0.0, 1.0);
+    std::normal_distribution<double> distR( 0.0, 1.0);
 
     return measnoise * distR( generator );
 }
