@@ -18,23 +18,38 @@
 		<Unit filename="../../example/.gitignore" />
 		<Unit filename="../../example/CMakeLists.txt" />
 		<Unit filename="../../example/covariance-error.cpp" />
+		<Unit filename="../../example/kalman-sim-avr.cpp" />
 		<Unit filename="../../example/kalman-sim.cpp" />
 		<Unit filename="../../example/kalman-sim.out.txt" />
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
 		<Unit filename="../../example/matlab/kalman.m" />
+		<Unit filename="../../example/mk-kalman-sim-avr.bat" />
 		<Unit filename="../../example/mk-kalman-sim.bat" />
+		<Unit filename="../../include/num/fixed-point-io.hpp" />
 		<Unit filename="../../include/num/fixed-point.hpp" />
 		<Unit filename="../../include/num/kalman-io.hpp" />
 		<Unit filename="../../include/num/kalman.hpp" />
 		<Unit filename="../../include/num/matrix-io.hpp" />
 		<Unit filename="../../include/num/matrix.hpp" />
 		<Unit filename="../../include/num/vector-io.hpp" />
+		<Unit filename="../../include/std/algorithm.hpp" />
+		<Unit filename="../../include/std/cstdint.hpp" />
+		<Unit filename="../../include/std/limits.hpp" />
+		<Unit filename="../../include/std/type_traits.hpp" />
+		<Unit filename="../../include/std/utility.hpp" />
+		<Unit filename="../../script/avr-builtin.bat" />
+		<Unit filename="../../script/avr.bat" />
 		<Unit filename="../../test/CMakeLists.txt" />
+		<Unit filename="../../test/fixed-point.t.cpp" />
 		<Unit filename="../../test/lest.hpp" />
+		<Unit filename="../../test/main-avr.t.cpp" />
 		<Unit filename="../../test/main.t.cpp" />
 		<Unit filename="../../test/matrix.t.cpp" />
+		<Unit filename="../../test/t-avr.bat" />
 		<Unit filename="../../test/t.bat" />
+		<Unit filename="../../test/tc.bat" />
+		<Unit filename="../../test/tg.bat" />
 		<Extensions>
 			<code_completion />
 			<envvars />
