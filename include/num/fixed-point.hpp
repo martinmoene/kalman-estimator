@@ -42,9 +42,6 @@ namespace detail {
 
 template< typename T > struct promote;
 
-#if defined( AVR ) && AVR
-template<> struct promote<     int     > { using type = long long; };
-#endif
 template<> struct promote<std::int8_t  > { using type = std::int16_t; };
 template<> struct promote<std::int16_t > { using type = std::int32_t; };
 template<> struct promote<std::int32_t > { using type = std::int64_t; };
