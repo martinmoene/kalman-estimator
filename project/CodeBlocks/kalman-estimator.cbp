@@ -46,6 +46,7 @@
 		<Unit filename="../../test/main-avr.t.cpp" />
 		<Unit filename="../../test/main.t.cpp" />
 		<Unit filename="../../test/matrix.t.cpp" />
+		<Unit filename="../../test/stdcpp.t.cpp" />
 		<Unit filename="../../test/t-avr.bat" />
 		<Unit filename="../../test/t.bat" />
 		<Unit filename="../../test/tc.bat" />
