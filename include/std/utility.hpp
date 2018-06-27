@@ -31,7 +31,10 @@ public:
     using iterator        = const T*;
     using const_iterator  = const T *;
 
-    constexpr initializer_list() noexcept;
+    constexpr initializer_list() noexcept
+    : m_array( nullptr )
+    , m_size(  0 )
+    {}
 
     constexpr size_type size() const noexcept
     {
