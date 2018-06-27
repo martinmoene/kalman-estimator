@@ -1,4 +1,10 @@
-// C++11 - auto-register test cases.
+//
+// Copyright 2018 by Martin Moene
+//
+// https://github.com/martinmoene/kalman-estimator
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "num/matrix.hpp"
 #include "num/matrix-io.hpp"
