@@ -17,7 +17,7 @@
 #define matrix_STRINGIFY(  x )  matrix_STRINGIFY_( x )
 #define matrix_STRINGIFY_( x )  #x
 
-#ifdef AVR
+#if defined( AVR ) && AVR
 # include "std/algorithm.hpp"   // std::copy()
 # include "std/utility.hpp"     // std::initializer_list, std::swap()
 #else
