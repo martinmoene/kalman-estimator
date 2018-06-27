@@ -1,16 +1,9 @@
 // C++11 - auto-register test cases.
 
+#include "num/fixed-point.hpp"
 #include "num/kalman.hpp"
 #include "num/matrix.hpp"
 #include "lest.hpp"
-
-#define CASE( name ) lest_CASE( specification(), name )
-
-#define kalman_PRESENT( x ) \
-    std::cout << #x << ": " << x << "\n"
-
-#define kalman_ABSENT( x ) \
-    std::cout << #x << ": (undefined)\n"
 
 // Suppress:
 // - unused parameter, for cases without assertions such as [.std...]
@@ -20,6 +13,14 @@
 # pragma GCC   diagnostic ignored "-Wunused-parameter"
 #endif
 
+#define kalman_PRESENT( x ) \
+    std::cout << #x << ": " << x << "\n"
+
+#define kalman_ABSENT( x ) \
+    std::cout << #x << ": (undefined)\n"
+
+#define CASE( name ) lest_CASE( specification(), name )
+
 lest::tests & specification()
 {
     static lest::tests tests;
@@ -28,18 +29,26 @@ lest::tests & specification()
 
 CASE( "kalman version" "[.version]" )
 {
-    kalman_PRESENT( kalman_MAJOR );
-    kalman_PRESENT( kalman_MINOR );
-    kalman_PRESENT( kalman_PATCH );
+//    kalman_PRESENT( kalman_MAJOR );
+//    kalman_PRESENT( kalman_MINOR );
+//    kalman_PRESENT( kalman_PATCH );
     kalman_PRESENT( kalman_VERSION );
 }
 
 CASE( "matrix version" "[.version]" )
 {
-    kalman_PRESENT( matrix_MAJOR );
-    kalman_PRESENT( matrix_MINOR );
-    kalman_PRESENT( matrix_PATCH );
+//    kalman_PRESENT( matrix_MAJOR );
+//    kalman_PRESENT( matrix_MINOR );
+//    kalman_PRESENT( matrix_PATCH );
     kalman_PRESENT( matrix_VERSION );
+}
+
+CASE( "fixed_point version" "[.version]" )
+{
+//    kalman_PRESENT( fixed_point_MAJOR );
+//    kalman_PRESENT( fixed_point_MINOR );
+//    kalman_PRESENT( fixed_point_PATCH );
+    kalman_PRESENT( fixed_point_VERSION );
 }
 
 CASE( "__cplusplus" "[.stdc++]" )

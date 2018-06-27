@@ -15,8 +15,8 @@ set CppCoreCheckInclude=%VCINSTALLDIR%\Auxiliary\VS\include
 call :CompilerVersion version
 echo VC%version%: %args%
 
-set xxx_feature=^
-    -Dxxx_FEATURE_XXX=1
+set ke_feature=^
+    -Dke_FEATURE_XXX=1
 
 set lest_defines=^
     -Dlest_FEATURE_AUTO_REGISTER
@@ -26,7 +26,10 @@ set msvc_defines=^
     -D_CRT_SECURE_NO_WARNINGS ^
     -D_SCL_SECURE_NO_WARNINGS
 
-cl -W3 -EHsc %std% %xxx_feature% %lest_defines% %msvc_defines% -I../include main.t.cpp matrix.t.cpp && main.t.exe
+set ke_program=main.t.exe
+set ke_sources=main.t.cpp fixed-point.t.cpp matrix.t.cpp
+
+cl -W3 -EHsc %std% %ke_feature% %lest_defines% %msvc_defines% -I../include %ke_sources% && %ke_program%
 endlocal & goto :EOF
 
 :: subroutines:
