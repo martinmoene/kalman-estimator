@@ -73,13 +73,23 @@ Plan:
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
 - [ ] Create a demo application for the setup that implements a controller that uses the Kalman estimator.
 - [ ] To reduce the computational load, implement (automatic) transitioning to a fixed Kalman gain after it has stabilized.
-- [ ] Time free-running loop on Trinket board, varing floating/fixed point, updating/fixed Kalman gain:
-  - [ ] floating-point, updating Kalman gain  
-  - [ ] floating-point, fixed Kalman gain  
-  - [ ] fixed-point, updating Kalman gain  
-  - [ ] fixed-point, fixed Kalman gain  
+- [ ] Time free-running loop on Trinket board, varing floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
 - [ ] Asses possible bottlenecks in the C++ code that may be easy to avoid.
 - [ ] ...
+
+
+Performance | Type                    | Kalman gain | Optimization | Relative time |
+------------|-------------------------|-------------|--------------|---------------|
+&nbsp;      | double                  | updating    | -O2          | &nbsp;|
+&nbsp;      | double                  | updating    | -Os          | &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | updating    | -O2          | &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | updating    | -Os          | &nbsp;|
+&nbsp;      | double                  | fix on %chg | -O2          | &nbsp;|
+&nbsp;      | double                  | fix on %chg | -Os          | &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -O2          | &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -Os          | &nbsp;|
+
+Table 1. Relative performance for numeric type, fixing Kalman gain and compiler optimization.
 
 
 Basic Kalman estimator code
@@ -137,8 +147,11 @@ Notes and References
 - [Kalman Estimator](#kalman-estimator)
 - [Matlab](#matlab)
 - [C++](#c++)
+- [GNUC](#gnuc)
+- [AVR](#avr)
 - [Arduino](#arduino)
-- [Hardware](#hardware)
+- [Atmel](#atmel)
+- [Adafruit](#adafruit)
 
 ### Kalman Estimator
 
@@ -158,21 +171,30 @@ Various articles, video's, books to read up on the Kalman estimator.
 [12] iLectureOnline. [Lectures in The Kalman Filter](http://www.ilectureonline.com/lectures/subject/SPECIAL%20TOPICS/26) (42 videos of 6 minutes).  
 
 ### Matlab
-[13] MathWorks. [MATLAB for Deep Learning](https://nl.mathworks.com/).   
+[13] MathWorks. [MATLAB for Deep Learning](https://nl.mathworks.com/).  
 [14] GNU. [GNU Octave - Scientific Programming Language](https://www.gnu.org/software/octave/) (largely compatible with Matlab).  
 
 ### C++
 [15] ISOCPP. [Standard C++ Foundation](https://isocpp.org/).  
 [16] CppReference. [The complete online reference for the C and C++ languages and standard libraries](https://en.cppreference.com/w/cpp).  
-[17] Martin Moene. [*lest* test framework](https://github.com/martinmoene/lest).
+[17] Martin Moene. [*lest* test framework](https://github.com/martinmoene/lest).  
+
+### GNUC
+[18] GNUC. [GNUC AVR Options](https://gcc.gnu.org/onlinedocs/gcc/AVR-Options.html).  
+[19] AVR-GCC. [AVR-GCC 8.1.0 for Windows 32 and 64 bit](http://blog.zakkemble.co.uk/avr-gcc-builds/). Contains section *Upgrading the Arduino IDE*.  
+
+### AVR
+[20] Elliot Williams. [AVR Programming - Learning to Write Software for Hardware](https://www.safaribooksonline.com/library/view/make-avr-programming/9781449356484/) ([Code](https://github.com/hexagon5un/AVR-Programming)).  
  
 ### Arduino
-[18] Arduino. [Home](https://www.arduino.cc/).  
-[19] Arduino. [Language Reference](https://www.arduino.cc/en/Reference/HomePage).  
-[20] Arduino. [Interfacing with Hardware](http://playground.arduino.cc/Main/InterfacingWithHardware).  
-[21] AVR-GCC. [AVR-GCC 8.1.0 for Windows 32 and 64 bit](http://blog.zakkemble.co.uk/avr-gcc-builds/). Contains section *Upgrading the Arduino IDE*.
+[21] Arduino. [Home](https://www.arduino.cc/).  
+[22] Arduino. [Language Reference](https://www.arduino.cc/en/Reference/HomePage).  
+[23] Arduino. [Interfacing with Hardware](http://playground.arduino.cc/Main/InterfacingWithHardware).  
 
-### Hardware
-[22] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
-[23] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
-[24] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
+### Atmel
+[24] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).
+[25] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
+
+### Adafruit
+[26] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
+[27] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
