@@ -119,7 +119,7 @@ public:
     real_t time() const
     {
         return t;
-    };
+    }
 
 private:
     A_t I() const
