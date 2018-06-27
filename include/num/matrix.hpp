@@ -17,23 +17,15 @@
 #define matrix_STRINGIFY(  x )  matrix_STRINGIFY_( x )
 #define matrix_STRINGIFY_( x )  #x
 
-
-//#include <algorithm>  // copy(), defined below to avoid inclusion
-#include <utility>      // std::initializer_list, std::swap()
+#ifdef AVR
+# include "std/algorithm.hpp"   // std::copy()
+# include "std/utility.hpp"     // std::initializer_list, std::swap()
+#else
+# include <algorithm>           // std::copy()
+# include <utility>             // std::initializer_list, std::swap()
+#endif
 
 namespace num {
-
-// Avoid including <algorithm>:
-
-template< class InputIt, class OutputIt >
-OutputIt copy( InputIt first, InputIt last, OutputIt d_first )
-{
-    while ( first != last )
-    {
-        *d_first++ = *first++;
-    }
-    return d_first;
-}
 
 // Identity: use to prevent a parameter to participate in template type deduction:
 
@@ -68,115 +60,115 @@ public:
 
     // Construction:
 
-    matrix() = default;
-    matrix( matrix && ) = default;
-    matrix( matrix const & ) = default;
-    matrix & operator=( matrix && ) = default;
-    matrix & operator=( matrix const & ) = default;
+    constexpr matrix() = default;
+    constexpr matrix( matrix && ) = default;
+    constexpr matrix( matrix const & ) = default;
+    constexpr matrix & operator=( matrix && ) = default;
+    constexpr matrix & operator=( matrix const & ) = default;
 
-    matrix( value_type v )
+    constexpr matrix( value_type v )
     {
         init( v );
     }
 
-    matrix( std::initializer_list<T> il )
+    constexpr matrix( std::initializer_list<T> il )
     {
-        copy( il.begin(), il.end(), begin() );
+        std::copy( il.begin(), il.end(), begin() );
     }
 
     // Observers:
 
-    int rows() const
+    constexpr int rows() const
     {
         return N;
     }
 
-    int columns() const
+    constexpr int columns() const
     {
         return M;
     }
 
-    int size() const
+    constexpr int size() const
     {
         return rows() * columns();;
     }
 
-    value_type operator[]( int ndx ) const
+    constexpr value_type operator[]( int ndx ) const
     {
         return at( 0, ndx );
     }
 
-    value_type operator()( int ndx ) const
+    constexpr value_type operator()( int ndx ) const
     {
         return at( 0, ndx );
     }
 
-    value_type at( int ndx ) const
+    constexpr value_type at( int ndx ) const
     {
         return storage[ ndx ];
     }
 
-    value_type operator()( int row, int col ) const
+    constexpr value_type operator()( int row, int col ) const
     {
         return at( row, col );
     }
 
-    value_type at( int row, int col ) const
+    constexpr value_type at( int row, int col ) const
     {
         return at( row * M + col );
     }
 
     // Modifiers:
 
-    value_type & operator[]( int col )
+    constexpr value_type & operator[]( int col )
     {
         return at( 0, col );
     }
 
-    value_type & operator()( int col )
+    constexpr value_type & operator()( int col )
     {
         return at( 0, col );
     }
 
-    value_type & operator()( int row, int col )
+    constexpr value_type & operator()( int row, int col )
     {
         return at( row, col );
     }
 
-    value_type & at( int ndx )
+    constexpr value_type & at( int ndx )
     {
         return storage[ ndx ];
     }
 
-    value_type & at( int row, int col )
+    constexpr value_type & at( int row, int col )
     {
         return at( row * M + col );
     }
 
     // Iteration:
 
-    iterator begin()
+    constexpr iterator begin()
     {
         return &storage[ 0 ];
     }
 
-    iterator end()
+    constexpr iterator end()
     {
         return &storage[ N * M ];
     }
 
-    const_iterator begin() const
+    constexpr const_iterator begin() const
     {
         return &storage[ 0 ];
     }
 
-    const_iterator end() const
+    constexpr const_iterator end() const
     {
         return &storage[ N * M ];
     }
 
 private:
-    void init( value_type v )
+    constexpr void init( value_type v )
     {
         for ( auto & x : *this )
         {
@@ -194,7 +186,7 @@ private:
 // vec_1x1 + v:
 
 template< typename T >
-T operator+( matrix<T,1,1> const & A, identity_t<T> v )
+constexpr T operator+( matrix<T,1,1> const & A, identity_t<T> v )
 {
     return A(0) + v;
 }
@@ -202,7 +194,7 @@ T operator+( matrix<T,1,1> const & A, identity_t<T> v )
 // v + vec_1x1:
 
 template< typename T >
-T operator+( identity_t<T> v, matrix<T,1,1> const & A )
+constexpr T operator+( identity_t<T> v, matrix<T,1,1> const & A )
 {
     return A(0) + v;
 }
@@ -210,7 +202,7 @@ T operator+( identity_t<T> v, matrix<T,1,1> const & A )
 // vec_1x1 - v:
 
 template< typename T >
-T operator-( matrix<T,1,1> const & A, identity_t<T> v )
+constexpr T operator-( matrix<T,1,1> const & A, identity_t<T> v )
 {
     return A(0) - v;
 }
@@ -218,7 +210,7 @@ T operator-( matrix<T,1,1> const & A, identity_t<T> v )
 // v - vec_1x1:
 
 template< typename T >
-T operator-( identity_t<T> v, matrix<T,1,1> const & A )
+constexpr T operator-( identity_t<T> v, matrix<T,1,1> const & A )
 {
     return v - A(0);
 }
@@ -226,7 +218,7 @@ T operator-( identity_t<T> v, matrix<T,1,1> const & A )
 // vec_1x1 * v:
 
 template< typename T >
-T operator*( matrix<T,1,1> const & A, identity_t<T> v )
+constexpr T operator*( matrix<T,1,1> const & A, identity_t<T> v )
 {
     return A(0) * v;
 }
@@ -234,7 +226,7 @@ T operator*( matrix<T,1,1> const & A, identity_t<T> v )
 // v * vec_1x1:
 
 template< typename T >
-T operator*( identity_t<T> v, matrix<T,1,1> const & A )
+constexpr T operator*( identity_t<T> v, matrix<T,1,1> const & A )
 {
     return A * v;
 }
@@ -242,7 +234,7 @@ T operator*( identity_t<T> v, matrix<T,1,1> const & A )
 // A + B1x1:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator+( matrix<T,N,M> const & A, matrix<T,1,1> const & B )
+constexpr matrix<T,N,M> operator+( matrix<T,N,M> const & A, matrix<T,1,1> const & B )
 {
     return A + B(0);
 }
@@ -250,14 +242,14 @@ matrix<T,N,M> operator+( matrix<T,N,M> const & A, matrix<T,1,1> const & B )
 // A1x1 + B:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator+( matrix<T,1,1> const & A, matrix<T,N,M> const & B )
+constexpr matrix<T,N,M> operator+( matrix<T,1,1> const & A, matrix<T,N,M> const & B )
 {
     return A(0) + B;
 }
 
 // A1x1 * A1x1:
 template< typename T >
-matrix<T,1,1> operator*( matrix<T,1,1> const & A, matrix<T,1,1> const & B )
+constexpr matrix<T,1,1> operator*( matrix<T,1,1> const & A, matrix<T,1,1> const & B )
 {
     return { A(0) * B(0) };
 }
@@ -268,7 +260,7 @@ matrix<T,1,1> operator*( matrix<T,1,1> const & A, matrix<T,1,1> const & B )
 // rowvec * colvec (dot product):
 
 template< typename T, int N > //, typename std::enable_if<N != 1>::type >
-T operator*( rowvec<T,N> const & a, colvec<T,N> const & b )
+constexpr T operator*( rowvec<T,N> const & a, colvec<T,N> const & b )
 {
     T result = T();
 
@@ -282,9 +274,9 @@ T operator*( rowvec<T,N> const & a, colvec<T,N> const & b )
 // colvec * rowvec:
 
 template< typename T, int N > // , typename std::enable_if<N != 1>::type >
-matrix<T,N,N> operator*( colvec<T,N> const & a, rowvec<T,N> const & b )
+constexpr matrix<T,N,N> operator*( colvec<T,N> const & a, rowvec<T,N> const & b )
 {
-    matrix<T,N,N> result;
+    matrix<T,N,N> result(0);
 
     for( int row = 0; row < a.rows(); ++row )
     {
@@ -301,9 +293,9 @@ matrix<T,N,N> operator*( colvec<T,N> const & a, rowvec<T,N> const & b )
 
 // A + v:
 template< typename T, int N, int M >
-matrix<T,N,M> operator+( matrix<T,N,M> const & A, identity_t<T> v )
+constexpr matrix<T,N,M> operator+( matrix<T,N,M> const & A, identity_t<T> v )
 {
-    matrix<T,N,M> result;
+    matrix<T,N,M> result(0);
 
     for( int i = 0; i < A.size(); ++i )
     {
@@ -315,7 +307,7 @@ matrix<T,N,M> operator+( matrix<T,N,M> const & A, identity_t<T> v )
 // v + A:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator+( identity_t<T> v, matrix<T,N,M> const & A )
+constexpr matrix<T,N,M> operator+( identity_t<T> v, matrix<T,N,M> const & A )
 {
     return A + v;
 }
@@ -323,7 +315,7 @@ matrix<T,N,M> operator+( identity_t<T> v, matrix<T,N,M> const & A )
 // A - v:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator-( matrix<T,N,M> const & A, identity_t<T> v )
+constexpr matrix<T,N,M> operator-( matrix<T,N,M> const & A, identity_t<T> v )
 {
     return A + -v;
 }
@@ -331,9 +323,9 @@ matrix<T,N,M> operator-( matrix<T,N,M> const & A, identity_t<T> v )
 // A * v:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator*( matrix<T,N,M> const & A, identity_t<T> v )
+constexpr matrix<T,N,M> operator*( matrix<T,N,M> const & A, identity_t<T> v )
 {
-    matrix<T,N,M> result;
+    matrix<T,N,M> result(0);
 
     for( int i = 0; i < A.size(); ++i )
     {
@@ -345,7 +337,7 @@ matrix<T,N,M> operator*( matrix<T,N,M> const & A, identity_t<T> v )
 // v * A
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator*( identity_t<T> v, matrix<T,N,M> const & A )
+constexpr matrix<T,N,M> operator*( identity_t<T> v, matrix<T,N,M> const & A )
 {
     return A * v;
 }
@@ -353,7 +345,7 @@ matrix<T,N,M> operator*( identity_t<T> v, matrix<T,N,M> const & A )
 // A * A1x1
 
 template< typename T, int N, int M>
-matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,1,1> const & v )
+constexpr matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,1,1> const & v )
 {
     return A * v(0);
 }
@@ -361,7 +353,7 @@ matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,1,1> const & v )
 // A1x1 * A
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator*( matrix<T,1,1> const & A, matrix<T,N,M> const & v )
+constexpr matrix<T,N,M> operator*( matrix<T,1,1> const & A, matrix<T,N,M> const & v )
 {
     return A * v(0);
 }
@@ -369,9 +361,9 @@ matrix<T,N,M> operator*( matrix<T,1,1> const & A, matrix<T,N,M> const & v )
 // A + A:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator+( matrix<T,N,M> const & a, matrix<T,N,M> const & b )
+constexpr matrix<T,N,M> operator+( matrix<T,N,M> const & a, matrix<T,N,M> const & b )
 {
-    matrix<T,N,M> result;
+    matrix<T,N,M> result(0);
 
     for( int i = 0; i < a.size(); ++i )
     {
@@ -383,9 +375,9 @@ matrix<T,N,M> operator+( matrix<T,N,M> const & a, matrix<T,N,M> const & b )
 // A - A:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator-( matrix<T,N,M> const & a, matrix<T,N,M> const & b )
+constexpr matrix<T,N,M> operator-( matrix<T,N,M> const & a, matrix<T,N,M> const & b )
 {
-    matrix<T,N,M> result;
+    matrix<T,N,M> result(0);
 
     for( int i = 0; i < a.size(); ++i )
     {
@@ -397,7 +389,7 @@ matrix<T,N,M> operator-( matrix<T,N,M> const & a, matrix<T,N,M> const & b )
 // A * B:
 
 template< typename T, int N, int M >
-matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,N,M> const & B )
+constexpr matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,N,M> const & B )
 {
     matrix<T,N,M> result(0);
 
@@ -418,7 +410,7 @@ matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,N,M> const & B )
 // x * A - rowvec:
 
 template< typename T, int N, int M >
-rowvec<T,N> operator*( rowvec<T,N> const & x, matrix<T,N,M> const & A )
+constexpr rowvec<T,N> operator*( rowvec<T,N> const & x, matrix<T,N,M> const & A )
 {
     rowvec<T,N> result( 0 );
     for ( int row = 0; row < A.rows(); ++row )
@@ -434,7 +426,7 @@ rowvec<T,N> operator*( rowvec<T,N> const & x, matrix<T,N,M> const & A )
 // A * x - colvec:
 
 template< typename T, int N, int M >
-colvec<T,N> operator*( matrix<T,N,M> const & A, colvec<T,N> const & x )
+constexpr colvec<T,N> operator*( matrix<T,N,M> const & A, colvec<T,N> const & x )
 {
     colvec<T,N> result( 0 );
     for ( int row = 0; row < A.rows(); ++row )
@@ -453,11 +445,11 @@ colvec<T,N> operator*( matrix<T,N,M> const & A, colvec<T,N> const & x )
 // transposed(x) - rowvec:
 
 template< typename T, int N >
-rowvec<T,N> transposed( colvec<T,N> const & x )
+constexpr rowvec<T,N> transposed( colvec<T,N> const & x )
 {
-    rowvec<T,N>  result;
+    rowvec<T,N>  result(0);
 
-    copy( x.begin(), x.end(), result.begin() );
+    std::copy( x.begin(), x.end(), result.begin() );
 
     return result;
 }
@@ -465,11 +457,11 @@ rowvec<T,N> transposed( colvec<T,N> const & x )
 // transposed(x) - colvec:
 
 template< typename T, int N >
-colvec<T,N> transposed( rowvec<T,N> const & x )
+constexpr colvec<T,N> transposed( rowvec<T,N> const & x )
 {
-    colvec<T,N>  result;
+    colvec<T,N>  result(0);
 
-    copy( x.begin(), x.end(), result.begin() );
+    std::copy( x.begin(), x.end(), result.begin() );
 
     return result;
 }
@@ -484,7 +476,7 @@ colvec<T,N> transposed( rowvec<T,N> const & x )
 // transposed(A) - 2x2:
 
 template< typename T >
-matrix<T,2,2> transposed( matrix<T,2,2> const & A )
+constexpr matrix<T,2,2> transposed( matrix<T,2,2> const & A )
 {
     matrix<T,2,2> result( A );
 
@@ -499,7 +491,7 @@ matrix<T,2,2> transposed( matrix<T,2,2> const & A )
 // inverted(v):
 
 template< typename T >
-T inverted( T v )
+constexpr T inverted( T v )
 {
     return v != 0 ? 1 / v : 0;
 }
@@ -507,9 +499,9 @@ T inverted( T v )
 // inverted(A) - 2x2:
 
 template< typename T >
-matrix<T,2,2> inverted( matrix<T,2,2> const & A )
+constexpr matrix<T,2,2> inverted( matrix<T,2,2> const & A )
 {
-    matrix<T,2,2> result;
+    matrix<T,2,2> result(0);
 
     const auto det = 1 / ( A(0) * A(3) - A(1) * A(2) );
 
@@ -527,7 +519,7 @@ matrix<T,2,2> inverted( matrix<T,2,2> const & A )
 // identity matrix, NxN:
 
 template< typename T, int N >
-matrix<T,N,N> eye()
+constexpr matrix<T,N,N> eye()
 {
     matrix<T,N,N> result(0);
 
