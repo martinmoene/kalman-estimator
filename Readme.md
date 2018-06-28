@@ -79,16 +79,16 @@ Plan:
 - [ ] ...
 
 
-Performance | Type                    | Kalman gain | Optimization | Relative time |
-------------|-------------------------|-------------|--------------|---------------|
-&nbsp;      | double                  | updating    | -O2          | &nbsp;|
-&nbsp;      | double                  | updating    | -Os          | &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | updating    | -O2          | &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | updating    | -Os          | &nbsp;|
-&nbsp;      | double                  | fix on %chg | -O2          | &nbsp;|
-&nbsp;      | double                  | fix on %chg | -Os          | &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -O2          | &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -Os          | &nbsp;|
+Performance | Type                    | Kalman gain | Optimization | Code size | Relative time |
+------------|-------------------------|-------------|--------------|-----------|---------------|
+&nbsp;      | double                  | updating    | -O2          | &nbsp;| &nbsp;|
+&nbsp;      | double                  | updating    | -Os          | &nbsp;| &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | updating    | -O2          | &nbsp;| &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | updating    | -Os          | &nbsp;| &nbsp;|
+&nbsp;      | double                  | fix on %chg | -O2          | &nbsp;| &nbsp;|
+&nbsp;      | double                  | fix on %chg | -Os          | &nbsp;| &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -O2          | &nbsp;| &nbsp;|
+&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -Os          | &nbsp;| &nbsp;|
 
 Table 1. Relative performance for numeric type, fixing Kalman gain and compiler optimization.
 
