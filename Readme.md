@@ -68,27 +68,32 @@ Plan:
 - [x] Write a supporting [matrix library](include/num/matrix.hpp).
 - [x] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
 - [x] Write a supporting [minimal standard C++ library](include/std).
+- [x] Install recent version of [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/).
+- [ ] Create basic blink LED example:
+  - [ ] Write code
+  - [ ] Compile code to .hex
+  - [ ] Upload code using avrdude and run it
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
-- [ ] Install up-to-date version of the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
-- [ ] Update Arduino compiler proper to recent version of [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
 - [ ] Create a demo application for the setup that implements a controller that uses the Kalman estimator.
 - [ ] To reduce the computational load, implement (automatic) transitioning to a fixed Kalman gain after it has stabilized.
-- [ ] Time free-running loop on Trinket board, varing floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
+- [ ] Time free-running loop on Trinket board, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
 - [ ] Asses possible bottlenecks in the C++ code that may be easy to avoid.
 - [ ] ...
 
 
-Performance | Type                    | Kalman gain | Optimization | Code size | Relative time |
-------------|-------------------------|-------------|--------------|-----------|---------------|
-&nbsp;      | double                  | updating    | -O2          | &nbsp;| &nbsp;|
-&nbsp;      | double                  | updating    | -Os          | &nbsp;| &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | updating    | -O2          | &nbsp;| &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | updating    | -Os          | &nbsp;| &nbsp;|
-&nbsp;      | double                  | fix on %chg | -O2          | &nbsp;| &nbsp;|
-&nbsp;      | double                  | fix on %chg | -Os          | &nbsp;| &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -O2          | &nbsp;| &nbsp;|
-&nbsp;      | fixed_point&lt;int32_t> | fix on %chg | -Os          | &nbsp;| &nbsp;|
+Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size |
+--------------------:|--------:|-------------------------|-------------|--------------|-----------|
+&nbsp;               | 144     | Blink LED               | &nbsp;      | -O2          | &nbsp;    |
+&nbsp;               | &nbsp;  | &nbsp;                  | &nbsp;      | &nbsp;       | &nbsp;    |
+&nbsp;               | &nbsp;  | double                  | updating    | -O2          | &nbsp;    |
+&nbsp;               | &nbsp;  | double                  | updating    | -Os          | &nbsp;    |
+&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | updating    | -O2          | &nbsp;    |
+&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | updating    | -Os          | &nbsp;    |
+&nbsp;               | &nbsp;  | double                  | fix on %chg | -O2          | &nbsp;    |
+&nbsp;               | &nbsp;  | double                  | fix on %chg | -Os          | &nbsp;    |
+&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | fix on %chg | -O2          | &nbsp;    |
+&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | fix on %chg | -Os          | &nbsp;    |
 
 Table 1. Relative performance for numeric type, fixing Kalman gain and compiler optimization.
 
@@ -168,7 +173,7 @@ Various articles, video's, books to read up on the Kalman estimator.
 [8] Tucker McClure. [How Simulations Work](http://www.anuncommonlab.com/articles/how-simulations-work/).  
 [9] Demofox. [Incremental Least Squares Curve Fitting](https://blog.demofox.org/2016/12/22/incremental-least-squares-curve-fitting/) (Contains C++ code).  
 [10]  Kristian Sloth Lauszus. [A practical approach to Kalman filter and how to implement it](http://blog.tkjelectronics.dk/2012/09/a-practical-approach-to-kalman-filter-and-how-to-implement-it/) (Contains C code).    
-[11] Dan Simon. [Optimal State Estimation: Kalman, H-infinity, and Nonlinear Approaches](http://academic.csuohio.edu/simond/estimation/) ([Code from the book]()).  
+[11] Dan Simon. [Optimal State Estimation: Kalman, H-infinity, and Nonlinear Approaches](http://academic.csuohio.edu/simond/estimation/) (Contains Matlab code from the book).  
 [12] iLectureOnline. [Lectures in The Kalman Filter](http://www.ilectureonline.com/lectures/subject/SPECIAL%20TOPICS/26) (42 videos of 6 minutes).  
 
 ### Matlab
@@ -186,16 +191,18 @@ Various articles, video's, books to read up on the Kalman estimator.
 
 ### AVR
 [20] Elliot Williams. [AVR Programming - Learning to Write Software for Hardware](https://www.safaribooksonline.com/library/view/make-avr-programming/9781449356484/) ([Code](https://github.com/hexagon5un/AVR-Programming)).  
+[21] Elliot Williams. [Embed with Elliot: There is no Arduino "Language"](https://hackaday.com/2015/07/28/embed-with-elliot-there-is-no-arduino-language/).    
  
 ### Arduino
-[21] Arduino. [Home](https://www.arduino.cc/).  
-[22] Arduino. [Language Reference](https://www.arduino.cc/en/Reference/HomePage).  
-[23] Arduino. [Interfacing with Hardware](http://playground.arduino.cc/Main/InterfacingWithHardware).  
+[22] Arduino. [Home](https://www.arduino.cc/).  
+[23] Arduino. [Language Reference](https://www.arduino.cc/en/Reference/HomePage).  
+[24] Arduino. [Interfacing with Hardware](http://playground.arduino.cc/Main/InterfacingWithHardware).  
 
 ### Atmel
-[24] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).  
-[25] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
+[25] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).  
+[26] Visual Micro. [Arduino for Atmel Studio 7 (plug-in)](https://www.visualmicro.com/page/Arduino-for-Atmel-Studio-7.aspx).
+[27] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
 
 ### Adafruit
-[26] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
-[27] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
+[28] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
+[29] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
