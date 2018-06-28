@@ -576,48 +576,49 @@ CASE( "algorithm: eye<N,T>()                 " " [mat][identity]" )
 CASE( "matrix: printing" " [.app][.print]" )
 {
     std::cout
-        << "rowvec<int,2>({1,2}):\n" << rowvec<int,2>({1,2}) << "\n"
-        << "colvec<int,2>({1,2}):\n" << colvec<int,2>({1,2}) << "\n"
-        << "matrix<int,2,2>({1,2,3,4}):\n" << matrix<int,2,2>({1,2,3,4}) << "\n"
+        << "\n"
+        << "\nrowvec<int,2>({1,2}):\n" << rowvec<int,2>({1,2})
+        << "\ncolvec<int,2>({1,2}):\n" << colvec<int,2>({1,2})
+        << "\nmatrix<int,2,2>({1,2,3,4}):\n" << matrix<int,2,2>({1,2,3,4})
         ;
 }
 
 CASE( "matrix: eye<N,T>()" " [.app][mat]" )
 {
-    std::cout << "eye<int,3>():\n" << eye<int,3>() << "\n";
+    std::cout << "\neye<int,3>():\n" << eye<int,3>();
 }
 
 CASE( "matrix: [1 2] . [1 2]T" " [.app][row][col][vec]" )
 {
-    std::cout << "[1 2] . [1 2]T: " << (rowvec<int,2>({1,2}) * colvec<int,2>({1,2})) << "\n\n";
+    std::cout << "\n[1 2] . [1 2]T: " << (rowvec<int,2>({1,2}) * colvec<int,2>({1,2})) << "\n";
 }
 
 CASE( "matrix: [1 2]T . [1 2]" " [.app][col][row][vec]" )
 {
-    std::cout << "[1 2]T . [1 2]:\n" << (colvec<int,2>({1,2}) * rowvec<int,2>({1,2})) << "\n";
+    std::cout << "\n[1 2]T . [1 2]:\n" << (colvec<int,2>({1,2}) * rowvec<int,2>({1,2}));
 }
 
 CASE( "matrix: [1 2]T" " [.app][row][vec][transposed]" )
 {
-    std::cout << "[1 2]T:\n" << transposed(rowvec<int,2>({1,2})) << "\n";
+    std::cout << "\n[1 2]T:\n" << transposed(rowvec<int,2>({1,2}));
 }
 
 CASE( "matrix: [1 2]TT" " [.app][col][vec][transposed]" )
 {
-    std::cout << "[1 2]TT:\n" << transposed(colvec<int,2>({1,2})) << "\n";
+    std::cout << "\n[1 2]TT:\n" << transposed(colvec<int,2>({1,2}));
 }
 
 CASE( "matrix: [1 2;3 4]" " [.app][mat]" )
 {
-    std::cout << "[1 2;3 4]:\n" << matrix<int,2,2>({1,2,3,4}) << "\n";
+    std::cout << "\n[1 2;3 4]:\n" << matrix<int,2,2>({1,2,3,4});
 }
 
 CASE( "matrix: [1 2;3 4]T" " [.app][mat][transposed]" )
 {
-    std::cout << "[1 2;3 4]T:\n" << transposed(matrix<int,2,2>({1,2,3,4})) << "\n";
+    std::cout << "\n[1 2;3 4]T:\n" << transposed(matrix<int,2,2>({1,2,3,4}));
 }
 
 CASE( "matrix: inverted([1 2;3 4])" " [.app][mat][inverted]" )
 {
-    std::cout << "inverted([1 2;3 4]):\n" << inverted(matrix<double,2,2>({1,2,3,4})) << "\n";
+    std::cout << "\ninverted([1 2;3 4]):\n" << inverted(matrix<double,2,2>({1,2,3,4}));
 }
