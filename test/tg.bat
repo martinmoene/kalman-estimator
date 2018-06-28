@@ -13,7 +13,7 @@ call :CompilerVersion version
 echo g++ %version%: %std% %args%
 
 set ke_feature=^
-    -Dke_FEATURE_XXX=1
+    -DKE_USE_STATIC_EXPECT=1
 
 set lest_defines=^
     -Dlest_FEATURE_AUTO_REGISTER

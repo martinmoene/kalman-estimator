@@ -66,8 +66,8 @@ Plan:
 - [x] Create a [simulation program in Matlab](example/matlab/kalman-sim.m) with a basic [Kalman Estimator](example/matlab/kalman.m). 
 - [x] Translate Matlab code to [C++ program](example/kalman-sim.cpp) and [estimator](include/num/kalman.hpp) using a recent [C++ standard (C++14, C++17)](https://isocpp.org/). 
 - [x] Write a supporting [matrix library](include/num/matrix.hpp).
-- [ ] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
-- [ ] Write a supporting [minimal standard C++ library](include/std).
+- [x] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
+- [x] Write a supporting [minimal standard C++ library](include/std).
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Install up-to-date version of the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
 - [ ] Update Arduino compiler proper to recent version of [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/).
