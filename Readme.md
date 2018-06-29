@@ -69,10 +69,10 @@ Plan:
 - [x] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
 - [x] Write a supporting [minimal standard C++ library](include/std).
 - [x] Install recent version of [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/).
-- [ ] Create basic blink LED example:
-  - [ ] Write code
-  - [ ] Compile code to .hex
-  - [ ] Upload code using avrdude and run it
+- [x] Create basic blink LED example:
+  - [x] Write [blink LED code](example/blink-led-avr.cpp)
+  - [x] [Compile code to .hex](example/mk-blink-led-avr.bat)
+  - [x] [Upload code using avrdude and run it](https://github.com/martinmoene/kalman-estimator/blob/ad6687583652e33c857158157a9297d28094577b/example/mk-blink-led-avr.bat#L71)
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
 - [ ] Create a demo application for the setup that implements a controller that uses the Kalman estimator.
