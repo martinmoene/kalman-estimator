@@ -17,6 +17,7 @@
 		<Unit filename="../../LICENSE.txt" />
 		<Unit filename="../../example/.gitignore" />
 		<Unit filename="../../example/CMakeLists.txt" />
+		<Unit filename="../../example/blink-led-avr.cpp" />
 		<Unit filename="../../example/covariance-error.cpp" />
 		<Unit filename="../../example/kalman-sim-avr.cpp" />
 		<Unit filename="../../example/kalman-sim.cpp" />
@@ -24,6 +25,7 @@
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
 		<Unit filename="../../example/matlab/kalman.m" />
+		<Unit filename="../../example/mk-blink-led-avr.bat" />
 		<Unit filename="../../example/mk-kalman-sim-avr.bat" />
 		<Unit filename="../../example/mk-kalman-sim.bat" />
 		<Unit filename="../../include/num/fixed-point-io.hpp" />
