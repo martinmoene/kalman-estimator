@@ -73,11 +73,11 @@ Plan:
   - [x] Write [blink LED code](example/blink-led-avr.cpp)
   - [x] [Compile code to .hex](example/mk-blink-led-avr.bat)
   - [x] [Upload code using avrdude and run it](https://github.com/martinmoene/kalman-estimator/blob/ad6687583652e33c857158157a9297d28094577b/example/mk-blink-led-avr.bat#L71)
+- [ ] Time free-running loop on Trinket board for blink LED and Kalman simulation, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
 - [ ] Create a demo application for the setup that implements a controller that uses the Kalman estimator.
 - [ ] To reduce the computational load, implement (automatic) transitioning to a fixed Kalman gain after it has stabilized.
-- [ ] Time free-running loop on Trinket board, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
 - [ ] Asses possible bottlenecks in the C++ code that may be easy to avoid.
 - [ ] ...
 
