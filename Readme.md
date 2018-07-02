@@ -73,7 +73,10 @@ Plan:
   - [x] Write [blink LED code](example/blink-led-avr.cpp)
   - [x] [Compile code to .hex](example/mk-blink-led-avr.bat)
   - [x] [Upload code using avrdude and run it](https://github.com/martinmoene/kalman-estimator/blob/ad6687583652e33c857158157a9297d28094577b/example/mk-blink-led-avr.bat#L71)
-- [ ] Time free-running loop on Trinket board for blink LED and Kalman simulation, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
+- [ ] Time free-running loop on Trinket board for Kalman simulation with blink LED, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
+  - [ ] Write [code to time](example/kalman-time-avr.cpp)
+  - [ ] [Compile code to .hex](example/mk-kalman-time-avr.py)
+  - [ ] [Upload code using avrdude and run it](mk-kalman-time-avr-upload.py)
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
 - [ ] Create a demo application for the setup that implements a controller that uses the Kalman estimator.
@@ -83,17 +86,17 @@ Plan:
 
 
 Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size [B] |
---------------------:|--------:|-------------------------|-------------|--------------|-----------|
-3383                 | 1600    | [Blink LED](example/blink-led-avr.cpp)| &nbsp; | -O2 | 0.2       |
+--------------------:|--------:|-------------------------|-------------|--------------|----------:|
+640                  | 1600    | [Blink LED](example/blink-led-avr.cpp)| &nbsp; | -O2 | 174       |
 &nbsp;               | &nbsp;  | &nbsp;                  | &nbsp;      | &nbsp;       | &nbsp;    |
 0.18                 |  0.473  | double                  | updating    | -Os          | 4,968     |
 0.2                  |  0.548  | double                  | updating    | -O2          | 5,492     |
 0.8                  |  2.1    | double                  | fix on %chg | -Os          | 4,966     |
 1.4                  |  3.6    | double                  | fix on %chg | -O2          | 5,490     |
-0.7                  |  1.7    | fixed_point&lt;int32_t> | updating    | -Os          | 2.848    |
-1                    |  2.5    | fixed_point&lt;int32_t> | updating    | -O2          | 2.490    |
-4                    |  9.9    | fixed_point&lt;int32_t> | fix on %chg | -Os          | 2.848    |
-18                   | 44.9    | fixed_point&lt;int32_t> | fix on %chg | -O2          | 2.490    |
+0.7                  |  1.7    | fixed_point&lt;int32_t> | updating    | -Os          | 2.848     |
+1                    |  2.5    | fixed_point&lt;int32_t> | updating    | -O2          | 2.490     |
+4                    |  9.9    | fixed_point&lt;int32_t> | fix on %chg | -Os          | 2.848     |
+18                   | 44.9    | fixed_point&lt;int32_t> | fix on %chg | -O2          | 2.490     |
 
 Table 1. Relative performance for numeric type, fixing Kalman gain and compiler optimization, without ADC and DAC conversions.
 
@@ -134,13 +137,10 @@ Graph for a simulation run with the resulting (estimated) position, (estimated) 
 
 Developing and testing the software
 ------------------------------------
-The software is developed using both the Arduino IDE and a separate [C++17](https://en.wikipedia.org/wiki/C%2B%2B17) compiler on a personal computer. The software is developed and tested as a PC program using the [*lest* test framework](https://github.com/martinmoene/lest). The Arduino IDE is used to verify that what we develop as a C++ program is acceptable as an Arduino program. The IDE is also used to upload the program to the Pro Trinket.
+The software is developed using both [AVR-GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/) and a separate [C++17](https://en.wikipedia.org/wiki/C%2B%2B17) compiler on a personal computer. The software is developed and tested as a PC program using the [*lest* test framework](https://github.com/martinmoene/lest). In parallel, the AVR-GCC compiler is used to verify that what we develop as a C++ program is acceptable as an AVR program. The tool [avrdude](http://savannah.nongnu.org/projects/avrdude) bundled with AVR-GCC is used to upload the program to the Pro Trinket.
 
 ### Prerequisites
-In what follows, it is expected that the [Arduino IDE](https://www.arduino.cc/en/Main/Software) with updated [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/) is available. If you want to compile and run the tests, a C++17 compiler such as [GNU C++](https://gcc.gnu.org/) or [Visual C++ 2017](https://www.visualstudio.com/) is needed. 
-
-### Setup Arduino IDE for Pro Trinket
-To be able to compile programs for the Pro Trinket board and to upload the result to it via [USB](https://en.wikipedia.org/wiki/USB), several settings must be made in the Arduino IDE. This is described in [Setup Arduino IDE for Pro Trinket](doc/Setup-Arduino-IDE-for-Pro-Trinket.md#top).
+In what follows, it is expected that [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/) is available. If you want to compile and run the tests, a C++17 compiler such as [GNU C++](https://gcc.gnu.org/) or [Visual C++ 2017](https://www.visualstudio.com/) is needed. 
 
 (to be continued.)
 
@@ -155,9 +155,9 @@ Notes and References
 - [C++](#c++)
 - [GNUC](#gnuc)
 - [AVR](#avr)
-- [Arduino](#arduino)
 - [Atmel](#atmel)
 - [Adafruit](#adafruit)
+<!-- - [Arduino](#arduino)-->
 
 ### Kalman Estimator
 
@@ -188,21 +188,24 @@ Various articles, video's, books to read up on the Kalman estimator.
 ### GNUC
 [18] GNUC. [GNUC AVR Options](https://gcc.gnu.org/onlinedocs/gcc/AVR-Options.html).  
 [19] AVR-GCC. [AVR-GCC 8.1.0 for Windows 32 and 64 bit](http://blog.zakkemble.co.uk/avr-gcc-builds/). Contains section *Upgrading the Arduino IDE*.  
+[20] AVRDUDE. [AVR Downloader/UploaDEr](http://savannah.nongnu.org/projects/avrdude).    
 
 ### AVR
-[20] Elliot Williams. [AVR Programming - Learning to Write Software for Hardware](https://www.safaribooksonline.com/library/view/make-avr-programming/9781449356484/) ([Code](https://github.com/hexagon5un/AVR-Programming)).  
-[21] Elliot Williams. [Embed with Elliot: There is no Arduino "Language"](https://hackaday.com/2015/07/28/embed-with-elliot-there-is-no-arduino-language/).    
+[21] Elliot Williams. [AVR Programming - Learning to Write Software for Hardware](https://www.safaribooksonline.com/library/view/make-avr-programming/9781449356484/) ([Code](https://github.com/hexagon5un/AVR-Programming)).  
+[22] Elliot Williams. [Embed with Elliot: There is no Arduino "Language"](https://hackaday.com/2015/07/28/embed-with-elliot-there-is-no-arduino-language/).    
  
-### Arduino
-[22] Arduino. [Home](https://www.arduino.cc/).  
-[23] Arduino. [Language Reference](https://www.arduino.cc/en/Reference/HomePage).  
-[24] Arduino. [Interfacing with Hardware](http://playground.arduino.cc/Main/InterfacingWithHardware).  
-
 ### Atmel
-[25] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).  
-[26] Visual Micro. [Arduino for Atmel Studio 7 (plug-in)](https://www.visualmicro.com/page/Arduino-for-Atmel-Studio-7.aspx).
-[27] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
+[23] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).  
+[24] Visual Micro. [Arduino for Atmel Studio 7 (plug-in)](https://www.visualmicro.com/page/Arduino-for-Atmel-Studio-7.aspx).
+[25] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
 
 ### Adafruit
-[28] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
-[29] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
+[26] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
+[27] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
+
+<!--
+### Arduino
+[23] Arduino. [Home](https://www.arduino.cc/).  
+[24] Arduino. [Language Reference](https://www.arduino.cc/en/Reference/HomePage).  
+[25] Arduino. [Interfacing with Hardware](http://playground.arduino.cc/Main/InterfacingWithHardware).  
+-->
