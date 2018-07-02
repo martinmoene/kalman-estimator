@@ -10,6 +10,10 @@
 #include <avr/io.h>
 //#include <avr/interrupt.h>
 
+#ifndef  led_FEATURE_BLINK_MS
+# define led_FEATURE_BLINK_MS  200
+#endif
+
 #define led_ddr  DDRB
 #define led_port PORTB
 #define led_bit  PB5
@@ -33,11 +37,11 @@ int main()
     led_port = 0b11111111;
     led_ddr |= bit_mask( led_bit );
 
-    constexpr uint16_t blink_ms = 200;
-
     for( ;; )
     {
-        delay_ms( blink_ms );
+#if led_FEATURE_BLINK_MS
+        delay_ms( led_FEATURE_BLINK_MS );
+#endif
         led_port ^= bit_mask( led_bit );
     }
 }

@@ -8,6 +8,8 @@ set std=c++17
 set mcu=atmega328p
 set fcpu=16000000L
 set basename=blink-led-avr
+set blink_ms=200
+::set blink_ms=0
 
 if [%AVR_GCC_ROOT%] == [] goto NO_VAR
 
@@ -29,7 +31,8 @@ set cppflags1=^
  -fno-threadsafe-statics ^
  -MMD ^
  -mmcu=%mcu% ^
- -DF_CPU_HZ=%fcpu%
+ -DF_CPU_HZ=%fcpu% ^
+ -Dled_FEATURE_BLINK_MS=%blink_ms%
 
 :: Add compile flags for object code:
 set cppflags2=^
@@ -68,7 +71,7 @@ echo Create %basename%.hex
 "%avrsize%" %basename%.hex
 
 :: Upload hex file
-::%avrdude% -v -patmega328p -cusbtiny -Uflash:w:%basename%.hex:i
+%avrdude% -v -patmega328p -cusbtiny -Uflash:w:%basename%.hex:i
 
 endlocal & goto :EOF
 
