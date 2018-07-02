@@ -82,9 +82,9 @@ Plan:
 - [ ] ...
 
 
-Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size |
+Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size [kB] |
 --------------------:|--------:|-------------------------|-------------|--------------|-----------|
-&nbsp;               | 144     | Blink LED               | &nbsp;      | -O2          | &nbsp;    |
+&nbsp;               | 1600    | [Blink LED](example/blink-led-avr.cpp)| &nbsp; | -O2 | 0.2       |
 &nbsp;               | &nbsp;  | &nbsp;                  | &nbsp;      | &nbsp;       | &nbsp;    |
 &nbsp;               | &nbsp;  | double                  | updating    | -O2          | &nbsp;    |
 &nbsp;               | &nbsp;  | double                  | updating    | -Os          | &nbsp;    |
