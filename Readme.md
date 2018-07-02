@@ -82,20 +82,20 @@ Plan:
 - [ ] ...
 
 
-Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size [kB] |
+Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size [B] |
 --------------------:|--------:|-------------------------|-------------|--------------|-----------|
-&nbsp;               | 1600    | [Blink LED](example/blink-led-avr.cpp)| &nbsp; | -O2 | 0.2       |
+3383                 | 1600    | [Blink LED](example/blink-led-avr.cpp)| &nbsp; | -O2 | 0.2       |
 &nbsp;               | &nbsp;  | &nbsp;                  | &nbsp;      | &nbsp;       | &nbsp;    |
-&nbsp;               | &nbsp;  | double                  | updating    | -O2          | &nbsp;    |
-&nbsp;               | &nbsp;  | double                  | updating    | -Os          | &nbsp;    |
-&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | updating    | -O2          | &nbsp;    |
-&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | updating    | -Os          | &nbsp;    |
-&nbsp;               | &nbsp;  | double                  | fix on %chg | -O2          | &nbsp;    |
-&nbsp;               | &nbsp;  | double                  | fix on %chg | -Os          | &nbsp;    |
-&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | fix on %chg | -O2          | &nbsp;    |
-&nbsp;               | &nbsp;  | fixed_point&lt;int32_t> | fix on %chg | -Os          | &nbsp;    |
+0.18                 |  0.473  | double                  | updating    | -Os          | 4,968     |
+0.2                  |  0.548  | double                  | updating    | -O2          | 5,492     |
+0.8                  |  2.1    | double                  | fix on %chg | -Os          | 4,966     |
+1.4                  |  3.6    | double                  | fix on %chg | -O2          | 5,490     |
+0.7                  |  1.7    | fixed_point&lt;int32_t> | updating    | -Os          | 2.848    |
+1                    |  2.5    | fixed_point&lt;int32_t> | updating    | -O2          | 2.490    |
+4                    |  9.9    | fixed_point&lt;int32_t> | fix on %chg | -Os          | 2.848    |
+18                   | 44.9    | fixed_point&lt;int32_t> | fix on %chg | -O2          | 2.490    |
 
-Table 1. Relative performance for numeric type, fixing Kalman gain and compiler optimization.
+Table 1. Relative performance for numeric type, fixing Kalman gain and compiler optimization, without ADC and DAC conversions.
 
 
 Basic Kalman estimator code
