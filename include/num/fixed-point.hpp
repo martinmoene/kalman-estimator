@@ -89,7 +89,11 @@ public:
 
     // Construction:
 
+#if defined(AVR) && AVR
+    constexpr fixed_point() : storage() {}
+#else
     constexpr fixed_point() = default;
+#endif
     constexpr fixed_point( fixed_point && ) = default;
     constexpr fixed_point( fixed_point const & ) = default;
     constexpr fixed_point & operator=( fixed_point && ) = default;

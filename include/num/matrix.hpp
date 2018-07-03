@@ -60,7 +60,11 @@ public:
 
     // Construction:
 
+#if defined(AVR) && AVR
+    constexpr matrix() : storage() {}
+#else
     constexpr matrix() = default;
+#endif
     constexpr matrix( matrix && ) = default;
     constexpr matrix( matrix const & ) = default;
     constexpr matrix & operator=( matrix && ) = default;
