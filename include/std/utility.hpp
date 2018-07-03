@@ -29,7 +29,7 @@ public:
     using const_reference = const T&;
     using size_type       = decltype(sizeof(int)); // std::size_t;
     using iterator        = const T*;
-    using const_iterator  = const T *;
+    using const_iterator  = const T*;
 
     constexpr initializer_list() noexcept
     : m_array( nullptr )
