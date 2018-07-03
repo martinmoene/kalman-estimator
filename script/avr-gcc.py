@@ -129,7 +129,7 @@ def print_size(opt, out_base):
 def buildSingle(opt, inp_file, out_base):
     """Build compilation and link products for single file"""
     if opt.verbose:
-        print( ('AVG-GCC {i} => {o} .s/.o/.elf/.eep/.hex:' if out_base else '{i}:').format(i=inp_file, o=out_base) )
+        print('AVG-GCC {i} => {o} .s/.o/.elf/.eep/.hex:'.format(i=inp_file, o=out_base) )
     compile_to_asm(opt, inp_file, out_base)
     compile_to_obj(opt, inp_file, out_base)
     link_to_elf(   opt, out_base)
@@ -247,15 +247,15 @@ def main():
     count = build(opt, paths=opt.Input, out_base=opt.output)
 
     if count > 0:
-        print( "Processed " + str(count) + " file" + ("(s)" if count > 1 else "") )
+        print( '{}: processed {} file{}'.format(parser.prog, str(count), 's' if count > 1 else ''))
     else:
-        print( "No files compiled" )
+        print('{}: no files compiled'.format(parser.prog))
 
 
 if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        print('{p}: Error: {e}'.format(p=os.path.basename(sys.argv[0]), e=e) )
+        print('{p}: error: {e}'.format(p=os.path.basename(sys.argv[0]), e=e) )
 
 # end of file
