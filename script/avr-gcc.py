@@ -13,6 +13,7 @@ from __future__ import print_function
 import argparse
 import glob
 import os
+import platform
 import re
 import sys
 
@@ -48,6 +49,7 @@ cxxflags_obj = '{cxxflags_asm} -flto'.format(cxxflags_asm=cxxflags_asm)
 
 lflags  = '-flto -fuse-linker-plugin -Wl,--gc-sections'
 
+cmd_mac = '"{cxx}" -std={std} -O{opt} -mmcu={mcu} -xc++ -E -dM - < {nul}'
 cmd_asm = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DAVR -DF_CPU_HZ={fcpu} {defines} {includes} -S -o {outname}.s {inpname}'
 cmd_obj = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DAVR -DF_CPU_HZ={fcpu} {defines} {includes} -c -o {outname}.o {inpname}'
 
@@ -65,6 +67,17 @@ def run(opt, cmd):
 
 def expand_list(prefix, lst):
     return ' '.join([prefix + s for s in lst])
+
+def dev_null():
+    return 'nul' if platform.system()=='Windows' else '/dev/null'
+
+def report_macros(opt):
+    """List built-in macros:"""
+    if opt.verbose > 2:
+        print('List built-in macros:')
+    cmd = cmd_mac.format(
+        cxx=cxx, std=opt.std, opt=opt.O, mcu=opt.mmcu, nul=dev_null())
+    run(opt, cmd)
 
 def compile_to_asm(opt, inp_file, out_base):
     """Compile to assembly discarding warnings and errors:"""
@@ -183,12 +196,17 @@ def main():
         help='report processing steps (3 levels)')
 
     parser.add_argument(
+        '-m', '--macros',
+        action='count',
+        help='report built-in macros')
+
+    parser.add_argument(
         '-D',
         metavar='<definition>',
         action='append',
         default=[],
         type=str,
-        help='Preprocessor definition')
+        help='preprocessor definition')
 
     parser.add_argument(
         '-I',
@@ -196,14 +214,14 @@ def main():
         action='append',
         default=[],
         type=str,
-        help='Preprocessor inclusion path')
+        help='preprocessor inclusion path')
 
     parser.add_argument(
         '-O',
         metavar='<optimization>',
         type=str,
         default=def_opt,
-        help='Optimization level [-O{}]'.format(def_opt))
+        help='optimization level [-O{}]'.format(def_opt))
 
     parser.add_argument(
         '-std',
@@ -224,7 +242,7 @@ def main():
         metavar='<F>',
         type=str,
         default=def_fcpu,
-        help='Processor clock frequency in Hz [{}]'.format(def_fcpu))
+        help='processor clock frequency in Hz [{}]'.format(def_fcpu))
 
     parser.add_argument(
         '--output',
@@ -235,6 +253,7 @@ def main():
     opt = parser.parse_args()
 
     if opt.debug > 0:
+        print('OS: {}, {}, {}'.format(os.name, platform.system(), platform.release()))
         print('Environment: avr_gcc_root={avr_gcc_root}'.format(avr_gcc_root=avr_gcc_root))
         print('Program: {}'.format(cxx))
         print('Program: {}'.format(objcopy))
@@ -243,6 +262,9 @@ def main():
 
     if opt.output and file_count(opt.Input) > 1:
         raise RuntimeError("Cannot use option '--output {o}' with multiple input files.".format(o=args.output))
+
+    if opt.macros:
+        return report_macros(opt)
 
     count = build(opt, paths=opt.Input, out_base=opt.output)
 
