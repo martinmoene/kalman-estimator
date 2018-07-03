@@ -64,7 +64,7 @@ Try and gain familiarity with the Kalman estimator. The intention is to implemen
 
 Plan:
 - [x] Create a [simulation program in Matlab](example/matlab/kalman-sim.m) with a basic [Kalman Estimator](example/matlab/kalman.m). 
-- [x] Translate Matlab code to [C++ program](example/kalman-sim.cpp) and [estimator](include/num/kalman.hpp) using a recent [C++ standard (C++14, C++17)](https://isocpp.org/). 
+- [x] Translate Matlab code to [C++ program](example/kalman-sim.cpp) and [estimator](include/num/kalman.hpp) using the [C++17 standard](https://isocpp.org/). 
 - [x] Write a supporting [matrix library](include/num/matrix.hpp).
 - [x] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
 - [x] Write a supporting [minimal standard C++ library](include/std).
@@ -77,6 +77,10 @@ Plan:
   - [ ] Write [code to time](example/kalman-time-avr.cpp)
   - [ ] [Compile code to .hex](example/mk-kalman-time-avr.py)
   - [ ] [Upload code using avrdude and run it](mk-kalman-time-avr-upload.py)
+- [ ] Create code example with an interrupt-timed blinking LED.
+- [ ] Create code example reading an ADC.
+- [ ] Create code example writing a pulse-width modulated DAC.
+- [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
 - [ ] Create a demo application for the setup that implements a controller that uses the Kalman estimator.
