@@ -31,7 +31,7 @@ def_fcpu = '16000000'
 def initialize():
 
     try:
-        avr_gcc_root = os.environ['AVR_GCC_ROOT']
+        global avr_gcc_root; avr_gcc_root = os.environ['AVR_GCC_ROOT']
     except KeyError as e:
         raise RuntimeError("expected environment variable {} to be set to root of AVR-GCC.".format(e))
 
@@ -54,7 +54,7 @@ def initialize():
     global cmd_asm;  cmd_asm = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DF_CPU_HZ={fcpu} {defines} {includes} -S -o {outname}.s {inpname}'
     global cmd_obj;  cmd_obj = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DF_CPU_HZ={fcpu} {defines} {includes} -c -o {outname}.o {inpname}'
 
-    global cmd_elf;  cmd_elf = '"{cxx}" -O{opt} {lflags} -mmcu={mcu} -o {outname}.elf {outname}.o -lm'
+    global cmd_elf;  cmd_elf = '"{cxx}" -O{opt} {lflags} -mmcu={mcu} -o {outname}.elf {files} -lm'
     global cmd_eep;  cmd_eep = '"{objcopy}" -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 {outname}.elf {outname}.eep'
     global cmd_hex;  cmd_hex = '"{objcopy}" -O ihex -R .eeprom {outname}.elf {outname}.hex'
     global cmd_size; cmd_size= '"{avrsize}" {outname}.hex'
@@ -63,6 +63,12 @@ def run(opt, cmd):
     if opt.debug > 1:
         print(cmd)
     os.system(cmd)
+
+def remove_ext(path):
+    return os.path.splitext(path)[0]
+
+def to_obj(paths):
+    return [remove_ext(f) + '.o' for f in paths]
 
 def expand_list(prefix, lst):
     return ' '.join([prefix + s for s in lst])
@@ -81,7 +87,7 @@ def report_macros(opt):
 def compile_to_asm(opt, inp_file, out_base):
     """Compile to assembly discarding warnings and errors:"""
     if opt.verbose > 2:
-        print('- Compile to assembly: {i} => {o}:'.format(i=inp_file, o=out_base))
+        print('- Compile to assembly: {i} => {o}.s:'.format(i=inp_file, o=out_base))
     cmd = cmd_asm.format(
         inpname=inp_file, outname=out_base,
         cxx=cxx, std=opt.std, opt=opt.O,
@@ -92,7 +98,7 @@ def compile_to_asm(opt, inp_file, out_base):
 def compile_to_obj(opt, inp_file, out_base):
     """Compile to object code, displaying warnings and errors:"""
     if opt.verbose > 2:
-        print('- Compile to object code: {i} => {o}:'.format(i=inp_file, o=out_base))
+        print('- Compile to object code: {i} => {o}.o:'.format(i=inp_file, o=out_base))
     cmd = cmd_obj.format(
         inpname=inp_file, outname=out_base,
         cxx=cxx, std=opt.std, opt=opt.O,
@@ -100,12 +106,19 @@ def compile_to_obj(opt, inp_file, out_base):
         defines=expand_list('-D', opt.D), includes=expand_list('-I', opt.I))
     run(opt, cmd)
 
-def link_to_elf(opt, out_base):
+def compile_cpp(opt, inp_file, out_base):
+    if opt.verbose > 0:
+        print('{}:'.format(inp_file))
+    compile_to_asm(opt, inp_file, out_base)
+    compile_to_obj(opt, inp_file, out_base)
+    return 1
+
+def link_to_elf(opt, out_base, obj_files):
     """Link to ELF:"""
     if opt.verbose > 2:
-        print('- Link to ELF: {f}.o => {f}.elf:'.format(f=out_base))
+        print('- Link to ELF: {f} => {o}.elf:'.format(f=obj_files, o=out_base))
     cmd = cmd_elf.format(
-        outname=out_base,
+        outname=out_base, files=' '.join(obj_files),
         cxx=cxx, opt=opt.O,
         lflags=lflags, mcu=opt.mmcu)
     run(opt, cmd)
@@ -138,36 +151,24 @@ def print_size(opt, out_base):
     if opt.verbose > 1:
         run(opt, cmd)
 
-def buildSingle(opt, inp_file, out_base):
-    """Build compilation and link products for single file"""
-    if opt.verbose:
-        print('AVG-GCC {i} => {o} .s/.o/.elf/.eep/.hex:'.format(i=inp_file, o=out_base) )
-    compile_to_asm(opt, inp_file, out_base)
-    compile_to_obj(opt, inp_file, out_base)
-    link_to_elf(   opt, out_base)
-    create_eep(    opt, out_base)
-    create_hex(    opt, out_base)
-    print_size(    opt, out_base)
-    return 1
-
 def build(opt, paths, out_base):
     """Build compilations and link products"""
     n = 0
-    for g in paths:
-        for f in glob.glob(g):
-            if os.path.isfile(f):
-                if not out_base:
-                    out_base = os.path.splitext(f)[0]
-                n = n + buildSingle(opt, inp_file=f, out_base=out_base)
+    if not out_base:
+        out_base = remove_ext(paths[0])
+    for f in paths:
+        n = n + compile_cpp(opt, inp_file=f, out_base=remove_ext(f))
+    link_to_elf(   opt, out_base, to_obj(paths) )
+    create_eep(    opt, out_base)
+    create_hex(    opt, out_base)
+    print_size(    opt, out_base)
     return n
 
-def file_count(paths):
-    n = 0
+def file_list(paths):
+    result = []
     for g in paths:
-        for f in glob.glob(g):
-            if os.path.isfile(f):
-                n += 1
-    return n
+        result.extend( [f for f in glob.glob(g) if os.path.isfile(f)])
+    return result
 
 def main():
     """Compile with avr-gcc."""
@@ -261,13 +262,10 @@ def main():
         print('Program: {}'.format(avrsize))
         print('Options: {}'.format(opt))
 
-    if opt.output and file_count(opt.Input) > 1:
-        raise RuntimeError("Cannot use option '--output {o}' with multiple input files.".format(o=args.output))
-
     if opt.macros:
         return report_macros(opt)
 
-    count = build(opt, paths=opt.Input, out_base=opt.output)
+    count = build(opt, paths=file_list(opt.Input), out_base=opt.output)
 
     if count > 0:
         print( '{}: processed {} file{}'.format(parser.prog, str(count), 's' if count > 1 else ''))
