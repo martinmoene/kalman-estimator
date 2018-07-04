@@ -28,37 +28,36 @@ def_fcpu = '16000000'
 
 # End configuration
 
-# AVR-GCC programs:
+def initialize():
 
-avr_gcc_root = os.environ['AVR_GCC_ROOT']
+    try:
+        avr_gcc_root = os.environ['AVR_GCC_ROOT']
+    except KeyError as e:
+        raise RuntimeError("expected environment variable {} to be set to root of AVR-GCC.".format(e))
 
-if len( avr_gcc_root ) == 0:
-    print("Expected environment variable 'AVR_GCC_ROOT' to be set to root of AVR-GCC.")
-    sys.exit()
+    # AVR-GCC programs:
 
-#cpp     = os.path.join( os.path.normpath(avr_gcc_root), os.path.normpath('/bin/avr-g++' ) )
-cxx     = avr_gcc_root + os.path.normpath('/bin/avr-g++')
-objcopy = avr_gcc_root + os.path.normpath('/bin/avr-objcopy')
-avrsize = avr_gcc_root + os.path.normpath('/bin/avr-size')
-avrdude = avr_gcc_root + os.path.normpath('/bin/avrdude')
+    #cpp     = os.path.join( os.path.normpath(avr_gcc_root), os.path.normpath('/bin/avr-g++' ) )
+    global cxx;     cxx     = avr_gcc_root + os.path.normpath('/bin/avr-g++')
+    global objcopy; objcopy = avr_gcc_root + os.path.normpath('/bin/avr-objcopy')
+    global avrsize; avrsize = avr_gcc_root + os.path.normpath('/bin/avr-size')
+    global avrdude; avrdude = avr_gcc_root + os.path.normpath('/bin/avrdude')
 
-# Derived configuration:
+    # Derived configuration:
 
-cxxflags_asm = '-Wall -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD'
-cxxflags_obj = '{cxxflags_asm} -flto'.format(cxxflags_asm=cxxflags_asm)
+    global cxxflags_asm; cxxflags_asm = '-Wall -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD'
+    global cxxflags_obj; cxxflags_obj = '{cxxflags_asm} -flto'.format(cxxflags_asm=cxxflags_asm)
 
-lflags  = '-flto -fuse-linker-plugin -Wl,--gc-sections'
+    global lflags;   lflags  = '-flto -fuse-linker-plugin -Wl,--gc-sections'
 
-cmd_mac = '"{cxx}" -std={std} -O{opt} -mmcu={mcu} -xc++ -E -dM - < {nul}'
-cmd_asm = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DAVR -DF_CPU_HZ={fcpu} {defines} {includes} -S -o {outname}.s {inpname}'
-cmd_obj = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DAVR -DF_CPU_HZ={fcpu} {defines} {includes} -c -o {outname}.o {inpname}'
+    global cmd_mac;  cmd_mac = '"{cxx}" -std={std} -O{opt} -mmcu={mcu} -xc++ -E -dM - < {nul}'
+    global cmd_asm;  cmd_asm = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DF_CPU_HZ={fcpu} {defines} {includes} -S -o {outname}.s {inpname}'
+    global cmd_obj;  cmd_obj = '"{cxx}" -std={std} -O{opt} {cxxflags} -mmcu={mcu} -DF_CPU_HZ={fcpu} {defines} {includes} -c -o {outname}.o {inpname}'
 
-cmd_elf = '"{cxx}" -O{opt} {lflags} -mmcu={mcu} -o {outname}.elf {outname}.o -lm'
-cmd_eep = '"{objcopy}" -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 {outname}.elf {outname}.eep'
-cmd_hex = '"{objcopy}" -O ihex -R .eeprom {outname}.elf {outname}.hex'
-cmd_size= '"{avrsize}" {outname}.hex'
-
-# End configuration
+    global cmd_elf;  cmd_elf = '"{cxx}" -O{opt} {lflags} -mmcu={mcu} -o {outname}.elf {outname}.o -lm'
+    global cmd_eep;  cmd_eep = '"{objcopy}" -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 {outname}.elf {outname}.eep'
+    global cmd_hex;  cmd_hex = '"{objcopy}" -O ihex -R .eeprom {outname}.elf {outname}.hex'
+    global cmd_size; cmd_size= '"{avrsize}" {outname}.hex'
 
 def run(opt, cmd):
     if opt.debug > 1:
@@ -172,6 +171,8 @@ def file_count(paths):
 
 def main():
     """Compile with avr-gcc."""
+
+    initialize()
 
     parser = argparse.ArgumentParser(
         description='Compile with avr-gcc and create .s/.o/.elf/.eep/.hex files.',
