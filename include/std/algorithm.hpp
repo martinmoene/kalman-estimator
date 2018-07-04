@@ -8,7 +8,7 @@
 #ifndef STD_ALGORITHM_INCLUDED
 #define STD_ALGORITHM_INCLUDED
 
-namespace std {
+namespace std20 {
 
 template< class InputIt, class OutputIt >
 constexpr OutputIt copy( InputIt first, InputIt last, OutputIt d_first )
@@ -18,6 +18,15 @@ constexpr OutputIt copy( InputIt first, InputIt last, OutputIt d_first )
         *d_first++ = *first++;
     }
     return d_first;
+}
+
+template< class ForwardIt, class T >
+constexpr void fill( ForwardIt first, ForwardIt last, T const & value )
+{
+    for (; first != last; ++first)
+    {
+        *first = value;
+    }
 }
 
 } // namespace std
