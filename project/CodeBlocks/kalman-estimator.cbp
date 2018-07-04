@@ -25,8 +25,8 @@
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
 		<Unit filename="../../example/matlab/kalman.m" />
-		<Unit filename="../../example/mk-blink-led-avr.bat" />
-		<Unit filename="../../example/mk-kalman-sim-avr.bat" />
+		<Unit filename="../../example/mk-blink-led-avr.py" />
+		<Unit filename="../../example/mk-kalman-sim-avr.py" />
 		<Unit filename="../../example/mk-kalman-sim.bat" />
 		<Unit filename="../../include/num/fixed-point-io.hpp" />
 		<Unit filename="../../include/num/fixed-point.hpp" />
@@ -40,8 +40,9 @@
 		<Unit filename="../../include/std/limits.hpp" />
 		<Unit filename="../../include/std/type_traits.hpp" />
 		<Unit filename="../../include/std/utility.hpp" />
-		<Unit filename="../../script/avr-builtin.bat" />
-		<Unit filename="../../script/avr.bat" />
+		<Unit filename="../../issue/avr-issue-tpl-fun.cpp" />
+		<Unit filename="../../script/avr-gcc.py" />
+		<Unit filename="../../script/avr-upload.py" />
 		<Unit filename="../../test/CMakeLists.txt" />
 		<Unit filename="../../test/fixed-point.t.cpp" />
 		<Unit filename="../../test/lest.hpp" />
@@ -49,10 +50,12 @@
 		<Unit filename="../../test/main.t.cpp" />
 		<Unit filename="../../test/matrix.t.cpp" />
 		<Unit filename="../../test/stdcpp.t.cpp" />
-		<Unit filename="../../test/t-avr.bat" />
+		<Unit filename="../../test/t-avr.py" />
 		<Unit filename="../../test/t.bat" />
 		<Unit filename="../../test/tc.bat" />
 		<Unit filename="../../test/tg.bat" />
+		<Unit filename="../../time/kalman-time-avr.cpp" />
+		<Unit filename="../../time/mk-kalman-time-avr.py" />
 		<Extensions>
 			<code_completion />
 			<envvars />
