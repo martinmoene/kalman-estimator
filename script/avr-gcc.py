@@ -79,7 +79,7 @@ def dev_null():
 def report_macros(opt):
     """List built-in macros:"""
     if opt.verbose > 2:
-        print('List built-in macros:')
+        print('List predefined macros:')
     cmd = cmd_mac.format(
         cxx=cxx, std=opt.std, opt=opt.O, mcu=opt.mmcu, nul=dev_null())
     run(opt, cmd)
@@ -200,7 +200,7 @@ def main():
     parser.add_argument(
         '-m', '--macros',
         action='count',
-        help='report built-in macros')
+        help='report predefined macros')
 
     parser.add_argument(
         '-D',
