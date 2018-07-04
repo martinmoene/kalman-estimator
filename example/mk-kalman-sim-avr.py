@@ -18,7 +18,7 @@ opt      = '-O2'
 mcu      = 'atmega328p'
 fcpu     = '16000000L'
 filename = 'kalman-sim-avr.cpp'
-verbose  = ''
+verbose  = '-vv'
 
 cmd = 'python ../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -DKE_NUMERIC_TYPE={nt} -I../include {filename}'
 

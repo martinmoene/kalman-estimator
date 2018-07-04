@@ -14,11 +14,12 @@ blink_ms = '200'
 #blink_ms = '0'
 
 std      = 'c++17'
+opt      = '-O2'
 mcu      = 'atmega328p'
 fcpu     = '16000000L'
 filename = 'blink-led-avr.cpp'
-verbose  = ''
+verbose  = '-vv'
 
-cmd = 'python ../script/avr-gcc.py -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -Dled_FEATURE_BLINK_MS={ms} {filename}'
+cmd = 'python ../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -Dled_FEATURE_BLINK_MS={ms} {filename}'
 
-os.system( cmd.format(verbose=verbose, std=std, opt='-O2', mcu=mcu, fcpu=fcpu, ms=blink_ms, filename=filename) )
+os.system( cmd.format(verbose=verbose, std=std, opt=opt, mcu=mcu, fcpu=fcpu, ms=blink_ms, filename=filename) )
