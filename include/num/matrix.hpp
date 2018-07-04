@@ -17,11 +17,11 @@
 #define matrix_STRINGIFY(  x )  matrix_STRINGIFY_( x )
 #define matrix_STRINGIFY_( x )  #x
 
+#include "std/algorithm.hpp"    // constexpr std20::copy(), std20::fill()
+
 #if defined( __AVR ) && __AVR
-# include "std/algorithm.hpp"   // std::copy()
 # include "std/utility.hpp"     // std::initializer_list, std::swap()
 #else
-# include <algorithm>           // std::copy()
 # include <utility>             // std::initializer_list, std::swap()
 #endif
 
@@ -71,13 +71,15 @@ public:
     constexpr matrix & operator=( matrix const & ) = default;
 
     constexpr matrix( value_type v )
+    : storage()
     {
-        init( v );
+        std20::fill( begin(), end(), v );
     }
 
     constexpr matrix( std::initializer_list<T> il )
+    : storage()
     {
-        std::copy( il.begin(), il.end(), begin() );
+        std20::copy( il.begin(), il.end(), begin() );
     }
 
     // Observers:
@@ -453,7 +455,7 @@ constexpr rowvec<T,N> transposed( colvec<T,N> const & x )
 {
     rowvec<T,N>  result(0);
 
-    std::copy( x.begin(), x.end(), result.begin() );
+    std20::copy( x.begin(), x.end(), result.begin() );
 
     return result;
 }
@@ -465,7 +467,7 @@ constexpr colvec<T,N> transposed( rowvec<T,N> const & x )
 {
     colvec<T,N>  result(0);
 
-    std::copy( x.begin(), x.end(), result.begin() );
+    std20::copy( x.begin(), x.end(), result.begin() );
 
     return result;
 }

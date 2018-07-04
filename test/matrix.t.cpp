@@ -11,12 +11,26 @@
 #include "lest.hpp"
 #include <algorithm>
 
+// Configuration:
+
+#ifndef  KE_USE_STATIC_EXPECT
+# define KE_USE_STATIC_EXPECT  0
+#endif
+
 // Suppress:
 // - unused parameter, for cases without assertions such as [.std...]
 #if defined __clang__
 # pragma clang diagnostic ignored "-Wunused-parameter"
 #elif defined __GNUC__
 # pragma GCC   diagnostic ignored "-Wunused-parameter"
+#endif
+
+#if defined( KE_USE_STATIC_EXPECT ) && KE_USE_STATIC_EXPECT
+# define STATIC_EXPECT(     expr )  static_assert(   expr  )
+# define STATIC_EXPECT_NOT( expr )  static_assert( !(expr) )
+#else
+# define STATIC_EXPECT(     expr )  EXPECT(     expr )
+# define STATIC_EXPECT_NOT( expr )  EXPECT_NOT( expr )
 #endif
 
 #define CASE( name ) lest_CASE( specification(), name )
@@ -53,71 +67,72 @@ CASE( "matrix: Allows to default construct" )
 
 CASE( "rowvec: Allows to construct from a single value" )
 {
-    rowvec<int,2> x(7);
-    EXPECT( x[0] == 7 );
-    EXPECT( x[1] == 7 );
+    constexpr rowvec<int,2> x(7);
+
+    STATIC_EXPECT( x[0] == 7 );
+    STATIC_EXPECT( x[1] == 7 );
 }
 
 CASE( "colvec: Allows to construct from a single value" )
 {
-    rowvec<int,2> x(7);
-    EXPECT( x[0] == 7 );
-    EXPECT( x[1] == 7 );
+    constexpr rowvec<int,2> x(7);
+    STATIC_EXPECT( x[0] == 7 );
+    STATIC_EXPECT( x[1] == 7 );
 }
 
 CASE( "matrix: Allows to construct from a single value" )
 {
-    matrix<int,2,2> A(7);
-    EXPECT( A[0] == 7 );
-    EXPECT( A[1] == 7 );
-    EXPECT( A[2] == 7 );
-    EXPECT( A[3] == 7 );
+    constexpr matrix<int,2,2> A(7);
+    STATIC_EXPECT( A[0] == 7 );
+    STATIC_EXPECT( A[1] == 7 );
+    STATIC_EXPECT( A[2] == 7 );
+    STATIC_EXPECT( A[3] == 7 );
 }
 
 CASE( "rowvec: Allows to construct from an initializer-list" )
 {
-    rowvec<int,2> x = { 1, 2 };
-    EXPECT( x[0] == 1 );
-    EXPECT( x[1] == 2 );
+    constexpr rowvec<int,2> x = { 1, 2 };
+    STATIC_EXPECT( x[0] == 1 );
+    STATIC_EXPECT( x[1] == 2 );
 }
 
 CASE( "colvec: Allows to construct from an initializer-list" )
 {
-    colvec<int,2> x = { 1, 2 };
-    EXPECT( x[0] == 1 );
-    EXPECT( x[1] == 2 );
+    constexpr colvec<int,2> x = { 1, 2 };
+    STATIC_EXPECT( x[0] == 1 );
+    STATIC_EXPECT( x[1] == 2 );
 }
 
 CASE( "matrix: Allows to construct from an initializer-list" )
 {
-    matrix<int,2,2> A = { 1, 2, 3, 4 };
-    EXPECT( A[0] == 1 );
-    EXPECT( A[1] == 2 );
-    EXPECT( A[2] == 3 );
-    EXPECT( A[3] == 4 );
+    constexpr matrix<int,2,2> A = { 1, 2, 3, 4 };
+    STATIC_EXPECT( A[0] == 1 );
+    STATIC_EXPECT( A[1] == 2 );
+    STATIC_EXPECT( A[2] == 3 );
+    STATIC_EXPECT( A[3] == 4 );
 }
 
 CASE( "rowvec: Allows to copy-construct from another rowvec of the same type" )
 {
-    rowvec<int,2> x = rowvec<int,2>({ 1, 2 });
-    EXPECT( x[0] == 1 );
-    EXPECT( x[1] == 2 );
+    constexpr rowvec<int,2> x = rowvec<int,2>({ 1, 2 });
+    STATIC_EXPECT( x[0] == 1 );
+    STATIC_EXPECT( x[1] == 2 );
 }
 
 CASE( "colvec: Allows to copy-construct from another colvec of the same type" )
 {
-    colvec<int,2> x = colvec<int,2>({ 1, 2 });
-    EXPECT( x[0] == 1 );
-    EXPECT( x[1] == 2 );
+    constexpr colvec<int,2> x = colvec<int,2>({ 1, 2 });
+    STATIC_EXPECT( x[0] == 1 );
+    STATIC_EXPECT( x[1] == 2 );
 }
 
 CASE( "matrix: Allows to copy-construct from another matrix of the same type" )
 {
-    matrix<int,2,2> A = matrix<int,2,2>({ 1, 2, 3, 4 });
-    EXPECT( A[0] == 1 );
-    EXPECT( A[1] == 2 );
-    EXPECT( A[2] == 3 );
-    EXPECT( A[3] == 4 );
+    constexpr matrix<int,2,2> A = matrix<int,2,2>({ 1, 2, 3, 4 });
+    STATIC_EXPECT( A[0] == 1 );
+    STATIC_EXPECT( A[1] == 2 );
+    STATIC_EXPECT( A[2] == 3 );
+    STATIC_EXPECT( A[3] == 4 );
 }
 
 CASE( "rowvec: Allows to copy-assign from another rowvec of the same type" )
@@ -175,7 +190,7 @@ CASE( "matrix: Allows to observe the number of elements" )
 
 CASE( "matrix: Allows to observe an element via array indexing (single dimension)" )
 {
-    matrix<int,2,2> A = { 1, 2, 3, 4 };
+    constexpr matrix<int,2,2> A = { 1, 2, 3, 4 };
     EXPECT( A[0] == 1 );
     EXPECT( A[1] == 2 );
     EXPECT( A[2] == 3 );
@@ -184,7 +199,7 @@ CASE( "matrix: Allows to observe an element via array indexing (single dimension
 
 CASE( "matrix: Allows to observe an element via call indexing (single dimension)" )
 {
-    matrix<int,2,2> A = { 1, 2, 3, 4 };
+    constexpr matrix<int,2,2> A = { 1, 2, 3, 4 };
     EXPECT( A(0) == 1 );
     EXPECT( A(1) == 2 );
     EXPECT( A(2) == 3 );
@@ -193,7 +208,7 @@ CASE( "matrix: Allows to observe an element via call indexing (single dimension)
 
 CASE( "matrix: Allows to observe an element via call indexing (dual dimension)" )
 {
-    matrix<int,2,2> A = { 1, 2, 3, 4 };
+    constexpr matrix<int,2,2> A = { 1, 2, 3, 4 };
     EXPECT( A(0,0) == 1 );
     EXPECT( A(0,1) == 2 );
     EXPECT( A(1,0) == 3 );
@@ -202,7 +217,7 @@ CASE( "matrix: Allows to observe an element via call indexing (dual dimension)" 
 
 CASE( "matrix: Allows to observe an element via at() (single dimension)" )
 {
-    matrix<int,2,2> A = { 1, 2, 3, 4 };
+    constexpr matrix<int,2,2> A = { 1, 2, 3, 4 };
     EXPECT( A.at(0) == 1 );
     EXPECT( A.at(1) == 2 );
     EXPECT( A.at(2) == 3 );
@@ -211,7 +226,7 @@ CASE( "matrix: Allows to observe an element via at() (single dimension)" )
 
 CASE( "matrix: Allows to observe an element via at() (dual dimension)" )
 {
-    matrix<int,2,2> A = { 1, 2, 3, 4 };
+    constexpr matrix<int,2,2> A = { 1, 2, 3, 4 };
     EXPECT( A.at(0,0) == 1 );
     EXPECT( A.at(0,1) == 2 );
     EXPECT( A.at(1,0) == 3 );
