@@ -17,7 +17,7 @@
 #define matrix_STRINGIFY(  x )  matrix_STRINGIFY_( x )
 #define matrix_STRINGIFY_( x )  #x
 
-#if defined( AVR ) && AVR
+#if defined( __AVR ) && __AVR
 # include "std/algorithm.hpp"   // std::copy()
 # include "std/utility.hpp"     // std::initializer_list, std::swap()
 #else
@@ -60,7 +60,7 @@ public:
 
     // Construction:
 
-#if defined(AVR) && AVR
+#if defined( __AVR ) && __AVR
     constexpr matrix() : storage() {}
 #else
     constexpr matrix() = default;

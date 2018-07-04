@@ -19,7 +19,7 @@
 #define fixed_point_STRINGIFY(  x )  fixed_point_STRINGIFY_( x )
 #define fixed_point_STRINGIFY_( x )  #x
 
-#if defined( AVR ) && AVR
+#if defined( __AVR ) && __AVR
 # include "std/cstdint.hpp"
 # include "std/limits.hpp"
 # include "std/type_traits.hpp"
@@ -89,7 +89,7 @@ public:
 
     // Construction:
 
-#if defined(AVR) && AVR
+#if defined( __AVR ) && __AVR
     constexpr fixed_point() : storage() {}
 #else
     constexpr fixed_point() = default;
