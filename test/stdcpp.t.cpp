@@ -59,10 +59,10 @@ TEST( cstdint )
     using i32 = std::int32_t;
     using i64 = std::int64_t;
 
-    assert( sizeof( std::int8_t  ) == 1 );
-    assert( sizeof( std::int16_t ) == 2 );
-    assert( sizeof( std::int32_t ) == 4 );
-    assert( sizeof( std::int64_t ) == 8 );
+    assert( sizeof( i8  ) == 1 );
+    assert( sizeof( i16 ) == 2 );
+    assert( sizeof( i32 ) == 4 );
+    assert( sizeof( i64 ) == 8 );
 
 };
 
