@@ -45,7 +45,7 @@ TEST( algorithm )
     int a[] = { 1, 2, 3, };
     int b[] = { 0, 0, 0, };
 
-    std::copy( &a[0], &a[3], &b[0] );
+    std20::copy( &a[0], &a[3], &b[0] );
 
     assert( b[0] == a[0] );
     assert( b[1] == a[1] );
