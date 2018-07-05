@@ -18,12 +18,7 @@
 #define matrix_STRINGIFY_( x )  #x
 
 #include "std/algorithm.hpp"    // constexpr std20::copy(), std20::fill()
-
-#if defined( __AVR ) && __AVR
-# include "std/utility.hpp"     // std::initializer_list, std::swap()
-#else
-# include <utility>             // std::initializer_list, std::swap()
-#endif
+#include "std/utility.hpp"      // std20::swap(), std::initializer_list
 
 namespace num {
 
@@ -174,15 +169,6 @@ public:
     }
 
 private:
-    constexpr void init( value_type v )
-    {
-        for ( auto & x : *this )
-        {
-            x = v;
-        }
-    }
-
-private:
     value_type storage[ N * M ];
 };
 
@@ -265,7 +251,7 @@ constexpr matrix<T,1,1> operator*( matrix<T,1,1> const & A, matrix<T,1,1> const 
 
 // rowvec * colvec (dot product):
 
-template< typename T, int N > //, typename std::enable_if<N != 1>::type >
+template< typename T, int N > //, typename std20::enable_if<N != 1>::type >
 constexpr T operator*( rowvec<T,N> const & a, colvec<T,N> const & b )
 {
     T result = T();
@@ -279,7 +265,7 @@ constexpr T operator*( rowvec<T,N> const & a, colvec<T,N> const & b )
 
 // colvec * rowvec:
 
-template< typename T, int N > // , typename std::enable_if<N != 1>::type >
+template< typename T, int N > // , typename std20::enable_if<N != 1>::type >
 constexpr matrix<T,N,N> operator*( colvec<T,N> const & a, rowvec<T,N> const & b )
 {
     matrix<T,N,N> result(0);
@@ -486,7 +472,7 @@ constexpr matrix<T,2,2> transposed( matrix<T,2,2> const & A )
 {
     matrix<T,2,2> result( A );
 
-    using std::swap; swap( result(0,1), result(1,0) );
+    using std20::swap; swap( result(0,1), result(1,0) );
 
     return result;
 }

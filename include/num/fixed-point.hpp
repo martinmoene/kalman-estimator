@@ -19,20 +19,13 @@
 #define fixed_point_STRINGIFY(  x )  fixed_point_STRINGIFY_( x )
 #define fixed_point_STRINGIFY_( x )  #x
 
-#if defined( __AVR ) && __AVR
-# include "std/cstdint.hpp"
-# include "std/limits.hpp"
-# include "std/type_traits.hpp"
-# include "std/utility.hpp"
-#else
-# include <cstdint>
-# include <limits>
-# include <type_traits>
-# include <utility>
-#endif
+#include "std/cstdint.hpp"
+#include "std/limits.hpp"
+#include "std/type_traits.hpp"
+#include "std/utility.hpp"
 
 #define num_require(expr) \
-    typename = std::enable_if_t<expr>
+    typename = std20::enable_if_t<expr>
 
 namespace num {
 
@@ -42,9 +35,9 @@ namespace detail {
 
 template< typename T > struct promote;
 
-template<> struct promote<std::int8_t  > { using type = std::int16_t; };
-template<> struct promote<std::int16_t > { using type = std::int32_t; };
-template<> struct promote<std::int32_t > { using type = std::int64_t; };
+template<> struct promote<std20::int8_t  > { using type = std20::int16_t; };
+template<> struct promote<std20::int16_t > { using type = std20::int32_t; };
+template<> struct promote<std20::int32_t > { using type = std20::int64_t; };
 
 template< typename T >
 using promote_t = typename promote<T>::type;
@@ -67,9 +60,9 @@ template
 <
     typename T      // integral implementation type
     , int I         // number of bits for integral part
-    , int F = std::numeric_limits<T>::digits - I
+    , int F = std20::numeric_limits<T>::digits - I
                     // number of bits for fractional part
-    , num_require( std::is_signed_v<T> && std::is_integral_v<T> )
+    , num_require( std20::is_signed_v<T> && std20::is_integral_v<T> )
                     // require signed integral implementation type
 >
 class fixed_point
@@ -83,7 +76,7 @@ public:
 
     // Constants:
 
-    constexpr static int digits = std::numeric_limits<T>::digits;
+    constexpr static int digits = std20::numeric_limits<T>::digits;
     constexpr static int integer_digits = I;
     constexpr static int fractional_digits = F;
 
@@ -120,12 +113,12 @@ public:
 
     constexpr auto min() const
     {
-        return fixed_point( construct, std::numeric_limits<T>::min() );
+        return fixed_point( construct, std20::numeric_limits<T>::min() );
     }
 
     constexpr auto max() const
     {
-        return fixed_point( construct, std::numeric_limits<T>::max() );
+        return fixed_point( construct, std20::numeric_limits<T>::max() );
     }
 
     constexpr auto underlying_value() const
@@ -137,6 +130,11 @@ public:
     constexpr auto as() const
     {
         return static_cast<U>( underlying_value() ) / detail::power2(F);
+    }
+
+    constexpr auto as_double() const
+    {
+        return static_cast<double>( underlying_value() ) / detail::power2(F);
     }
 
     // Arithmetic:
@@ -246,7 +244,7 @@ struct from_rep< fixed_point<T,I,F> >
 {
     constexpr auto operator()( T value ) const
     {
-        return fixed_point<T,I,F>::fixed_point( fixed_point<T,I,F>::construct, value );
+        return typename fixed_point<T,I,F>::fixed_point( fixed_point<T,I,F>::construct, value );
     }
 };
 
@@ -260,7 +258,7 @@ struct from_value< fixed_point<T,I,F>, Value >
 {
     constexpr auto operator()( Value value ) const
     {
-        return fixed_point<Value,I,F>::fixed_point( fixed_point<Value,I,F>::construct, value );
+        return typename fixed_point<Value,I,F>::fixed_point( fixed_point<Value,I,F>::construct, value );
     }
 };
 
