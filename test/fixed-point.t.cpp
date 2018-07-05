@@ -297,7 +297,6 @@ CASE( "fixed_point: ==, !=" "[.app][comparison][equality]" )
 {
     fp32_t x{ 123 };
     fp32_t y{ 0.123 };
-    auto z = x + y;
 
     std::cout
         << "\n" << std::boolalpha
@@ -314,7 +313,6 @@ CASE( "fixed_point: <, <= etc." "[.app][comparison][less-than]" )
 {
     fp32_t x{ 123 };
     fp32_t y{ 0.123 };
-    auto z = x + y;
 
     std::cout
         << "\n" << std::boolalpha
