@@ -8,7 +8,18 @@
 #ifndef STD_LIMITS_INCLUDED
 #define STD_LIMITS_INCLUDED
 
-namespace std {
+#if !( defined( __AVR ) && __AVR )
+
+#include <limits>
+
+namespace std20 {
+
+    using std::numeric_limits;
+}
+
+#else
+
+namespace std20 {
 
 template< typename T > class numeric_limits;
 
@@ -80,6 +91,8 @@ public:
     static constexpr T max() { return   __INT64_MAX__     ; }
 };
 
-}
+} // namespace std20
+
+#endif // __AVR
 
 #endif // STD_LIMITS_INCLUDED

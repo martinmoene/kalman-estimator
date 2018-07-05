@@ -8,17 +8,51 @@
 #ifndef STD_UTILITY_INCLUDED
 #define STD_UTILITY_INCLUDED
 
-namespace std {
+#if !( defined( __AVR ) && __AVR )
 
-// swap():
+#include <utility>              // std::initializer_list, std::swap()
+
+namespace std20 {
+
+using std::move;
+
+// constexpr swap():
 
 template< typename T >
-void swap(  T & a, T & b ) noexcept
+constexpr void swap(  T & a, T & b ) noexcept
 {
-    T t(a); a = b; b = t;
+    T t{std::move(a)}; a = std::move(b); b = std::move(t);
 }
 
-// initializer_list:
+} // namespace std20
+
+#else // __AVR
+
+#include "std/type_traits.hpp"
+
+namespace std20 {
+
+// move():
+
+template< typename T >
+constexpr typename remove_reference<T>::type && move( T && t ) noexcept
+{
+    return static_cast< typename remove_reference<T>::type&& >( t );
+}
+
+// constexpr swap():
+
+template< typename T >
+constexpr void swap(  T & a, T & b ) noexcept
+{
+    T t{move(a)}; a = move(b); b = move(t);
+}
+
+} // naespace std20
+
+// initializer_list, must be in namespace std:
+
+namespace std {
 
 template< typename T >
 class initializer_list
@@ -75,5 +109,7 @@ constexpr const E * end( std::initializer_list<E> il ) noexcept
 }
 
 } // naespace std
+
+#endif  // __AVR
 
 #endif // STD_UTILITY_INCLUDED

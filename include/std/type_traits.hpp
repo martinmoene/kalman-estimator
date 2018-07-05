@@ -8,9 +8,31 @@
 #ifndef STD_TYPE_TRAITS_INCLUDED
 #define STD_TYPE_TRAITS_INCLUDED
 
+#if !( defined( __AVR ) && __AVR )
+
+#include <type_traits>
+
+namespace std20 {
+
+    using std::remove_reference;
+    using std::integral_constant;
+    using std::is_integral;
+    using std::is_integral_v;
+    using std::is_signed;
+    using std::is_signed_v;
+    using std::enable_if;
+    using std::enable_if_t;
+}
+
+#else
+
 #include "std/limits.hpp"
 
-namespace std {
+namespace std20 {
+
+template< typename T > struct remove_reference      { typedef T type; };
+template< typename T > struct remove_reference<T&>  { typedef T type; };
+template< typename T > struct remove_reference<T&&> { typedef T type; };
 
 template< typename T, T v >
 struct integral_constant
@@ -24,8 +46,8 @@ struct integral_constant
     constexpr value_type operator()() const noexcept { return value; }
 };
 
-using true_type = std::integral_constant<bool, true>;
-using false_type = std::integral_constant<bool, false>;
+using true_type = integral_constant<bool, true>;
+using false_type = integral_constant<bool, false>;
 
 template< typename T >
 struct is_integral : integral_constant<bool, numeric_limits<T>::is_integer>{};
@@ -48,6 +70,8 @@ struct enable_if<true, T> { typedef T type; };
 template< bool B, typename T = void >
 using enable_if_t = typename enable_if<B,T>::type;
 
-}
+} // namespace std20
+
+#endif // __AVR
 
 #endif // STD_TYPE_TRAITS_INCLUDED

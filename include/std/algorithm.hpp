@@ -23,10 +23,36 @@ constexpr OutputIt copy( InputIt first, InputIt last, OutputIt d_first )
 template< class ForwardIt, class T >
 constexpr void fill( ForwardIt first, ForwardIt last, T const & value )
 {
-    for (; first != last; ++first)
+    for ( ; first != last; ++first )
     {
         *first = value;
     }
+}
+
+template<class InputIt1, class InputIt2>
+constexpr bool equal( InputIt1 first1, InputIt1 last1, InputIt2 first2 )
+{
+    for ( ; first1 != last1; ++first1, ++first2 )
+    {
+        if ( !(*first1 == *first2) )
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+template< class InputIt1, class InputIt2, class BinaryPredicate >
+constexpr bool equal( InputIt1 first1, InputIt1 last1, InputIt2 first2, BinaryPredicate p )
+{
+    for ( ; first1 != last1; ++first1, ++first2 )
+    {
+        if ( !p( *first1, *first2 ) )
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 } // namespace std
