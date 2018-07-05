@@ -596,8 +596,8 @@ CASE( "algorithm: inverted( [a ; ...]    )   " " [matNxN][inverted]" )
 CASE( "algorithm: eye<N,T>()                 " " [mat][identity]" )
 {
     constexpr matrix<int,3,3> R = { 1, 0, 0,
-                          0, 1, 0,
-                          0, 0, 1 };
+                                    0, 1, 0,
+                                    0, 0, 1 };
 
     constexpr auto A = eye<int,3>();
 
