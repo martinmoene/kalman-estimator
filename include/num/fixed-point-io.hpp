@@ -17,7 +17,7 @@ namespace num {
 template< typename T, int I, int F >
 std::ostream & operator<<( std::ostream & os, fixed_point<T,I,F> const & x )
 {
-    return os << x.as<double>();
+    return os << x.template as<double>();
 }
 
 } // namespace num
