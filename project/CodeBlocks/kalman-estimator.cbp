@@ -13,8 +13,11 @@
 		</Build>
 		<Unit filename="../../.gitattributes" />
 		<Unit filename="../../.gitignore" />
+		<Unit filename="../../Build-AVR.py" />
+		<Unit filename="../../Build-PC.py" />
 		<Unit filename="../../CMakeLists.txt" />
 		<Unit filename="../../LICENSE.txt" />
+		<Unit filename="../../cmake/toolchain-avr-gcc.cmake" />
 		<Unit filename="../../example/.gitignore" />
 		<Unit filename="../../example/CMakeLists.txt" />
 		<Unit filename="../../example/blink-led-avr.cpp" />
@@ -29,7 +32,7 @@
 		<Unit filename="../../example/mk-blink-led-avr.py" />
 		<Unit filename="../../example/mk-blink-led-isr-avr.py" />
 		<Unit filename="../../example/mk-kalman-sim-avr.py" />
-		<Unit filename="../../example/mk-kalman-sim.bat" />
+		<Unit filename="../../example/mk-kalman-sim.py" />
 		<Unit filename="../../include/num/fixed-point-io.hpp" />
 		<Unit filename="../../include/num/fixed-point.hpp" />
 		<Unit filename="../../include/num/kalman-io.hpp" />
@@ -56,6 +59,7 @@
 		<Unit filename="../../test/t.bat" />
 		<Unit filename="../../test/tc.bat" />
 		<Unit filename="../../test/tg.bat" />
+		<Unit filename="../../time/CMakeLists.txt" />
 		<Unit filename="../../time/kalman-time-avr.cpp" />
 		<Unit filename="../../time/mk-kalman-time-avr.py" />
 		<Extensions>
