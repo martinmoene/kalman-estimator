@@ -9,8 +9,9 @@ cmake_minimum_required( VERSION 3.5 )
 
 # At default, enable building and performing of tests and building of examples:
 
-option( KE_OPT_BUILD_TESTS    "Build and perform kalman-estimator tests" OFF )
-option( KE_OPT_BUILD_EXAMPLES "Build kalman-estimator examples" ON )
+option( KE_OPT_BUILD_TEST    "Build and perform kalman-estimator tests" ON )
+option( KE_OPT_BUILD_EXAMPLE "Build kalman-estimator examples" ON )
+option( KE_OPT_BUILD_TIME    "Build kalman-estimator timing" ON )
 
 project( kalman_estimator LANGUAGES CXX )
 
@@ -28,12 +29,16 @@ target_include_directories(
 
 enable_testing()
 
-if ( KE_OPT_BUILD_TESTS )
+if ( KE_OPT_BUILD_TEST )
     add_subdirectory( test )
 endif()
 
-if ( KE_OPT_BUILD_EXAMPLES )
+if ( KE_OPT_BUILD_EXAMPLE )
     add_subdirectory( example )
+endif()
+
+if ( KE_OPT_BUILD_TIME )
+    add_subdirectory( time )
 endif()
 
 # end of file
