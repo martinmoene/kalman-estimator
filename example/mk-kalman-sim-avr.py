@@ -20,6 +20,8 @@ fcpu     = '16000000L'
 filename = 'kalman-sim-avr.cpp'
 verbose  = '-vv'
 
-cmd = 'python ../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -DKE_NUMERIC_TYPE={nt} -I../include {filename}'
+tpl = 'python ../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -DKE_NUMERIC_TYPE={nt} -I../include {filename}'
+cmd = tpl.format(nt=nt, verbose=verbose, std=std, opt=opt, mcu=mcu, fcpu=fcpu, filename=filename)
 
-os.system( cmd.format(nt=nt, verbose=verbose, std=std, opt=opt, mcu=mcu, fcpu=fcpu, filename=filename) )
+print(     cmd )
+os.system( cmd )
