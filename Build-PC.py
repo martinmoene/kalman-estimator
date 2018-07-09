@@ -10,7 +10,7 @@
 
 import os
 
-cmd = 'cd build && cmake.exe -G "Unix Makefiles" .. && make'
+cmd = 'cd build && cmake -G "Unix Makefiles" .. && make'
 
 print(cmd)
 

@@ -10,7 +10,7 @@
 
 import os
 
-cmd = 'cd build && cmake.exe -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-avr-gcc.cmake -G "Unix Makefiles" .. && make'
+cmd = 'cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-avr-gcc.cmake -G "Unix Makefiles" .. && make'
 
 print(cmd)
 
