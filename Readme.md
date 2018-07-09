@@ -69,15 +69,19 @@ Plan:
 - [x] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
 - [x] Write a supporting [minimal standard C++ library](include/std).
 - [x] Install recent version of [AVR GCC](http://blog.zakkemble.co.uk/avr-gcc-builds/).
+- [x] Create [Python script to compile C++ code for AVR](script/avr-gcc.py).
+- [x] Create [Python script to upload HEX file for AVR](script/avr-upload.py).
+- [x] Create [Cmake toolchain for AVR](cmake/toolchain-avr-gcc.cmake).
+- [x] Create Cmake configuration scripts: [toplevel](./CMakeLists.txt), [example](example/CMakeLists.txt), [test](test/CMakeLists.txt), [time](time/CMakeLists.txt)
 - [x] Create basic blink LED example:
   - [x] Write [blink LED code](example/blink-led-avr.cpp)
-  - [x] [Compile code to .hex](example/mk-blink-led-avr.bat)
-  - [x] [Upload code using avrdude and run it](https://github.com/martinmoene/kalman-estimator/blob/ad6687583652e33c857158157a9297d28094577b/example/mk-blink-led-avr.bat#L71)
+  - [x] [Compile code to .hex](example/mk-blink-led-avr.py)
+  - [x] [Upload code using avrdude and run it](script/avr-upload.py)
 - [x] Time free-running loop on Trinket board for Kalman simulation with blink LED, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
   - [x] Write [code to time](time/kalman-time-avr.cpp)
   - [x] [Compile code to .hex](time/mk-kalman-time-avr.py)
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
-- [ ] Create code example with an interrupt-timed blinking LED.
+- [x] Create code example with an [interrupt-timed blinking LED](example/blink-led-isr-avr.cpp) ([compile](example/mk-blink-led-isr-avr.py)).
 - [ ] Create code example reading an ADC.
 - [ ] Create code example writing a pulse-width modulated DAC.
 - [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
