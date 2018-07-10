@@ -18,7 +18,7 @@
 #define led_port PORTB
 #define led_bit  PB5
 
-constexpr uint8_t bit_mask( uint8_t pin )
+constexpr uint8_t bitmask( uint8_t pin )
 {
     return static_cast<uint8_t>( 1 << pin );
 }
@@ -35,13 +35,13 @@ void delay_ms( uint16_t ms )
 int main()
 {
     led_port = 0b11111111;
-    led_ddr |= bit_mask( led_bit );
+    led_ddr |= bitmask( led_bit );
 
     for( ;; )
     {
 #if led_FEATURE_BLINK_MS
         delay_ms( led_FEATURE_BLINK_MS );
 #endif
-        led_port ^= bit_mask( led_bit );
+        led_port ^= bitmask( led_bit );
     }
 }
