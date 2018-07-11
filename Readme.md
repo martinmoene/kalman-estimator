@@ -82,7 +82,7 @@ Plan:
   - [x] [Compile code to .hex](time/mk-kalman-time-avr.py)
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
 - [x] Create code example with an [interrupt-timed blinking LED](example/blink-led-isr-avr.cpp) ([compile](example/mk-blink-led-isr-avr.py)).
-- [ ] Create code example reading an ADC.
+- [x] Create code example [reading the ADC](example/input-adc-isr-avr.cpp).
 - [x] Create code example [writing a pulse-width modulated DAC](example/fade-led-avr.cpp).
 - [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
@@ -185,8 +185,8 @@ Various articles, video's, books to read up on the Kalman estimator.
 [12] iLectureOnline. [Lectures in The Kalman Filter](http://www.ilectureonline.com/lectures/subject/SPECIAL%20TOPICS/26) (42 videos of 6 minutes).  
 
 ### Fixed point
-[13] Wikipedia. [https://en.wikipedia.org/wiki/Fixed-point_arithmetic](Fixed-point arithmetic).
-[14] Rick Regan. [Number of Bits in a Decimal Integer](https://www.exploringbinary.com/number-of-bits-in-a-decimal-integer/).
+[13] Wikipedia. [https://en.wikipedia.org/wiki/Fixed-point_arithmetic](Fixed-point arithmetic).  
+[14] Rick Regan. [Number of Bits in a Decimal Integer](https://www.exploringbinary.com/number-of-bits-in-a-decimal-integer/).  
 
 ### Matlab
 [15] MathWorks. [MATLAB for Deep Learning](https://nl.mathworks.com/).  
