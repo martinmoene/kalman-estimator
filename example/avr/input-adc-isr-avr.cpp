@@ -101,10 +101,10 @@ struct guard
 // read multiple-byte values guarded by interrupts off
 
 template< typename T >
-T guarded( T & value )
+T guarded( T const & value )
 {
-    if constexpr ( sizeof(T) > 1 ) { guard _; return value; }
-    else                           {          return value; }
+    if constexpr( sizeof(T) > 1 ) { guard _; return value; }
+    else                          {          return value; }
 }
 
 void init_adc()
