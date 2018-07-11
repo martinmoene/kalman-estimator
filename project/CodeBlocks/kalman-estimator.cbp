@@ -24,6 +24,7 @@
 		<Unit filename="../../example/blink-led-isr-avr.cpp" />
 		<Unit filename="../../example/covariance-error.cpp" />
 		<Unit filename="../../example/fade-led-avr.cpp" />
+		<Unit filename="../../example/input-adc-isr-avr.cpp" />
 		<Unit filename="../../example/kalman-sim-avr.cpp" />
 		<Unit filename="../../example/kalman-sim.cpp" />
 		<Unit filename="../../example/kalman-sim.out.txt" />
@@ -33,6 +34,7 @@
 		<Unit filename="../../example/mk-blink-led-avr.py" />
 		<Unit filename="../../example/mk-blink-led-isr-avr.py" />
 		<Unit filename="../../example/mk-fade-led-avr.py" />
+		<Unit filename="../../example/mk-input-adc-isr-avr.py" />
 		<Unit filename="../../example/mk-kalman-sim-avr.py" />
 		<Unit filename="../../example/mk-kalman-sim.py" />
 		<Unit filename="../../include/num/fixed-point-io.hpp" />
