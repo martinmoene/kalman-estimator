@@ -33,7 +33,7 @@
 #define pwm1_bita  PB1
 #define pwm1_bitb  PB2
 #define pwm1_val_a OCR1A
-#define pwm1_val_b OCR1A
+#define pwm1_val_b OCR1B
 
 #define spl_ddr    DDRD
 #define spl_port   PIND   // read pins
