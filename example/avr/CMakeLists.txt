@@ -19,6 +19,9 @@ set( DEFINITIONS "" )
 set( SOURCES
     blink-led-avr.cpp
     blink-led-isr-avr.cpp
+    fade-led-avr.cpp
+    input-adc-isr-avr.cpp
+    io-adc-dac-isr-avr.cpp
     kalman-sim-avr.cpp
 )
 
