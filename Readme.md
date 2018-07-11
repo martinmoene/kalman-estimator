@@ -64,7 +64,7 @@ Try and gain familiarity with the Kalman estimator. The intention is to implemen
 
 Plan:
 - [x] Create a [simulation program in Matlab](example/matlab/kalman-sim.m) with a basic [Kalman Estimator](example/matlab/kalman.m). 
-- [x] Translate Matlab code to [C++ program](example/kalman-sim.cpp) and [estimator](include/num/kalman.hpp) using the [C++17 standard](https://isocpp.org/). 
+- [x] Translate Matlab code to [C++ program](example/desktop/kalman-sim.cpp) and [estimator](include/num/kalman.hpp) using the [C++17 standard](https://isocpp.org/). 
 - [x] Write a supporting [matrix library](include/num/matrix.hpp).
 - [x] Write a supporting [fixed-point library](include/num/fixed-point.hpp).
 - [x] Write a supporting [minimal standard C++ library](include/std).
@@ -72,18 +72,18 @@ Plan:
 - [x] Create [Python script to compile C++ code for AVR](script/avr-gcc.py).
 - [x] Create [Python script to upload HEX file for AVR](script/avr-upload.py).
 - [x] Create [Cmake toolchain for AVR](cmake/toolchain-avr-gcc.cmake).
-- [x] Create Cmake configuration scripts: [toplevel](./CMakeLists.txt), [example](example/CMakeLists.txt), [test](test/CMakeLists.txt), [time](time/CMakeLists.txt)
+- [x] Create Cmake configuration scripts: [toplevel](./CMakeLists.txt), [example](example/CMakeLists.txt), [example/avr](example/avr/CMakeLists.txt), [example/desktop](example/desktop/CMakeLists.txt), [test](test/CMakeLists.txt), [time](time/CMakeLists.txt)
 - [x] Create basic blink LED example:
-  - [x] Write [blink LED code](example/blink-led-avr.cpp)
-  - [x] [Compile code to .hex](example/mk-blink-led-avr.py)
+  - [x] Write [blink LED code](example/avr/blink-led-avr.cpp)
+  - [x] [Compile code to .hex](example/avr/mk-blink-led-avr.py)
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
 - [x] Time free-running loop on Trinket board for Kalman simulation with blink LED, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
   - [x] Write [code to time](time/kalman-time-avr.cpp)
   - [x] [Compile code to .hex](time/mk-kalman-time-avr.py)
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
-- [x] Create code example with an [interrupt-timed blinking LED](example/blink-led-isr-avr.cpp) ([compile](example/mk-blink-led-isr-avr.py)).
-- [x] Create code example [reading the ADC](example/input-adc-isr-avr.cpp).
-- [x] Create code example [writing a pulse-width modulated DAC](example/fade-led-avr.cpp).
+- [x] Create code example with an [interrupt-timed blinking LED](example/avr/blink-led-isr-avr.cpp) ([compile](example/avr/mk-blink-led-isr-avr.py)).
+- [x] Create code example [reading the ADC](example/avr/input-adc-isr-avr.cpp).
+- [x] Create code example [writing a pulse-width modulated DAC](example/avr/fade-led-avr.cpp).
 - [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
