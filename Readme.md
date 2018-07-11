@@ -83,7 +83,7 @@ Plan:
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
 - [x] Create code example with an [interrupt-timed blinking LED](example/blink-led-isr-avr.cpp) ([compile](example/mk-blink-led-isr-avr.py)).
 - [ ] Create code example reading an ADC.
-- [ ] Create code example writing a pulse-width modulated DAC.
+- [x] Create code example [writing a pulse-width modulated DAC](example/fade-led-avr.cpp).
 - [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
@@ -184,32 +184,36 @@ Various articles, video's, books to read up on the Kalman estimator.
 [11] Dan Simon. [Optimal State Estimation: Kalman, H-infinity, and Nonlinear Approaches](http://academic.csuohio.edu/simond/estimation/) (Contains Matlab code from the book).  
 [12] iLectureOnline. [Lectures in The Kalman Filter](http://www.ilectureonline.com/lectures/subject/SPECIAL%20TOPICS/26) (42 videos of 6 minutes).  
 
+### Fixed point
+[13] Wikipedia. [https://en.wikipedia.org/wiki/Fixed-point_arithmetic](Fixed-point arithmetic).
+[14] Rick Regan. [Number of Bits in a Decimal Integer](https://www.exploringbinary.com/number-of-bits-in-a-decimal-integer/).
+
 ### Matlab
-[13] MathWorks. [MATLAB for Deep Learning](https://nl.mathworks.com/).  
-[14] GNU. [GNU Octave - Scientific Programming Language](https://www.gnu.org/software/octave/) (largely compatible with Matlab).  
+[15] MathWorks. [MATLAB for Deep Learning](https://nl.mathworks.com/).  
+[16] GNU. [GNU Octave - Scientific Programming Language](https://www.gnu.org/software/octave/) (largely compatible with Matlab).  
 
 ### C++
-[15] ISOCPP. [Standard C++ Foundation](https://isocpp.org/).  
-[16] CppReference. [The complete online reference for the C and C++ languages and standard libraries](https://en.cppreference.com/w/cpp).  
-[17] Martin Moene. [*lest* test framework](https://github.com/martinmoene/lest).  
+[17] ISOCPP. [Standard C++ Foundation](https://isocpp.org/).  
+[18] CppReference. [The complete online reference for the C and C++ languages and standard libraries](https://en.cppreference.com/w/cpp).  
+[19] Martin Moene. [*lest* test framework](https://github.com/martinmoene/lest).  
 
 ### GNUC
-[18] GNUC. [GNUC AVR Options](https://gcc.gnu.org/onlinedocs/gcc/AVR-Options.html).  
-[19] AVR-GCC. [AVR-GCC 8.1.0 for Windows 32 and 64 bit](http://blog.zakkemble.co.uk/avr-gcc-builds/). Contains section *Upgrading the Arduino IDE*.  
-[20] AVRDUDE. [AVR Downloader/UploaDEr](http://savannah.nongnu.org/projects/avrdude).    
+[20] GNUC. [GNUC AVR Options](https://gcc.gnu.org/onlinedocs/gcc/AVR-Options.html).  
+[21] AVR-GCC. [AVR-GCC 8.1.0 for Windows 32 and 64 bit](http://blog.zakkemble.co.uk/avr-gcc-builds/). Contains section *Upgrading the Arduino IDE*.  
+[22] AVRDUDE. [AVR Downloader/UploaDEr](http://savannah.nongnu.org/projects/avrdude).    
 
 ### AVR
-[21] Elliot Williams. [AVR Programming - Learning to Write Software for Hardware](https://www.safaribooksonline.com/library/view/make-avr-programming/9781449356484/) ([Code](https://github.com/hexagon5un/AVR-Programming)).  
-[22] Elliot Williams. [Embed with Elliot: There is no Arduino "Language"](https://hackaday.com/2015/07/28/embed-with-elliot-there-is-no-arduino-language/).    
+[23] Elliot Williams. [AVR Programming - Learning to Write Software for Hardware](https://www.safaribooksonline.com/library/view/make-avr-programming/9781449356484/) ([Code](https://github.com/hexagon5un/AVR-Programming)).  
+[24] Elliot Williams. [Embed with Elliot: There is no Arduino "Language"](https://hackaday.com/2015/07/28/embed-with-elliot-there-is-no-arduino-language/).    
  
 ### Atmel
-[23] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).  
-[24] Visual Micro. [Arduino for Atmel Studio 7 (plug-in)](https://www.visualmicro.com/page/Arduino-for-Atmel-Studio-7.aspx).
-[25] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
+[25] Atmel. [Atmel Studio 7](http://www.microchip.com/mplab/avr-support/atmel-studio-7).  
+[26] Visual Micro. [Arduino for Atmel Studio 7 (plug-in)](https://www.visualmicro.com/page/Arduino-for-Atmel-Studio-7.aspx).
+[27] Atmel. [Datasheet of ATmega328 Microcontroller (PDF)](http://adafruit.com/datasheets/ATMEGA328P.pdf).  
 
 ### Adafruit
-[26] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
-[27] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
+[28] Adafruit. [Pro Trinket](https://www.adafruit.com/products/2010).  
+[29] Adafruit. [Introducing Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/).  
 
 <!--
 ### Arduino
