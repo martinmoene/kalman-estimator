@@ -61,6 +61,15 @@ struct is_signed : integral_constant<bool, numeric_limits<T>::is_signed>{};
 template< typename T >
 inline constexpr bool is_signed_v = is_signed<T>::value;
 
+template< typename T, typename U>
+struct is_same : false_type {};
+
+template< typename T>
+struct is_same<T, T> : true_type {};
+
+template< typename T, typename U>
+inline constexpr bool is_same_v = is_same<T,U>::value;
+
 template<bool B, typename T = void>
 struct enable_if {};
 
