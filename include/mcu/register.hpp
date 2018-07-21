@@ -152,7 +152,7 @@ struct getbit_t
 {
     static auto get( address_t address, index_t bit )
     {
-        return *to_pointer<T>(address) & bitmask<T>( bit );
+        return static_cast<T>( *to_pointer<T>(address) & bitmask<T>( bit ) );
     }
 };
 
@@ -163,7 +163,7 @@ struct setbit_t
 {
     static void set( address_t address, index_t bit )
     {
-       *to_pointer<T>(address) = *to_pointer<T>(address) | bitmask<T>( bit );
+       *to_pointer<T>(address) = static_cast<T>( *to_pointer<T>(address) | bitmask<T>( bit ) );
     }
 };
 
@@ -174,7 +174,7 @@ struct togglebit_t
 {
     static void toggle( address_t address, index_t bit )
     {
-       *to_pointer<T>(address) = *to_pointer<T>(address) ^ bitmask<T>( bit );
+       *to_pointer<T>(address) = static_cast<T>( *to_pointer<T>(address) ^ bitmask<T>( bit ) );
     }
 };
 
@@ -185,7 +185,7 @@ struct clearbit_w1_t
 {
     static void clear( address_t address, index_t bit )
     {
-        *to_pointer<T>(address) = *to_pointer<T>(address) | bitmask<T>( bit );
+        *to_pointer<T>(address) = static_cast<T>( *to_pointer<T>(address) | bitmask<T>( bit ) );
     }
 };
 
@@ -222,7 +222,7 @@ struct r_t : detail::getbit_t<T>
 
     static auto read( address_t address, T mask )
     {
-        return *to_pointer<T>(address) & mask;
+        return static_cast<T>( *to_pointer<T>(address) & mask );
     }
 };
 
