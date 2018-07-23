@@ -84,6 +84,8 @@ Plan:
 - [x] Create code example with an [interrupt-timed blinking LED](example/avr/blink-led-isr-avr.cpp) ([compile](example/avr/mk-blink-led-isr-avr.py)).
 - [x] Create code example [reading the ADC](example/avr/input-adc-isr-avr.cpp).
 - [x] Create code example [writing a pulse-width modulated DAC](example/avr/fade-led-avr.cpp).
+- [x] Create [bitfield and register abstractions](include/mcu/register.hpp).
+- [ ] Create [atmega328 abstraction](include/mcu/atmega328.hpp), see [issue #1](https://github.com/martinmoene/kalman-estimator/issues/1).
 - [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
 - [ ] Design a simple setup to control via an [Adafruit Pro Trinket](https://www.adafruit.com/products/2010) (Arduino-like) board (spring&ndash;mass positioning).
 - [ ] Create a demo application for the setup that implements a conventional [PID controller](https://en.wikipedia.org/wiki/PID_controller).
