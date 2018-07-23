@@ -53,6 +53,19 @@ public:
 };
 
 template<>
+class numeric_limits<__UINT8_TYPE__>
+{
+    using T = __UINT8_TYPE__;
+public:
+    static constexpr bool is_signed  = true;
+    static constexpr bool is_integer = true;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+
+    static constexpr T min() { return     0;           }
+    static constexpr T max() { return   __UINT8_MAX__; }
+};
+
+template<>
 class numeric_limits<__INT16_TYPE__>
 {
     using T = __INT16_TYPE__;
@@ -63,6 +76,19 @@ public:
 
     static constexpr T min() { return (-__INT16_MAX__ - 1); }
     static constexpr T max() { return   __INT16_MAX__     ; }
+};
+
+template<>
+class numeric_limits<__UINT16_TYPE__>
+{
+    using T = __UINT16_TYPE__;
+public:
+    static constexpr bool is_signed = true;
+    static constexpr bool is_integer = true;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+
+    static constexpr T min() { return     0;            }
+    static constexpr T max() { return   __UINT16_MAX__; }
 };
 
 template<>
@@ -79,6 +105,19 @@ public:
 };
 
 template<>
+class numeric_limits<__UINT32_TYPE__>
+{
+    using T = __UINT32_TYPE__;
+public:
+    static constexpr bool is_signed = true;
+    static constexpr bool is_integer = true;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+
+    static constexpr T min() { return     0;            }
+    static constexpr T max() { return   __UINT32_MAX__; }
+};
+
+template<>
 class numeric_limits<__INT64_TYPE__>
 {
     using T = __INT64_TYPE__;
@@ -89,6 +128,19 @@ public:
 
     static constexpr T min() { return (-__INT64_MAX__ - 1); }
     static constexpr T max() { return   __INT64_MAX__     ; }
+};
+
+template<>
+class numeric_limits<__UINT64_TYPE__>
+{
+    using T = __UINT64_TYPE__;
+public:
+    static constexpr bool is_signed = true;
+    static constexpr bool is_integer = true;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+
+    static constexpr T min() { return     0;            }
+    static constexpr T max() { return   __UINT64_MAX__; }
 };
 
 } // namespace std20
