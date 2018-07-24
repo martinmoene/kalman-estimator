@@ -6,6 +6,17 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+//
+// Types bitfield and register are inspired on the work by:
+// - Ken Smith. C++ Hardware Register Access. 2010. [1]
+// - Mike Franklin. A memory-mapped IO library written in the D programming language. 2014. [2]
+//
+// Both are mentioned by Niklas Hauser in Typesafe Register Access in C++. 2015. [3]
+//
+// [1] https://github.com/kensmith/cppmmio
+// [2] https://github.com/JinShil/memory_mapped_io
+// [3] https://blog.salkinium.com/typesafe-register-access-in-c++/
+
 #ifndef MCU_REGISTER_HPP_INCLUDED
 #define MCU_REGISTER_HPP_INCLUDED
 
