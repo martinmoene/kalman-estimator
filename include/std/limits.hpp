@@ -59,7 +59,7 @@ class numeric_limits<__UINT8_TYPE__>
 public:
     static constexpr bool is_signed  = true;
     static constexpr bool is_integer = true;
-    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T);
 
     static constexpr T min() { return     0;           }
     static constexpr T max() { return   __UINT8_MAX__; }
@@ -85,7 +85,7 @@ class numeric_limits<__UINT16_TYPE__>
 public:
     static constexpr bool is_signed = true;
     static constexpr bool is_integer = true;
-    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T);
 
     static constexpr T min() { return     0;            }
     static constexpr T max() { return   __UINT16_MAX__; }
@@ -111,7 +111,7 @@ class numeric_limits<__UINT32_TYPE__>
 public:
     static constexpr bool is_signed = true;
     static constexpr bool is_integer = true;
-    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T);
 
     static constexpr T min() { return     0;            }
     static constexpr T max() { return   __UINT32_MAX__; }
@@ -137,7 +137,7 @@ class numeric_limits<__UINT64_TYPE__>
 public:
     static constexpr bool is_signed = true;
     static constexpr bool is_integer = true;
-    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T) - 1;
+    static constexpr int  digits     = __CHAR_BIT__ * sizeof(T);
 
     static constexpr T min() { return     0;            }
     static constexpr T max() { return   __UINT64_MAX__; }
