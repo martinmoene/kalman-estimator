@@ -113,6 +113,11 @@ namespace mem
 
 }
 
+// 11. AVR CPU Core
+//
+// 11.3 Status Register
+// 11.4 General Purpose Register File
+
 // 13. System Clock and Clock Options
 //
 // 13.12.1 OSCCAL: Oscillator Calibration Register
@@ -131,6 +136,7 @@ namespace mem
 
 namespace mcu
 {
+    static constexpr address_t gpreg_base  = 0x00;
     static constexpr address_t sreg_addr   = 0x5f;
     static constexpr address_t osccal_addr = 0x66;
     static constexpr address_t clkpr_addr  = 0x61;
@@ -164,9 +170,9 @@ namespace mcu
         using     C = bitfield8_t< rw_t, sreg_addr, 0 >;
     }
 
-    // AVR CPU General Purpose Working Registers:
+    // 11.4 - r0..r31, rx, y, z: AVR General Purpose Register File:
 
-    namespace reg
+    namespace gpwr
     {
         using r0  = register8_t< rw_t, 0x00 >;
         using r1  = register8_t< rw_t, 0x01 >;
@@ -206,7 +212,7 @@ namespace mcu
         using z   = register16_t< rw_t, 0x1e >;
     }
 
-    //  9.12.1 - OSCCAL: Oscillator Calibration Register:
+    // 13.12.1 OSCCAL: Oscillator Calibration Register:
 
     namespace osccal
     {
@@ -214,7 +220,7 @@ namespace mcu
 
     }
 
-    //  9.12.2 - CLKPR : Clock Prescale Register:
+    // 13.12.2 CLKPR : Clock Prescaler Register:
 
 //    clkpr_addr
     namespace clkpr
@@ -222,14 +228,14 @@ namespace mcu
 
     }
 
-    // 10.11.1 - SMCR  : Sleep Mode Control Register:
+    // 14.12.1 SMCR : Sleep Mode Control Register:
 //    smcr_addr
     namespace smcr
     {
 
     }
 
-    // 10.11.2 - MCUCR : MCU Control Register:
+    // 14.12.2 MCUCR: MCU Control Register:
 
 //    mcusr_addr
     namespace mcusr
@@ -237,7 +243,7 @@ namespace mcu
 
     }
 
-    // 10.11.3 - PRR   : Power Reduction Register:
+    // 14.12.3 PRR: Power Reduction Register:
 
 //    prr_addr
     namespace prr
@@ -245,14 +251,14 @@ namespace mcu
 
     }
 
-    // 11.9.1  - MCUSR : MCU Status Register:
+    // 15.9.1 MCUSR : MCU Status Register:
 //    mcucr_addr
     namespace mcucr
     {
 
     }
 
-    // 11.9.2  - WDTCSR: Watchdog Timer Control Register:
+    // 15.9.2 WDTCSR: Watchdog Timer Control Register:
 
 //    wdtcsr_addr
     namespace wdtcsr
@@ -290,9 +296,9 @@ namespace ei
 // 18.4.2 PORTB: Port B Data Register
 // 18.4.3 DDRB : Port B Data Direction Register
 // 18.4.4 PINB : Port B Input Pins Address
-// 18.4.5 PORTC: Port C Data Register
-// 18.4.6 DDRC : Port C Data Direction Register
-// 18.4.7 PINC : Port C Input Pins Address
+// 18.4.5 PORTC: Port C Data Register (no bit7)
+// 18.4.6 DDRC : Port C Data Direction Register (no bit7)
+// 18.4.7 PINC : Port C Input Pins Address (no bit7)
 // 18.4.8 PORTD: Port D Data Register
 // 18.4.9 DDRD : Port D Data Direction Register
 // 18.4.10 PIND: Port D Input Pins Address
@@ -307,9 +313,9 @@ struct gpio
     static constexpr address_t ddr_addr   = base_addr + 1;
     static constexpr address_t port_addr  = base_addr + 2;
 
-    using pin  = register8_t<rw_t,  pin_addr>;          // pin input level
-    using ddr  = register8_t<rw_t,  ddr_addr>;          // data direction register
-    using port = bitfield8_t<rw_t, port_addr, 6, 0>;    // port io register
+    using pin  = register8_t<rw_t,  pin_addr>;  // pin input level
+    using ddr  = register8_t<rw_t,  ddr_addr>;  // data direction register
+    using port = register8_t<rw_t, port_addr>;  // port io register
 
     template< uint8_t pin_id >
     struct p
@@ -406,6 +412,116 @@ namespace twi
 
 namespace ac
 {
+    static constexpr address_t addr_acsr  = 0x50;
+    static constexpr address_t addr_didr1 = 0x7f;
+
+    enum class interrupt : uint8_t
+    {
+        toggle = 0      // comparator interrupt on output toggle
+        , reserved1     // -
+        , falling_edge  // comparator interrupt on falling output edge
+        , rising_edge   // comparator interrupt on rising output edge
+    };
+
+    namespace acsr
+    {
+        using acd  = bitfield8_t< rw_t, addr_acsr, ACD  >;
+        using acbg = bitfield8_t< rw_t, addr_acsr, ACBG >;
+        using aco  = bitfield8_t< r_t , addr_acsr, ACO  >;
+        using aci  = bitfield8_t< rc_w1_t, addr_acsr, ACI  >;
+        using acie = bitfield8_t< rw_t, addr_acsr, ACIE >;
+        using acic = bitfield8_t< rw_t, addr_acsr, ACIC >;
+        using acis = bitfield8_t< rw_t, addr_acsr, ACIS1, ACIS0 >;
+
+        inline auto disabled_comparator()
+        {
+            return acd::read();
+        }
+
+        inline auto disable_comparator( bool on )
+        {
+            return acd::write_lazy( on );
+        }
+
+        inline auto fixed_bandgap()
+        {
+            return acbg::read();
+        }
+
+        inline auto fixed_bandgap( bool on )
+        {
+            return acbg::write_lazy( on );
+        }
+
+        inline auto comparator_output()
+        {
+            return aco::read();
+        }
+
+        inline auto interrupt_flag()
+        {
+            return aci::read();
+        }
+
+        inline auto clear_interrupt_flag()
+        {
+            aci::clear();
+        }
+
+        inline auto enabled_interrupt()
+        {
+            return acie::read();
+        }
+
+        inline auto enable_interrupt( bool on )
+        {
+            return acie::write_lazy( on );
+        }
+
+        inline auto enabled_input_capture();
+        inline auto enable_input_capture( bool on );
+
+        // disable/restore interrupt enable bit:
+
+        struct scoped_interrupt_guard
+        {
+            const bool ei = enabled_interrupt();
+            scoped_interrupt_guard() { enable_interrupt(false); }
+            ~scoped_interrupt_guard() { enable_interrupt(ei); }
+        };
+
+        inline auto interrupt_on()
+        {
+            return interrupt{ acis::read() };
+        }
+
+        inline auto interrupt_on( interrupt what )
+        {
+            return acis::write_lazy( to_integral( what ) );
+        }
+    }
+
+    // didr1  – Digital Input Disable Register 1:
+    // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
+
+    using didr1 = bitfield8_t< rw_t, addr_didr1, AIN1D, AIN0D >;
+
+    // provide types and functions in ac namespace:
+
+    using acsr::scoped_interrupt_guard;
+
+    using acsr::disabled_comparator;
+    using acsr::disable_comparator;
+    using acsr::fixed_bandgap;
+    using acsr::fixed_bandgap;
+    using acsr::comparator_output;
+    using acsr::interrupt_flag;
+    using acsr::clear_interrupt_flag;
+    using acsr::enabled_interrupt;
+    using acsr::enable_interrupt;
+    using acsr::enabled_input_capture;
+    using acsr::enable_input_capture;
+    using acsr::interrupt_on;
 }
 
 // 28. ADC - Analog-to-Digital Converter (ADC)
@@ -494,7 +610,7 @@ namespace adc
     enum class auto_trigger_source : uint8_t
     {
         free_run = 0
-        , analog_domparator
+        , analog_comparator
         , external_interrupt_0
         , timer_counter_0_cmp_match_a
         , timer_counter_0_overflow
@@ -664,17 +780,14 @@ namespace adc
     };
 
     // didr0  – Digital Input Disable Register 0:
+    // exampple: adc::didr0::write( bitmask( ADC1D, ADC0D ) );
 
-    namespace didr0
-    {
-        //Bit 5:0 – ADC5D...ADC0D: ADC5...0 Digital Input Disable
-    };
+    using didr0 = bitfield8_t< rw_t, addr_didr0, ADC5D, ADC0D >;
 
     // didr1  – Digital Input Disable Register 1:
+    // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
 
-    namespace didr1
-    {
-    };
+    using didr1 = ac::didr1;
 
     // provide functions in adc namespace:
 
