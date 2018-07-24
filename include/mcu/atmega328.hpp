@@ -149,8 +149,27 @@ namespace mem
         {
             return eere::write_lazy( on );
         }
+    }   // eecr
 
-    }
+    // 12.6.5/6/7 GPIOR2/1/0: General Purpose I/O Register 2/1/0
+
+    // Note: register 0 is bit-addressable
+    // Example: mem::gpio<mem::r0>::bit<2>::set();
+
+    // See also: http://bit.ly/mm-avr-gpior-usage
+
+    static constexpr address_t r2 = gpior2_addr;
+    static constexpr address_t r1 = gpior1_addr;
+    static constexpr address_t r0 = gpior0_addr;
+
+    template< address_t gpiorn_address >
+    struct gpio
+    {
+        using whole = register8_t< rw_t, gpiorn_address >;
+
+        template< uint8_t bit_id >
+        using bit = bitfield8_t< rw_t, gpiorn_address, bit_id >;
+    };
 
     // provide functions in mem namespace:
 
