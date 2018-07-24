@@ -471,10 +471,10 @@ using register_t = bitfield_t< data_t, io, address, std20::numeric_limits<data_t
 // scoped interrupt guard;
 // simplification: interrupts are assumed to be on
 
-struct guard
+struct scoped_interrupt_guard
 {
-     ~guard() { sei(); }
-     guard()  { cli(); }
+     ~scoped_interrupt_guard() { sei(); }
+     scoped_interrupt_guard()  { cli(); }
 };
 
 // read multiple-byte values atomic by interrupts off
@@ -482,15 +482,15 @@ struct guard
 template< typename T >
 T atomic( T const & value )
 {
-    if constexpr( sizeof(T) > 1 ) { guard _; return value; }
-    else                          {          return value; }
+    if constexpr( sizeof(T) > 1 ) { scoped_interrupt_guard _; return value; }
+    else                          {                           return value; }
 }
 
 template< typename T, typename U >
 void atomic( T & dest, U value )
 {
-    if constexpr( sizeof(T) > 1 ) { guard _; dest = value; }
-    else                          {          dest = value; }
+    if constexpr( sizeof(T) > 1 ) { scoped_interrupt_guard _; dest = value; }
+    else                          {                           dest = value; }
 }
 
 } // namespace mcu
