@@ -52,7 +52,7 @@ namespace mem
 
     // EEPROM programming mode, see 8.6.3 eecr
 
-    enum class eeprom_programming_mode
+    enum class eeprom_programming_modes
     {
         erase_write = 0     // 3.4 ms, atomic operation
         , erase_only        // 1.8 ms
@@ -100,17 +100,69 @@ namespace mem
         using eepe  = bitfield8_t< rw_t, eecr_addr , EEPE         >;
         using eere  = bitfield8_t< rw_t, eecr_addr , EERE         >;
 
-        inline auto programming()
+        inline auto eeprom_programming_mode()
         {
-            return eeprom_programming_mode{ eepm::read() };
+            return eeprom_programming_modes{ eepm::read() };
         }
 
-        inline auto programming( eeprom_programming_mode mode )
+        inline auto eeprom_programming_mode( eeprom_programming_modes mode )
         {
             return eepm::write_lazy( to_integral(mode) );
         }
+
+        inline auto enabled_eeprom_ready_interrupt()
+        {
+            return eerie::read();
+        }
+
+        inline auto enable_eeprom_ready_interrupt( bool on )
+        {
+            return eerie::write_lazy( on );
+        }
+
+        inline auto enabled_eeprom_master_write()
+        {
+            return eempe::read();
+        }
+
+        inline auto enable_eeprom_master_write( bool on )
+        {
+            return eempe::write_lazy( on );
+        }
+
+        inline auto enabled_eeprom_write()
+        {
+            return eepe::read();
+        }
+
+        inline auto enable_eeprom_write( bool on )
+        {
+            return eepe::write_lazy( on );
+        }
+
+        inline auto enabled_eeprom_read()
+        {
+            return eere::read();
+        }
+
+        inline auto enable_eeprom_read( bool on )
+        {
+            return eere::write_lazy( on );
+        }
+
     }
 
+    // provide functions in mem namespace:
+
+    using eecr::eeprom_programming_mode;
+    using eecr::enabled_eeprom_ready_interrupt;
+    using eecr::enable_eeprom_ready_interrupt;
+    using eecr::enabled_eeprom_master_write;
+    using eecr::enable_eeprom_master_write;
+    using eecr::enabled_eeprom_write;
+    using eecr::enable_eeprom_write;
+    using eecr::enabled_eeprom_read;
+    using eecr::enable_eeprom_read;
 }
 
 // 11. AVR CPU Core
