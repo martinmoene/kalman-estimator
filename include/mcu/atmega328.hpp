@@ -26,6 +26,101 @@ constexpr auto to_integral( Id id )
     return static_cast< uint8_t >( id );
 }
 
+// 11. AVR CPU Core
+//
+// 11.3 Status Register
+// 11.4 General Purpose Register File
+// 11.5 Stack Pointer Register Low and High byte
+
+namespace core
+{
+    static constexpr address_t gpreg_base  = 0x00;
+    static constexpr address_t sreg_addr   = 0x5f;
+    static constexpr address_t sp_addr     = 0x5d;
+    static constexpr address_t spl_addr    = sp_addr;
+    static constexpr address_t sph_addr    = sp_addr + 1;
+
+    // 11.3 SREG: AVR Status Register
+    //
+    // 7: Global Interrupt Enable; or use sei(), cli()
+    // 6: T: Bit Copy Storage
+    // 5: H: Half Carry Flag
+    // 4: S: Sign Bit, S = N xor V
+    // 3: V: Two’s Complement Overflow Flag
+    // 2: N: Negative Flag
+    // 1: Z: Zero Flag
+    // 0: C: Carry Flag
+
+    namespace sreg
+    {
+        using whole = register8_t< rw_t, sreg_addr    >;     // or: 'whole'
+        using     I = bitfield8_t< rw_t, sreg_addr, 7 >;
+        using     T = bitfield8_t< rw_t, sreg_addr, 6 >;
+        using     H = bitfield8_t< rw_t, sreg_addr, 5 >;
+        using     S = bitfield8_t< rw_t, sreg_addr, 4 >;
+        using     V = bitfield8_t< rw_t, sreg_addr, 3 >;
+        using     N = bitfield8_t< rw_t, sreg_addr, 2 >;
+        using     Z = bitfield8_t< rw_t, sreg_addr, 1 >;
+        using     C = bitfield8_t< rw_t, sreg_addr, 0 >;
+    }
+
+    struct scoped_sreg
+    {
+        uint8_t cache = sreg::whole::read();
+        ~scoped_sreg() { sreg::whole::write( cache ); }
+    };
+
+    // 11.4 - r0..r31, rx, y, z: AVR General Purpose Register File:
+
+    namespace gpwr
+    {
+        using r0  = register8_t< rw_t, 0x00 >;
+        using r1  = register8_t< rw_t, 0x01 >;
+        using r2  = register8_t< rw_t, 0x02 >;
+        using r3  = register8_t< rw_t, 0x03 >;
+        using r4  = register8_t< rw_t, 0x04 >;
+        using r5  = register8_t< rw_t, 0x05 >;
+        using r6  = register8_t< rw_t, 0x06 >;
+        using r7  = register8_t< rw_t, 0x07 >;
+        using r8  = register8_t< rw_t, 0x08 >;
+        using r9  = register8_t< rw_t, 0x09 >;
+        using r10 = register8_t< rw_t, 0x0a >;
+        using r11 = register8_t< rw_t, 0x0b >;
+        using r12 = register8_t< rw_t, 0x0c >;
+        using r13 = register8_t< rw_t, 0x0d >;
+        using r14 = register8_t< rw_t, 0x0e >;
+        using r15 = register8_t< rw_t, 0x0f >;
+        using r16 = register8_t< rw_t, 0x10 >;
+        using r17 = register8_t< rw_t, 0x11 >;
+        using r18 = register8_t< rw_t, 0x12 >;
+        using r19 = register8_t< rw_t, 0x13 >;
+        using r20 = register8_t< rw_t, 0x14 >;
+        using r21 = register8_t< rw_t, 0x15 >;
+        using r22 = register8_t< rw_t, 0x16 >;
+        using r23 = register8_t< rw_t, 0x17 >;
+        using r24 = register8_t< rw_t, 0x18 >;
+        using r25 = register8_t< rw_t, 0x19 >;
+        using r26 = register8_t< rw_t, 0x1a >;      // XL
+        using r27 = register8_t< rw_t, 0x1b >;      // XH
+        using r28 = register8_t< rw_t, 0x1c >;      // YL
+        using r29 = register8_t< rw_t, 0x1d >;      // YH
+        using r30 = register8_t< rw_t, 0x1e >;      // ZL
+        using r31 = register8_t< rw_t, 0x1f >;      // ZH
+
+        using x   = register16_t< rw_t, 0x1a >;
+        using y   = register16_t< rw_t, 0x1c >;
+        using z   = register16_t< rw_t, 0x1e >;
+    }
+
+    // 11.5 Stack Pointer Register Low and High byte
+
+    namespace sp
+    {
+        using whole = register16_t< rw_t, sp_addr  >;
+        using lo    =  register8_t< rw_t, spl_addr >;
+        using hi    =  register8_t< rw_t, sph_addr >;
+    }
+}
 
 // 12. AVR Memories
 //
@@ -184,117 +279,15 @@ namespace mem
     using eecr::enable_eeprom_read;
 }
 
-// 11. AVR CPU Core
-//
-// 11.3 Status Register
-// 11.4 General Purpose Register File
-// 11.5 Stack Pointer Register Low and High byte
-
 // 13. System Clock and Clock Options
 //
 // 13.12.1 OSCCAL: Oscillator Calibration Register
 // 13.12.2 CLKPR : Clock Prescaler Register
 
-// 14. Power Management and Sleep Modes
-//
-// 14.12.1 SMCR : Sleep Mode Control Register
-// 14.12.2 MCUCR: MCU Control Register
-// 14.12.3 PRR : Power Reduction Register
-
-// 15. System Control and Reset
-//
-// 15.9.1 MCUSR : MCU Status Register
-// 15.9.2 WDTCSR: Watchdog Timer Control Register
-
-namespace mcu
+namespace clock
 {
-    static constexpr address_t gpreg_base  = 0x00;
-    static constexpr address_t sreg_addr   = 0x5f;
-    static constexpr address_t sp_addr     = 0x5d;
-    static constexpr address_t spl_addr    = sp_addr;
-    static constexpr address_t sph_addr    = sp_addr + 1;
     static constexpr address_t osccal_addr = 0x66;
     static constexpr address_t clkpr_addr  = 0x61;
-    static constexpr address_t smcr_addr   = 0x53;
-    static constexpr address_t mcusr_addr  = 0x54;
-    static constexpr address_t mcucr_addr  = 0x55;
-    static constexpr address_t wdtcsr_addr = 0x60;
-    static constexpr address_t prr_addr    = 0x64;
-
-    // 7.3.1 - SREG: AVR Status Register:
-    //
-    // 7: Global Interrupt Enable; or use sei(), cli()
-    // 6: T: Bit Copy Storage
-    // 5: H: Half Carry Flag
-    // 4: S: Sign Bit, S = N xor V
-    // 3: V: Two’s Complement Overflow Flag
-    // 2: N: Negative Flag
-    // 1: Z: Zero Flag
-    // 0: C: Carry Flag
-
-    namespace sreg
-    {
-        using whole = register8_t< rw_t, sreg_addr    >;     // or: 'whole'
-        using     I = bitfield8_t< rw_t, sreg_addr, 7 >;
-        using     T = bitfield8_t< rw_t, sreg_addr, 6 >;
-        using     H = bitfield8_t< rw_t, sreg_addr, 5 >;
-        using     S = bitfield8_t< rw_t, sreg_addr, 4 >;
-        using     V = bitfield8_t< rw_t, sreg_addr, 3 >;
-        using     N = bitfield8_t< rw_t, sreg_addr, 2 >;
-        using     Z = bitfield8_t< rw_t, sreg_addr, 1 >;
-        using     C = bitfield8_t< rw_t, sreg_addr, 0 >;
-    }
-
-    // 11.4 - r0..r31, rx, y, z: AVR General Purpose Register File:
-
-    namespace gpwr
-    {
-        using r0  = register8_t< rw_t, 0x00 >;
-        using r1  = register8_t< rw_t, 0x01 >;
-        using r2  = register8_t< rw_t, 0x02 >;
-        using r3  = register8_t< rw_t, 0x03 >;
-        using r4  = register8_t< rw_t, 0x04 >;
-        using r5  = register8_t< rw_t, 0x05 >;
-        using r6  = register8_t< rw_t, 0x06 >;
-        using r7  = register8_t< rw_t, 0x07 >;
-        using r8  = register8_t< rw_t, 0x08 >;
-        using r9  = register8_t< rw_t, 0x09 >;
-        using r10 = register8_t< rw_t, 0x0a >;
-        using r11 = register8_t< rw_t, 0x0b >;
-        using r12 = register8_t< rw_t, 0x0c >;
-        using r13 = register8_t< rw_t, 0x0d >;
-        using r14 = register8_t< rw_t, 0x0e >;
-        using r15 = register8_t< rw_t, 0x0f >;
-        using r16 = register8_t< rw_t, 0x10 >;
-        using r17 = register8_t< rw_t, 0x11 >;
-        using r18 = register8_t< rw_t, 0x12 >;
-        using r19 = register8_t< rw_t, 0x13 >;
-        using r20 = register8_t< rw_t, 0x14 >;
-        using r21 = register8_t< rw_t, 0x15 >;
-        using r22 = register8_t< rw_t, 0x16 >;
-        using r23 = register8_t< rw_t, 0x17 >;
-        using r24 = register8_t< rw_t, 0x18 >;
-        using r25 = register8_t< rw_t, 0x19 >;
-        using r26 = register8_t< rw_t, 0x1a >;      // XL
-        using r27 = register8_t< rw_t, 0x1b >;      // XH
-        using r28 = register8_t< rw_t, 0x1c >;      // YL
-        using r29 = register8_t< rw_t, 0x1d >;      // YH
-        using r30 = register8_t< rw_t, 0x1e >;      // ZL
-        using r31 = register8_t< rw_t, 0x1f >;      // ZH
-
-        using x   = register16_t< rw_t, 0x1a >;
-        using y   = register16_t< rw_t, 0x1c >;
-        using z   = register16_t< rw_t, 0x1e >;
-    }
-
-    // 11.5 Stack Pointer Register Low and High byte
-
-    namespace sp
-    {
-        using whole = register16_t< rw_t, sp_addr  >;
-        using lo    =  register8_t< rw_t, spl_addr >;
-        using hi    =  register8_t< rw_t, sph_addr >;
-    }
 
     // 13.12.1 OSCCAL: Oscillator Calibration Register:
 
@@ -312,7 +305,21 @@ namespace mcu
 
     }
 
+}
+
+// 14. Power Management and Sleep Modes
+//
+// 14.12.1 SMCR : Sleep Mode Control Register
+// 14.12.2 MCUCR: MCU Control Register
+// 14.12.3 PRR : Power Reduction Register
+
+namespace power
+{
+    static constexpr address_t smcr_addr   = 0x53;
+    static constexpr address_t mcusr_addr  = 0x54;
+    static constexpr address_t prr_addr    = 0x64;
     // 14.12.1 SMCR : Sleep Mode Control Register:
+
 //    smcr_addr
     namespace smcr
     {
@@ -334,6 +341,17 @@ namespace mcu
     {
 
     }
+}
+
+// 15. System Control and Reset
+//
+// 15.9.1 MCUSR : MCU Status Register
+// 15.9.2 WDTCSR: Watchdog Timer Control Register
+
+namespace reset
+{
+    static constexpr address_t mcucr_addr  = 0x55;
+    static constexpr address_t wdtcsr_addr = 0x60;
 
     // 15.9.1 MCUSR : MCU Status Register:
 //    mcucr_addr
