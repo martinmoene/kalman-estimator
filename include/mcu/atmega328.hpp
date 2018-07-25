@@ -362,6 +362,12 @@ namespace mcu
 // 17.2.7 PCMSK1: Pin Change Mask Register 1
 // 17.2.8 PCMSK0: Pin Change Mask Register 0
 
+// external interrupt int0..1:
+enum class eint { int0, int1, };
+
+// pin change interrupt int0..2
+enum class pcint { int0, int1, int2 };
+
 namespace ei
 {
     static constexpr address_t eicra_addr  = 0x69;
@@ -372,6 +378,91 @@ namespace ei
     static constexpr address_t pcmsk2_addr = 0x6d;
     static constexpr address_t pcmsk1_addr = 0x6c;
     static constexpr address_t pcmsk0_addr = 0x6b;
+
+    enum class sense
+    {
+        low = 0
+        , change
+        , falling_edge
+        , rising_edge
+    };
+
+    // 17.2.1 EICRA : External Interrupt Control Register A
+
+    namespace eicra
+    {
+        using ics1 = bitfield8_t< rw_t, eicra_addr , ISC11, ISC10 >;
+        using ics0 = bitfield8_t< rw_t, eicra_addr , ISC01, ISC00 >;
+
+        template< eint i >
+        inline auto interrupt_sense()
+        {
+            if constexpr( i == eint::int1 )
+            {
+                return sense{ ics1::read() };
+            }
+
+            if constexpr( i == eint::int0 )
+            {
+                return sense{ ics0::read() };
+            }
+        }
+
+        template< eint i >
+        inline auto interrupt_sense( sense s )
+        {
+            if constexpr( i == eint::int1 )
+            {
+                return ics1::write_lazy( to_integral( s ) );
+            }
+
+            if constexpr( i == eint::int0 )
+            {
+                return ics0::write_lazy( to_integral( s ) );
+            }
+        }
+    }
+
+    // 17.2.2 EIMSK: External Interrupt Mask Register
+
+    template< eint i >
+    using eimsk = bitfield8_t< rw_t, eimsk_addr, to_integral(i) >;
+
+    // 17.2.3 EIFR: External Interrupt Flag Register
+
+    template< eint i >
+    using eifr = bitfield8_t< rw_t, eifr_addr, to_integral(i) >;
+
+    // 17.2.4 PCICR: Pin Change Interrupt Control Register
+
+    template< pcint i >
+    using pcicr = bitfield8_t< rw_t, pcicr_addr, to_integral(i) >;
+
+    // 17.2.5 PCIFR: Pin Change Interrupt Flag Register
+
+    template< pcint i >
+    using pcifr = bitfield8_t< rw_t, pcifr_addr, to_integral(i) >;
+
+    // 17.2.6 PCMSK2: Pin Change Mask Register 2
+    // 17.2.7 PCMSK1: Pin Change Mask Register 1
+    // 17.2.8 PCMSK0: Pin Change Mask Register 0
+
+    static constexpr address_t pcmsk2 = pcmsk2_addr;
+    static constexpr address_t pcmsk1 = pcmsk1_addr;
+    static constexpr address_t pcmsk0 = pcmsk0_addr;
+
+    template< address_t pcmskn_address >
+    struct pcmsk
+    {
+        using whole = register8_t< rw_t, pcmskn_address >;
+
+        template< uint8_t bit_id >
+        using bit = bitfield8_t< rw_t, pcmskn_address, bit_id >;
+    };
+
+    // provide functions in ei namespace:
+
+    using eicra::interrupt_sense;
 }
 
 // 18. I/O-Ports
