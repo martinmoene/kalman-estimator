@@ -240,6 +240,11 @@ struct r_t : detail::getbit_t<T>
 {
     static constexpr Mutability mutability = Mutability::r;
 
+    static auto read( address_t address )
+    {
+        return static_cast<T>( *to_pointer<T>(address) );
+    }
+
     static auto read( address_t address, T mask )
     {
         return static_cast<T>( *to_pointer<T>(address) & mask );
@@ -403,6 +408,10 @@ public:
         if constexpr( is_single_bit() )
         {
             return io::get( address, hi );
+        }
+        else if constexpr( is_all_bits() )
+        {
+            return io::read( address );
         }
         else
         {
