@@ -34,7 +34,7 @@ using address_t = uint8_t;
 using index_t   = uint8_t;
 using size_t    = uint8_t;
 
-// A bit mask, e.g. bitmask<uint8_t>( 6, 5, 0 ):
+// Number of bits in type, e.g. bits<uint8_t>():
 
 template< typename T >
 constexpr uint8_t bits()
