@@ -385,6 +385,15 @@ class bitfield_t
 public:
     using value_type = T;
 
+    bitfield_t()
+    {
+        static_assert( hi >= 0    , "register: bit index hi must be in [#bits-1..0]");
+        static_assert( lo >= 0    , "register: bit index lo must be in [#bits-1..0]");
+        static_assert( hi < bits(), "register: bit index hi must be in [#bits-1..0]");
+        static_assert( lo < bits(), "register: bit index lo must be in [#bits-1..0]");
+        static_assert( hi >= lo   , "register: bit index hi must be >= bit index lo");
+    }
+
     // Read a field, special case single bit read:
 
     static auto read()
