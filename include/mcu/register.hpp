@@ -36,6 +36,15 @@ using size_t    = uint8_t;
 
 // A bit mask, e.g. bitmask<uint8_t>( 6, 5, 0 ):
 
+template< typename T >
+constexpr uint8_t bits()
+{
+    return __CHAR_BIT__ * sizeof(T);
+}
+
+
+// A bit mask, e.g. bitmask<uint8_t>( 6, 5, 0 ):
+
 template< typename T, typename ...Args >
 constexpr T bitmask( Args&&... args )
 {
@@ -244,6 +253,11 @@ struct w_t : detail::setbit_t<T>, detail::clearbit_w0_t<T>
 {
     static constexpr Mutability mutability = Mutability::w;
 
+    static void write( address_t address, T value )
+    {
+        *to_pointer<T>(address) = value;
+    }
+
     static void write( address_t address, T mask, T value )
     {
         *to_pointer<T>(address) = ( *to_pointer<T>(address) & ~mask ) | ( value & mask );
@@ -369,6 +383,8 @@ class bitfield_t
     using io = io_t<T>;
 
 public:
+    using value_type = T;
+
     // Read a field, special case single bit read:
 
     static auto read()
@@ -387,7 +403,7 @@ public:
 
     // Write a field, special case single bit write:
 
-    static void write( T value )
+    static void write( value_type value )
     {
         // static_assert(  can_write( io::mutability ), "field: write not supported." );
         // static_assert( !can_only_set_or_clear( io::mutability ), "field: write not supported for single bits." );
@@ -397,6 +413,10 @@ public:
             if ( value ) set();
             else         clear();
         }
+        else if constexpr( is_all_bits() )
+        {
+            io::write( address, value );
+        }
         else
         {
             io::write( address, rngmask<T>(hi,lo), shl(value, lo) );
@@ -405,7 +425,7 @@ public:
 
     // Deferred write a field:
 
-    static auto write_lazy( T value )
+    static auto write_lazy( value_type value )
     {
         return write_proxy< T, io, address, rngmask<T>(hi,lo), 0 >{ shl(value, lo) };
     }
@@ -451,6 +471,16 @@ private:
     {
         return hi == lo;
     }
+
+    static constexpr auto is_all_bits()
+    {
+        return hi - lo + 1 == bits();
+    }
+
+    static constexpr uint8_t bits()
+    {
+        return ::mcu::bits<T>();
+    }
 };
 
 // A bit field in an 8-bit register:
@@ -476,7 +506,7 @@ using register16_t = bitfield_t< uint16_t, io, address, 15, 0>;
 // A register type of type to be defined:
 
 template< typename data_t, template<typename> typename io, address_t address >
-using register_t = bitfield_t< data_t, io, address, std20::numeric_limits<data_t>::digits, 0>;
+using register_t = bitfield_t< data_t, io, address, bits<data_t>() - 1, 0>;
 
 
 // scoped interrupt guard;
