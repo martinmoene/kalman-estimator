@@ -188,6 +188,7 @@ namespace mem
 //
 // 11.3 Status Register
 // 11.4 General Purpose Register File
+// 11.5 Stack Pointer Register Low and High byte
 
 // 13. System Clock and Clock Options
 //
@@ -209,6 +210,9 @@ namespace mcu
 {
     static constexpr address_t gpreg_base  = 0x00;
     static constexpr address_t sreg_addr   = 0x5f;
+    static constexpr address_t sp_addr     = 0x5d;
+    static constexpr address_t spl_addr    = sp_addr;
+    static constexpr address_t sph_addr    = sp_addr + 1;
     static constexpr address_t osccal_addr = 0x66;
     static constexpr address_t clkpr_addr  = 0x61;
     static constexpr address_t smcr_addr   = 0x53;
@@ -281,6 +285,15 @@ namespace mcu
         using x   = register16_t< rw_t, 0x1a >;
         using y   = register16_t< rw_t, 0x1c >;
         using z   = register16_t< rw_t, 0x1e >;
+    }
+
+    // 11.5 Stack Pointer Register Low and High byte
+
+    namespace sp
+    {
+        using whole = register16_t< rw_t, sp_addr  >;
+        using lo    =  register8_t< rw_t, spl_addr >;
+        using hi    =  register8_t< rw_t, sph_addr >;
     }
 
     // 13.12.1 OSCCAL: Oscillator Calibration Register:
