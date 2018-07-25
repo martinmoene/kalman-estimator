@@ -428,20 +428,120 @@ namespace ei
     template< eint i >
     using eimsk = bitfield8_t< rw_t, eimsk_addr, to_integral(i) >;
 
+    inline auto enabled_external_int0()
+    {
+        return eimsk<eint::int0>::read();
+    }
+
+    inline auto enabled_external_int1()
+    {
+        return eimsk<eint::int1>::read();
+    }
+
+    inline auto enable_external_int0( bool on )
+    {
+        return eimsk<eint::int0>::write( on );
+    }
+
+    inline auto enable_external_int1( bool on )
+    {
+        return eimsk<eint::int1>::write( on );
+    }
+
     // 17.2.3 EIFR: External Interrupt Flag Register
 
     template< eint i >
-    using eifr = bitfield8_t< rw_t, eifr_addr, to_integral(i) >;
+    using eifr = bitfield8_t< rc_w1_t, eifr_addr, to_integral(i) >;
+
+    inline auto external_int0_flag()
+    {
+        return eifr<eint::int0>::read();
+    }
+
+    inline auto external_int1_flag()
+    {
+        return eifr<eint::int1>::read();
+    }
+
+    inline auto clear_external_int0_flag()
+    {
+        return eifr<eint::int0>::clear();
+    }
+
+    inline auto clear_external_int1_flag()
+    {
+        return eifr<eint::int1>::clear();
+    }
 
     // 17.2.4 PCICR: Pin Change Interrupt Control Register
 
     template< pcint i >
     using pcicr = bitfield8_t< rw_t, pcicr_addr, to_integral(i) >;
 
+    inline auto enabled_pin_change_int2()
+    {
+        return pcicr<pcint::int2>::read();
+    }
+
+    inline auto enabled_pin_change_int1()
+    {
+        return pcicr<pcint::int1>::read();
+    }
+
+    inline auto enabled_pin_change_int0()
+    {
+        return pcicr<pcint::int0>::read();
+    }
+
+    inline auto enable_pin_change_int2( bool on )
+    {
+        return pcicr<pcint::int2>::write( on );
+    }
+
+    inline auto enable_pin_change_int1( bool on )
+    {
+        return pcicr<pcint::int1>::write( on );
+    }
+
+    inline auto enable_pin_change_int0( bool on )
+    {
+        return pcicr<pcint::int0>::write( on );
+    }
+
     // 17.2.5 PCIFR: Pin Change Interrupt Flag Register
 
     template< pcint i >
     using pcifr = bitfield8_t< rw_t, pcifr_addr, to_integral(i) >;
+
+    inline auto pin_change_int2_flag()
+    {
+        return pcifr<pcint::int2>::read();
+    }
+
+    inline auto pin_change_int1_flag()
+    {
+        return pcifr<pcint::int1>::read();
+    }
+
+    inline auto pin_change_int0_flag()
+    {
+        return pcifr<pcint::int0>::read();
+    }
+
+    inline auto clear_pin_change_int2_flag()
+    {
+        return pcifr<pcint::int2>::clear();
+    }
+
+    inline auto clear_pin_change_int1_flag()
+    {
+        return pcifr<pcint::int1>::clear();
+    }
+
+    inline auto clear_pin_change_int0_flag()
+    {
+        return pcifr<pcint::int0>::clear();
+    }
 
     // 17.2.6 PCMSK2: Pin Change Mask Register 2
     // 17.2.7 PCMSK1: Pin Change Mask Register 1
@@ -459,6 +559,36 @@ namespace ei
         template< uint8_t bit_id >
         using bit = bitfield8_t< rw_t, pcmskn_address, bit_id >;
     };
+
+    inline auto pin_change_interrupt_mask2()
+    {
+        return pcmsk<pcmsk2>::whole::read();
+    }
+
+    inline auto pin_change_interrupt_mask1()
+    {
+        return pcmsk<pcmsk1>::whole::read();
+    }
+
+    inline auto pin_change_interrupt_mask0()
+    {
+        return pcmsk<pcmsk0>::whole::read();
+    }
+
+    inline auto pin_change_interrupt_mask2( uint8_t mask )
+    {
+        pcmsk<pcmsk2>::whole::write( mask );
+    }
+
+    inline auto pin_change_interrupt_mask1( uint8_t mask )
+    {
+        pcmsk<pcmsk1>::whole::write( mask );
+    }
+
+    inline auto pin_change_interrupt_mask0( uint8_t mask )
+    {
+        pcmsk<pcmsk0>::whole::write( mask );
+    }
 
     // provide functions in ei namespace:
 
@@ -478,6 +608,7 @@ namespace ei
 // 18.4.9 DDRD : Port D Data Direction Register
 // 18.4.10 PIND: Port D Input Pins Address
 
+// io port id:
 enum class port { B, C, D, };
 
 template< port port_id >
@@ -578,6 +709,20 @@ namespace usart
 
 namespace twi
 {
+    static constexpr address_t addr_twbr  = 0xb8;
+    static constexpr address_t addr_twsr  = 0xb9;
+    static constexpr address_t addr_twar  = 0xba;
+    static constexpr address_t addr_twdr  = 0xbb;
+    static constexpr address_t addr_twcr  = 0xbc;
+    static constexpr address_t addr_twamr = 0xbd;
+
+    using twbr  = register8_t< rw_t, addr_twbr >;
+    using twsr  = register8_t< rw_t, addr_twsr >;
+    using twar  = register8_t< rw_t, addr_twar >;
+    using twdr  = register8_t< rw_t, addr_twdr >;
+    using twcr  = register8_t< rw_t, addr_twcr >;
+    using twamr = register8_t< rw_t, addr_twamr >;
+
 }
 
 // 27. AC - Analog Comparator (AC)
