@@ -661,7 +661,51 @@ struct gpio
 // 19.9.6 OCR0A : TC0 Output Compare Register A
 // 19.9.7 OCR0B : TC0 Output Compare Register B
 // 19.9.8 TIFR0 : TC0 Interrupt Flag Register
-//
+
+namespace tc0
+{
+    static constexpr address_t tccr0a_addr = 0x44;
+    static constexpr address_t tccr0b_addr = 0x45;
+    static constexpr address_t timsk0_addr = 0x6e;
+    static constexpr address_t gtccr_addr  = 0x43;
+    static constexpr address_t tcnt0_addr  = 0x46;
+    static constexpr address_t ocr0a_addr  = 0x47;
+    static constexpr address_t ocr0b_addr  = 0x48;
+    static constexpr address_t tifr0_addr  = 0x35;
+
+    namespace tccr0a
+    {
+    }
+
+    namespace tccr0b
+    {
+    }
+
+    namespace timsk0
+    {
+    }
+
+    namespace gtccr
+    {
+    }
+
+    namespace tcnt0
+    {
+    }
+
+    namespace ocr0a
+    {
+    }
+
+    namespace ocr0b
+    {
+    }
+
+    namespace tifr0
+    {
+    }
+}
+
 // 20. 16-bit Timer/Counter1 (TC1) with PWM
 // 20.15.1 TCCR0A  : TC1 Control Register A
 // 20.15.2 TCCR0B  : TC1 Control Register B
@@ -672,10 +716,76 @@ struct gpio
 // 20.15.7 OCR1BL/H: Output Compare Register 1 B Low and High byte
 // 20.15.8 TIMSK1  : Timer/Counter 1 Interrupt Mask Register
 // 20.15.9 TIFR1   : TC1 Interrupt Flag Register
-//
+
+namespace tc1
+{
+    static constexpr address_t tccr0a_addr = 0x80;
+    static constexpr address_t tccr0b_addr = 0x81;
+    static constexpr address_t tccr0c_addr = 0x82;
+    static constexpr address_t tcnt1_addr  = 0x84;
+    static constexpr address_t tcnt1l_addr = tcnt1_addr + 0;
+    static constexpr address_t tcnt1h_addr = tcnt1_addr + 1;
+    static constexpr address_t icr1_addr   = 0x86;
+    static constexpr address_t icr1l_addr  = icr1_addr + 0;
+    static constexpr address_t icr1h_addr  = icr1_addr + 1;
+    static constexpr address_t ocr1a_addr  = 0x88;
+    static constexpr address_t ocr1al_addr = ocr1a_addr + 0;
+    static constexpr address_t ocr1ah_addr = ocr1a_addr + 1;
+    static constexpr address_t ocr1b_addr  = 0x8a;
+    static constexpr address_t ocr1bl_addr = ocr1b_addr + 0;
+    static constexpr address_t ocr1bh_addr = ocr1b_addr + 1;
+    static constexpr address_t timsk1_addr = 0x6f;
+    static constexpr address_t tifr1_addr  = 0x36;
+
+    namespace tccr0a
+    {
+    }
+
+    namespace tccr0b
+    {
+    }
+
+    namespace tccr0c
+    {
+    }
+
+    namespace tcnt1
+    {
+    }
+
+    namespace icr1
+    {
+    }
+
+    namespace ocr1a
+    {
+    }
+
+    namespace ocr1b
+    {
+    }
+
+    namespace timsk1
+    {
+    }
+
+    namespace tifr1
+    {
+    }
+}
+
 // 21. Timer/Counter 0, 1 Prescalers
-// 21.4.1 General Timer/Counter Control Register
-//
+// 21.4.1 GTCCR: General Timer/Counter Control Register
+
+namespace tcp
+{
+    static constexpr address_t gtccr_addr = 0x43;
+
+    namespace gtccr
+    {
+    }
+}
+
 // 22. 8-bit Timer/Counter2 (TC2) with PWM and Asynchronous Operation
 // 22.11.1 TCCR2A: TC2 Control Register A
 // 22.11.2 TCCR2B: TC2 Control Register B
@@ -684,11 +794,60 @@ struct gpio
 // 22.11.5 OCR2B : TC2 Output Compare Register B
 // 22.11.6 TIMSK2: TC2 Interrupt Mask Register
 // 22.11.7 TIFR2 : TC2 Interrupt Flag Register
-// 22.11.8 ASSR : Asynchronous Status Register
+// 22.11.8 ASSR  : Asynchronous Status Register
 // 22.11.9 GTCCR : General Timer/Counter Control Register
 
-namespace tc
+namespace tc2
 {
+    static constexpr address_t tccr2a_addr = 0xb0;
+    static constexpr address_t tccr2b_addr = 0xb1;
+    static constexpr address_t tcnt2_addr  = 0xb2;
+    static constexpr address_t ocr2a_addr  = 0xb3;
+    static constexpr address_t ocr2b_addr  = 0xb4;
+    static constexpr address_t timsk2_addr = 0x70;
+    static constexpr address_t tifr2_addr  = 0x37;
+    static constexpr address_t assr_addr   = 0xb6;
+    static constexpr address_t gtccr_addr  = 0x43;
+
+    namespace tccr2a
+    {
+    }
+
+    namespace tccr2b
+    {
+    }
+
+    namespace tcnt2
+    {
+    }
+
+    namespace ocr2a
+    {
+    }
+
+    namespace ocr2b
+    {
+    }
+
+    namespace timsk2
+    {
+    }
+
+    namespace tifr2
+    {
+    }
+
+    namespace assr
+    {
+    }
+
+    namespace gtccr
+    {
+    }
+
+    namespace gtccr
+    {
+    }
 }
 
 // 23. SPI - Serial Peripheral Interface (SPI)
