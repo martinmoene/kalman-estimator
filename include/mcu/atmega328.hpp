@@ -34,11 +34,11 @@ constexpr auto to_integral( Id id )
 
 namespace core
 {
-    static constexpr address_t gpreg_base  = 0x00;
-    static constexpr address_t sreg_addr   = 0x5f;
-    static constexpr address_t sp_addr     = 0x5d;
-    static constexpr address_t spl_addr    = sp_addr;
-    static constexpr address_t sph_addr    = sp_addr + 1;
+    static constexpr address_t gpreg_base = 0x00;
+    static constexpr address_t sreg_addr  = 0x5f;
+    static constexpr address_t sp_addr    = 0x5d;
+    static constexpr address_t spl_addr   = sp_addr;
+    static constexpr address_t sph_addr   = sp_addr + 1;
 
     // 11.3 SREG: AVR Status Register
     //
@@ -1111,7 +1111,46 @@ namespace tcp
 
     namespace gtccr
     {
+        using tsm     = bitfield8_t< rw_t, gtccr_addr, TSM >;
+        using psrasy  = bitfield8_t< rw_t, gtccr_addr, PSRASY >;
+        using psrsync = bitfield8_t< rw_t, gtccr_addr, PSRSYNC >;
+
+        inline auto synchronization_mode()
+        {
+            return tsm::read();
+        }
+
+        inline auto synchronization_mode( bool on )
+        {
+            return tsm::write_lazy( on );
+        }
+
+        inline auto prescaler_reset_timer_counter2()
+        {
+            return psrasy::read();
+        }
+
+        inline auto prescaler_reset_timer_counter2( bool on )
+        {
+            return psrasy::write_lazy( on );
+        }
+
+        inline auto prescaler_reset_timer_counter01()
+        {
+            return psrsync::read();
+        }
+
+        inline auto prescaler_reset_timer_counter01( bool on )
+        {
+            return psrsync::write_lazy( on );
+        }
     }
+
+    // provide functions in tcp namespace:
+
+    using gtccr::synchronization_mode;
+    using gtccr::prescaler_reset_timer_counter2;
+    using gtccr::prescaler_reset_timer_counter01;
 }
 
 // 22. 8-bit Timer/Counter2 (TC2) with PWM and Asynchronous Operation
