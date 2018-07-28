@@ -698,7 +698,7 @@ namespace tc0
     {
         normal = 0
         , pwm_phase_correct = 1
-        , ctc_ocr0a = 2
+        , ctc_ocr0a = 2, ctc = 2
         , fast_pwm = 3
         , reserved4 = 4
         , pwm_phase_correct_ocr0a = 5
@@ -708,7 +708,7 @@ namespace tc0
 
     // clock source:
 
-    enum class clock_select : uint8_t
+    enum class clocks : uint8_t
     {
         none = 0        // no clock source, timer/counter stopped
         , clk_1         // no prescaling
@@ -734,7 +734,7 @@ namespace tc0
 
         inline auto compare_output_mode_a( compare_output_mode m )
         {
-            com0a::write_lazy( to_integral(m) );
+            return com0a::write_lazy( to_integral(m) );
         }
 
         inline auto compare_output_mode_b()
@@ -744,7 +744,7 @@ namespace tc0
 
         inline auto compare_output_mode_b( compare_output_mode m )
         {
-            com0b::write_lazy( to_integral(m) );
+            return com0b::write_lazy( to_integral(m) );
         }
 
         // wgm0: see tc0::waveform()
@@ -753,10 +753,10 @@ namespace tc0
     namespace tccr0b
     {
         using whole = register8_t< rw_t, tccr0b_addr >;
-        using foc0a = bitfield8_t< rw_t, tccr0a_addr, FOC0A >;
-        using foc0b = bitfield8_t< rw_t, tccr0a_addr, FOC0B >;
-        using wgm02 = bitfield8_t< rw_t, tccr0a_addr, WGM02 >;
-        using cs0   = bitfield8_t< rw_t, tccr0a_addr, CS02, CS00 >;
+        using foc0a = bitfield8_t< rw_t, tccr0b_addr, FOC0A >;
+        using foc0b = bitfield8_t< rw_t, tccr0b_addr, FOC0B >;
+        using wgm02 = bitfield8_t< rw_t, tccr0b_addr, WGM02 >;
+        using cs0   = bitfield8_t< rw_t, tccr0b_addr, CS02, CS00 >;
 
         inline auto force_output_compare_a()
         {
@@ -765,7 +765,7 @@ namespace tc0
 
         inline auto force_output_compare_a( bool on )
         {
-            foc0a::write_lazy( on );
+            return foc0a::write_lazy( on );
         }
 
         inline auto force_output_compare_b()
@@ -775,20 +775,20 @@ namespace tc0
 
         inline auto force_output_compare_b( bool on )
         {
-            foc0b::write_lazy( on );
+            return foc0b::write_lazy( on );
         }
 
         // wgm02: see tc0::waveform()
 
         inline auto clock()
         {
-            return clock_select{ cs0::read() };
+            return clocks{ cs0::read() };
 
         }
 
-        inline auto clock( clock_select s )
+        inline auto clock( clocks s )
         {
-            cs0::write_lazy( to_integral(s) );
+            return cs0::write_lazy( to_integral(s) );
         }
     }
 
@@ -806,7 +806,7 @@ namespace tc0
 
         inline auto enable_output_compare_b_match_interrupt( bool on )
         {
-            ocie0b::write_lazy( on );
+            return ocie0b::write_lazy( on );
         }
 
         inline auto enabled_output_compare_a_match_interrupt()
@@ -816,7 +816,7 @@ namespace tc0
 
         inline auto enable_output_compare_a_match_interrupt( bool on )
         {
-            ocie0a::write_lazy( on );
+            return ocie0a::write_lazy( on );
         }
 
         inline auto enabled_timer_overflow_interrupt()
@@ -826,7 +826,7 @@ namespace tc0
 
         inline auto enable_timer_overflow_interrupt( bool on )
         {
-            toie0::write_lazy( on );
+            return toie0::write_lazy( on );
         }
     }
 
@@ -926,8 +926,9 @@ namespace tc0
     {
         constexpr auto wg01_mask = bitmask<uint8_t>(WGM01, WGM00);
 
-        tccr0a::wgm0::write(       to_integral(w) & wg01_mask );
-        tccr0b::wgm02::write( shr( to_integral(w),  WGM02 )   );
+        return
+            tccr0a::wgm0::write(            to_integral(w) & wg01_mask ),
+            tccr0b::wgm02::write_lazy( shr( to_integral(w),  WGM02 )   );
     }
 
     using tccr0a::compare_output_mode_a;
@@ -991,7 +992,7 @@ namespace tc1
 
     // clock source:
 
-    using tc0::clock_select;
+    using tc0::clocks;
 
     // waveforms (see tccr1a::wgm1, tccr1b::wgm1):
 
@@ -1031,7 +1032,7 @@ namespace tc1
 
         inline auto compare_output_mode_a( compare_output_mode m )
         {
-            com1a::write_lazy( to_integral(m) );
+            return com1a::write_lazy( to_integral(m) );
         }
 
         inline auto compare_output_mode_b()
@@ -1041,7 +1042,7 @@ namespace tc1
 
         inline auto compare_output_mode_b( compare_output_mode m )
         {
-            com1b::write_lazy( to_integral(m) );
+            return com1b::write_lazy( to_integral(m) );
         }
 
         // wgm1: see tc1::waveform()
@@ -1064,7 +1065,7 @@ namespace tc1
 
         inline auto input_capture_noise_canceler( bool on )
         {
-            icnc1::write_lazy( on );
+            return icnc1::write_lazy( on );
         }
 
         inline auto input_capture_rising_edge()
@@ -1074,20 +1075,20 @@ namespace tc1
 
         inline auto input_capture_rising_edge( bool on )
         {
-            ices1::write_lazy( on );
+            return ices1::write_lazy( on );
         }
 
         // wgm1: see tc1::waveform()
 
         inline auto clock()
         {
-            return clock_select{ cs1::read() };
+            return clocks{ cs1::read() };
 
         }
 
-        inline auto clock( clock_select s )
+        inline auto clock( clocks s )
         {
-            cs1::write_lazy( to_integral(s) );
+            return cs1::write_lazy( to_integral(s) );
         }
     }
 
@@ -1106,7 +1107,7 @@ namespace tc1
 
         inline auto force_output_compare_a( bool on )
         {
-            foc1a::write_lazy( on );
+            return foc1a::write_lazy( on );
         }
 
         inline auto force_output_compare_b()
@@ -1116,7 +1117,7 @@ namespace tc1
 
         inline auto force_output_compare_b( bool on )
         {
-            foc1b::write_lazy( on );
+            return foc1b::write_lazy( on );
         }
     }
 
@@ -1218,7 +1219,7 @@ namespace tc1
 
         inline auto enable_input_capture_interrupt( bool on )
         {
-            icie1::write_lazy( on );
+            return icie1::write_lazy( on );
         }
 
         inline auto enabled_output_compare_b_match_interrupt()
@@ -1228,7 +1229,7 @@ namespace tc1
 
         inline auto enable_output_compare_b_match_interrupt( bool on )
         {
-            ocie1b::write_lazy( on );
+            return ocie1b::write_lazy( on );
         }
 
         inline auto enabled_output_compare_a_match_interrupt()
@@ -1238,7 +1239,7 @@ namespace tc1
 
         inline auto enable_output_compare_a_match_interrupt( bool on )
         {
-            ocie1a::write_lazy( on );
+            return ocie1a::write_lazy( on );
         }
 
         inline auto enabled_timer_overflow_interrupt()
@@ -1248,7 +1249,7 @@ namespace tc1
 
         inline auto enable_timer_overflow_interrupt( bool on )
         {
-            toie1::write_lazy( on );
+            return toie1::write_lazy( on );
         }
     }
 
