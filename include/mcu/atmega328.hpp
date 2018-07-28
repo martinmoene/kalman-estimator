@@ -682,43 +682,282 @@ namespace tc0
     static constexpr address_t ocr0b_addr  = 0x48;
     static constexpr address_t tifr0_addr  = 0x35;
 
+    // output action on compare-match:
+
+    enum class compare_output_mode : uint8_t
+    {
+        none = 0    // normal port operation, oc1a/b disconnected
+        , toggle    // set output to high level then low level (?)
+        , clear     // set output to low level (non-inverting mode)
+        , set       // set output to high level (inverting mode)
+    };
+
+    // waveforms (see tccr0a::wgm0, tccr0b::wgm0):
+
+    enum class waveforms : uint8_t
+    {
+        normal = 0
+        , pwm_phase_correct = 1
+        , ctc_ocr0a = 2
+        , fast_pwm = 3
+        , reserved4 = 4
+        , pwm_phase_correct_ocr0a = 5
+        , reserved6 = 6
+        , fast_pwm_ocr0a = 7
+    };
+
+    // clock source:
+
+    enum class clock_select : uint8_t
+    {
+        none = 0        // no clock source, timer/counter stopped
+        , clk_1         // no prescaling
+        , clk_8         // clk / 8
+        , clk_64        // clk / 64
+        , clk_256       // clk / 256
+        , clk_1024      // clk / 1024
+        , clk_ext1_falling_adge
+        , clk_ext1_rising_adge
+    };
+
     namespace tccr0a
     {
+        using whole = register8_t< rw_t, tccr0a_addr >;
+        using com0a = bitfield8_t< rw_t, tccr0a_addr, COM0A1, COM0A0 >;
+        using com0b = bitfield8_t< rw_t, tccr0a_addr, COM0B1, COM0B0 >;
+        using wgm0  = bitfield8_t< rw_t, tccr0a_addr, WGM01 , WGM00  >;
+
+        inline auto compare_output_mode_a()
+        {
+            return compare_output_mode{ com0a::read() };
+        }
+
+        inline auto compare_output_mode_a( compare_output_mode m )
+        {
+            com0a::write_lazy( to_integral(m) );
+        }
+
+        inline auto compare_output_mode_b()
+        {
+            return compare_output_mode{ com0b::read() };
+        }
+
+        inline auto compare_output_mode_b( compare_output_mode m )
+        {
+            com0b::write_lazy( to_integral(m) );
+        }
+
+        // wgm0: see tc0::waveform()
     }
 
     namespace tccr0b
     {
+        using whole = register8_t< rw_t, tccr0b_addr >;
+        using foc0a = bitfield8_t< rw_t, tccr0a_addr, FOC0A >;
+        using foc0b = bitfield8_t< rw_t, tccr0a_addr, FOC0B >;
+        using wgm02 = bitfield8_t< rw_t, tccr0a_addr, WGM02 >;
+        using cs0   = bitfield8_t< rw_t, tccr0a_addr, CS02, CS00 >;
+
+        inline auto force_output_compare_a()
+        {
+            return foc0a::read();
+        }
+
+        inline auto force_output_compare_a( bool on )
+        {
+            foc0a::write_lazy( on );
+        }
+
+        inline auto force_output_compare_b()
+        {
+            return foc0b::read();
+        }
+
+        inline auto force_output_compare_b( bool on )
+        {
+            foc0b::write_lazy( on );
+        }
+
+        // wgm02: see tc0::waveform()
+
+        inline auto clock()
+        {
+            return clock_select{ cs0::read() };
+
+        }
+
+        inline auto clock( clock_select s )
+        {
+            cs0::write_lazy( to_integral(s) );
+        }
     }
 
     namespace timsk0
     {
+        using whole = register8_t< rw_t, timsk0_addr >;
+        using ocie0b = bitfield8_t< rw_t, timsk0_addr, OCIE0B >;
+        using ocie0a = bitfield8_t< rw_t, timsk0_addr, OCIE0A >;
+        using toie0  = bitfield8_t< rw_t, timsk0_addr, TOIE0  >;
+
+        inline auto enabled_output_compare_b_match_interrupt()
+        {
+            return ocie0b::read();
+        }
+
+        inline auto enable_output_compare_b_match_interrupt( bool on )
+        {
+            ocie0b::write_lazy( on );
+        }
+
+        inline auto enabled_output_compare_a_match_interrupt()
+        {
+            return ocie0a::read();
+        }
+
+        inline auto enable_output_compare_a_match_interrupt( bool on )
+        {
+            ocie0a::write_lazy( on );
+        }
+
+        inline auto enabled_timer_overflow_interrupt()
+        {
+            return toie0::read();
+        }
+
+        inline auto enable_timer_overflow_interrupt( bool on )
+        {
+            toie0::write_lazy( on );
+        }
     }
 
-    namespace gtccr
-    {
-    }
+    // 19.9.4 GTCCR : General Timer/Counter Control Register:
+    // See 1. Timer/Counter 0, 1 Prescalers (tcp)
+
+    namespace gtccr {}
 
     namespace tcnt0
     {
+        using whole = register8_t< rw_t, tcnt0_addr >;
+
+        inline auto count()
+        {
+            return whole::read();
+        }
     }
 
     namespace ocr0a
     {
+        using whole = register8_t< rw_t, ocr0a_addr >;
+
+        inline auto output_compare_a()
+        {
+            return whole::read();
+        }
+
+        inline auto output_compare_a( uint8_t v )
+        {
+            whole::write( v );
+        }
     }
 
     namespace ocr0b
     {
+        using whole = register8_t< rw_t, ocr0b_addr >;
+
+        inline auto output_compare_b()
+        {
+            return whole::read();
+        }
+
+        inline auto output_compare_b( uint8_t v )
+        {
+            whole::write( v );
+        }
     }
 
     namespace tifr0
     {
+        using whole = register8_t< rw_t, tifr0_addr >;
+        using ocf0b = bitfield8_t< rc_w1_t, tifr0_addr, OCF0B >;
+        using ocf0a = bitfield8_t< rc_w1_t, tifr0_addr, OCF0A >;
+        using tov0  = bitfield8_t< rc_w1_t, tifr0_addr, TOV0  >;
+
+        inline auto output_compare_b_match_flag()
+        {
+            return ocf0b::read();
+        }
+
+        inline auto clear_output_compare_b_match_flag()
+        {
+            ocf0b::clear();
+        }
+
+        inline auto output_compare_a_match_flag()
+        {
+            return ocf0a::read();
+        }
+
+        inline auto clear_output_compare_a_match_flag()
+        {
+            ocf0a::clear();
+        }
+
+        inline auto timer_overflow_flag()
+        {
+            return tov0::read();
+        }
+
+        inline auto clear_timer_overflow_flag()
+        {
+            tov0::clear();
+        }
     }
+
+    // provide functions in tc1 namespace:
+
+    // waveform (wgm) setting is spread over tccr1a and tccr1b:
+
+    inline auto waveform()
+    {
+        return waveforms( shl(tccr0b::wgm02::read(), WGM02) + tccr0a::wgm0::read() );
+    }
+
+    inline auto waveform( waveforms w )
+    {
+        constexpr auto wg01_mask = bitmask<uint8_t>(WGM01, WGM00);
+
+        tccr0a::wgm0::write(       to_integral(w) & wg01_mask );
+        tccr0b::wgm02::write( shr( to_integral(w),  WGM02 )   );
+    }
+
+    using tccr0a::compare_output_mode_a;
+    using tccr0a::compare_output_mode_b;
+
+    using tccr0b::force_output_compare_a;
+    using tccr0b::force_output_compare_b;
+    using tccr0b::clock;
+
+    using timsk0::enabled_output_compare_b_match_interrupt;
+    using timsk0::enabled_output_compare_a_match_interrupt;
+    using timsk0::enabled_timer_overflow_interrupt;
+    using timsk0::enable_output_compare_b_match_interrupt;
+    using timsk0::enable_output_compare_a_match_interrupt;
+    using timsk0::enable_timer_overflow_interrupt;
+
+    using tcnt0::count;
+
+    using ocr0a::output_compare_a;
+    using ocr0b::output_compare_b;
+
+    using tifr0::output_compare_b_match_flag;
+    using tifr0::output_compare_a_match_flag;
+    using tifr0::timer_overflow_flag;
 }
 
 // 20. 16-bit Timer/Counter1 (TC1) with PWM
-// 20.15.1 TCCR0A  : TC1 Control Register A
-// 20.15.2 TCCR0B  : TC1 Control Register B
-// 20.15.3 TCCR0C  : TC1 Control Register C
+// 20.15.1 TCCR1A  : TC1 Control Register A
+// 20.15.2 TCCR1B  : TC1 Control Register B
+// 20.15.3 TCCR1C  : TC1 Control Register C
 // 20.15.4 TCNT1L/H: TC1 Counter Value Low and High byte
 // 20.15.5 ICR1L/H : Input Capture Register 1 Low and High byte
 // 20.15.6 OCR1AL/H: Output Compare Register 1 A Low and High byte
@@ -746,6 +985,14 @@ namespace tc1
     static constexpr address_t timsk1_addr = 0x6f;
     static constexpr address_t tifr1_addr  = 0x36;
 
+    // output action on compare-match:
+
+    using tc0::compare_output_mode;
+
+    // clock source:
+
+    using tc0::clock_select;
+
     // waveforms (see tccr1a::wgm1, tccr1b::wgm1):
 
     enum class waveforms : uint8_t
@@ -766,28 +1013,6 @@ namespace tc1
         , reserved13 = 13
         , fast_pwm_icr1 = 14
         , fast_pwm_ocr1a = 15
-    };
-
-    // output action on compare-match:
-
-    enum class compare_output_mode : uint8_t
-    {
-        none = 0    // normal port operation, oc1a/b disconnected
-        , toggle    // set output to high level then low level (?)
-        , clear     // set output to low level
-        , set       // set output to high level
-    };
-
-    enum class clock_select : uint8_t
-    {
-        none = 0        // no clock source, timer/counter stopped
-        , clk_1         // no prescaling
-        , clk_8         // clk / 8
-        , clk_64        // clk / 64
-        , clk_256       // clk / 256
-        , clk_1024      // clk / 1024
-        , clk_ext1_falling_adge
-        , clk_ext1_rising_adge
     };
 
     // 20.15.1 TCCR0A: TC1 Control Register A
@@ -926,6 +1151,16 @@ namespace tc1
         using whole = register16_t< rw_t, icr1_addr  >;
         using lo    =  register8_t< rw_t, icr1l_addr >;
         using hi    =  register8_t< rw_t, icr1h_addr >;
+
+        inline auto input_capture()
+        {
+            return whole::read();
+        }
+
+        inline auto input_capture( uint16_t v )
+        {
+            whole::write( v );
+        }
     }
 
     // 20.15.6 OCR1AL/H: Output Compare Register 1 A Low and High byte
@@ -935,14 +1170,35 @@ namespace tc1
         using whole = register16_t< rw_t, ocr1a_addr  >;
         using lo    =  register8_t< rw_t, ocr1al_addr >;
         using hi    =  register8_t< rw_t, ocr1ah_addr >;
+
+        inline auto output_compare_a()
+        {
+            return whole::read();
+        }
+
+        inline auto output_compare_a( uint16_t v )
+        {
+            whole::write( v );
+        }
     }
 
     // 20.15.7 OCR1BL/H: Output Compare Register 1 B Low and High byte
+
     namespace ocr1b
     {
         using whole = register16_t< rw_t, ocr1b_addr  >;
         using lo    =  register8_t< rw_t, ocr1bl_addr >;
         using hi    =  register8_t< rw_t, ocr1bh_addr >;
+
+        inline auto output_compare_b()
+        {
+            return whole::read();
+        }
+
+        inline auto output_compare_b( uint16_t v )
+        {
+            whole::write( v );
+        }
     }
 
     // 20.15.8 TIMSK1: Timer/Counter 1 Interrupt Mask Register
@@ -1053,13 +1309,15 @@ namespace tc1
 
     inline auto waveform()
     {
-        return waveforms( shl(tccr1b::wgm1::read(), 2) + tccr1a::wgm1::read() );
+        return waveforms( shl(tccr1b::wgm1::read(), WGM12) + tccr1a::wgm1::read() );
     }
 
     inline auto waveform( waveforms w )
     {
-        tccr1a::wgm1::write(      to_integral(w) & 0x3   );
-        tccr1b::wgm1::write( shr( to_integral(w),   2  ) );
+        constexpr auto wg01_mask = bitmask<uint8_t>(WGM11, WGM10);
+
+        tccr1a::wgm1::write(      to_integral(w) & wg01_mask );
+        tccr1b::wgm1::write( shr( to_integral(w),  WGM12 )   );
     }
 
     using tccr1a::compare_output_mode_a;
@@ -1076,10 +1334,10 @@ namespace tc1
     using tcnt1::count_lo;
     using tcnt1::count_hi;
 
-    // 8- and 16-bit registers:
-    // - icr1::
-    // - ocr1a::
-    // - ocr1b::
+    using icr1::input_capture;
+
+    using ocr1a::output_compare_a;
+    using ocr1b::output_compare_b;
 
     using timsk1::enabled_input_capture_interrupt;
     using timsk1::enabled_output_compare_b_match_interrupt;
