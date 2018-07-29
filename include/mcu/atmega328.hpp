@@ -62,6 +62,8 @@ namespace core
         using     N = bitfield8_t< rw_t, sreg_addr, 2 >;
         using     Z = bitfield8_t< rw_t, sreg_addr, 1 >;
         using     C = bitfield8_t< rw_t, sreg_addr, 0 >;
+
+        using value_type = whole::value_type;
     }
 
     // save-restore status register for ISR:
@@ -74,7 +76,9 @@ namespace core
 
     struct scoped_sreg
     {
-        uint8_t cache = sreg::whole::read();
+        using value_type = sreg::value_type;
+
+        value_type cache = sreg::whole::read();
         ~scoped_sreg() { sreg::whole::write( cache ); }
     };
 
@@ -127,6 +131,8 @@ namespace core
         using whole = register16_t< rw_t, sp_addr  >;
         using lo    =  register8_t< rw_t, spl_addr >;
         using hi    =  register8_t< rw_t, sph_addr >;
+
+        using value_type = whole::value_type;
     }
 }
 
@@ -203,6 +209,8 @@ namespace mem
         using eepe  = bitfield8_t< rw_t, eecr_addr , EEPE         >;
         using eere  = bitfield8_t< rw_t, eecr_addr , EERE         >;
 
+        using value_type = whole::value_type;
+
         inline auto eeprom_programming_mode()
         {
             return eeprom_programming_modes{ eepm::read() };
@@ -269,6 +277,7 @@ namespace mem
     struct gpio
     {
         using whole = register8_t< rw_t, gpiorn_address >;
+        using value_type = typename whole::value_type;
 
         template< uint8_t bit_id >
         using bit = bitfield8_t< rw_t, gpiorn_address, bit_id >;
@@ -420,6 +429,8 @@ namespace ei
         using whole = register8_t< rw_t, eicra_addr >;
         using ics1  = bitfield8_t< rw_t, eicra_addr , ISC11, ISC10 >;
         using ics0  = bitfield8_t< rw_t, eicra_addr , ISC01, ISC00 >;
+
+        using value_type = whole::value_type;
 
         template< eint i >
         inline auto interrupt_sense()
@@ -582,6 +593,7 @@ namespace ei
     struct pcmsk
     {
         using whole = register8_t< rw_t, pcmskn_address >;
+        using value_type = typename whole::value_type;
 
         template< uint8_t bit_id >
         using bit = bitfield8_t< rw_t, pcmskn_address, bit_id >;
@@ -645,6 +657,8 @@ struct gpio
     static constexpr address_t pin_addr   = base_addr + 0;
     static constexpr address_t ddr_addr   = base_addr + 1;
     static constexpr address_t port_addr  = base_addr + 2;
+
+    using value_type = uint8_t;
 
     using pin  = register8_t<rw_t,  pin_addr>;  // pin input level
     using ddr  = register8_t<rw_t,  ddr_addr>;  // data direction register
@@ -727,6 +741,8 @@ namespace tc0
         using com0b = bitfield8_t< rw_t, tccr0a_addr, COM0B1, COM0B0 >;
         using wgm0  = bitfield8_t< rw_t, tccr0a_addr, WGM01 , WGM00  >;
 
+        using value_type = whole::value_type;
+
         inline auto compare_output_mode_a()
         {
             return compare_output_mode{ com0a::read() };
@@ -757,6 +773,8 @@ namespace tc0
         using foc0b = bitfield8_t< rw_t, tccr0b_addr, FOC0B >;
         using wgm02 = bitfield8_t< rw_t, tccr0b_addr, WGM02 >;
         using cs0   = bitfield8_t< rw_t, tccr0b_addr, CS02, CS00 >;
+
+        using value_type = whole::value_type;
 
         inline auto force_output_compare_a()
         {
@@ -794,10 +812,12 @@ namespace tc0
 
     namespace timsk0
     {
-        using whole = register8_t< rw_t, timsk0_addr >;
+        using whole  = register8_t< rw_t, timsk0_addr >;
         using ocie0b = bitfield8_t< rw_t, timsk0_addr, OCIE0B >;
         using ocie0a = bitfield8_t< rw_t, timsk0_addr, OCIE0A >;
         using toie0  = bitfield8_t< rw_t, timsk0_addr, TOIE0  >;
+
+        using value_type = whole::value_type;
 
         inline auto enabled_output_compare_b_match_interrupt()
         {
@@ -838,6 +858,7 @@ namespace tc0
     namespace tcnt0
     {
         using whole = register8_t< rw_t, tcnt0_addr >;
+        using value_type = whole::value_type;
 
         inline auto count()
         {
@@ -848,6 +869,7 @@ namespace tc0
     namespace ocr0a
     {
         using whole = register8_t< rw_t, ocr0a_addr >;
+        using value_type = whole::value_type;
 
         inline auto output_compare_a()
         {
@@ -863,6 +885,7 @@ namespace tc0
     namespace ocr0b
     {
         using whole = register8_t< rw_t, ocr0b_addr >;
+        using value_type = whole::value_type;
 
         inline auto output_compare_b()
         {
@@ -881,6 +904,8 @@ namespace tc0
         using ocf0b = bitfield8_t< rc_w1_t, tifr0_addr, OCF0B >;
         using ocf0a = bitfield8_t< rc_w1_t, tifr0_addr, OCF0A >;
         using tov0  = bitfield8_t< rc_w1_t, tifr0_addr, TOV0  >;
+
+        using value_type = whole::value_type;
 
         inline auto output_compare_b_match_flag()
         {
@@ -1020,12 +1045,12 @@ namespace tc1
 
     namespace tccr1a
     {
-        using value_type = uint8_t;
-
         using whole = register8_t< rw_t, tccr1a_addr >;
         using com1a = bitfield8_t< rw_t, tccr1a_addr, COM1A1, COM1A0 >;
         using com1b = bitfield8_t< rw_t, tccr1a_addr, COM1B1, COM1B0 >;
         using wgm1  = bitfield8_t< rw_t, tccr1a_addr, WGM11 , WGM10  >;
+
+        using value_type = whole::value_type;
 
         inline auto compare_output_mode_a()
         {
@@ -1054,13 +1079,13 @@ namespace tc1
 
     namespace tccr1b
     {
-        using value_type = uint8_t;
-
         using whole = register8_t< rw_t, tccr1b_addr >;
         using icnc1 = bitfield8_t< rw_t, tccr1b_addr, ICNC1 >;
         using ices1 = bitfield8_t< rw_t, tccr1b_addr, ICES1 >;
         using wgm1  = bitfield8_t< rw_t, tccr1b_addr, WGM13, WGM12 >;
         using cs1   = bitfield8_t< rw_t, tccr1b_addr, CS12 , CS10  >;
+
+        using value_type = whole::value_type;
 
         inline auto input_capture_noise_canceler()
         {
@@ -1100,11 +1125,11 @@ namespace tc1
 
     namespace tccr1c
     {
-        using value_type = uint8_t;
-
         using whole = register8_t< rw_t, tccr1c_addr >;
         using foc1a = bitfield8_t< rw_t, tccr1a_addr, FOC1A >;
         using foc1b = bitfield8_t< rw_t, tccr1a_addr, FOC1B >;
+
+        using value_type = whole::value_type;
 
         inline auto force_output_compare_a()
         {
@@ -1131,11 +1156,11 @@ namespace tc1
 
     namespace tcnt1
     {
-        using value_type = uint16_t;
-
         using whole = register16_t< rw_t, tcnt1_addr  >;
         using lo    =  register8_t< rw_t, tcnt1l_addr >;
         using hi    =  register8_t< rw_t, tcnt1h_addr >;
+
+        using value_type = whole::value_type;
 
         inline auto count()
         {
@@ -1157,11 +1182,11 @@ namespace tc1
 
     namespace icr1
     {
-        using value_type = uint16_t;
-
         using whole = register16_t< rw_t, icr1_addr  >;
         using lo    =  register8_t< rw_t, icr1l_addr >;
         using hi    =  register8_t< rw_t, icr1h_addr >;
+
+        using value_type = whole::value_type;
 
         inline auto input_capture()
         {
@@ -1178,11 +1203,11 @@ namespace tc1
 
     namespace ocr1a
     {
-        using value_type = uint16_t;
-
         using whole = register16_t< rw_t, ocr1a_addr  >;
         using lo    =  register8_t< rw_t, ocr1al_addr >;
         using hi    =  register8_t< rw_t, ocr1ah_addr >;
+
+        using value_type = whole::value_type;
 
         inline auto output_compare_a()
         {
@@ -1199,11 +1224,11 @@ namespace tc1
 
     namespace ocr1b
     {
-        using value_type = uint16_t;
-
         using whole = register16_t< rw_t, ocr1b_addr  >;
         using lo    =  register8_t< rw_t, ocr1bl_addr >;
         using hi    =  register8_t< rw_t, ocr1bh_addr >;
+
+        using value_type = whole::value_type;
 
         inline auto output_compare_b()
         {
@@ -1220,13 +1245,13 @@ namespace tc1
 
     namespace timsk1
     {
-        using value_type = uint8_t;
-
         using whole  = register8_t< rw_t, timsk1_addr >;
         using icie1  = bitfield8_t< rw_t, timsk1_addr, ICIE1  >;
         using ocie1b = bitfield8_t< rw_t, timsk1_addr, OCIE1B >;
         using ocie1a = bitfield8_t< rw_t, timsk1_addr, OCIE1A >;
         using toie1  = bitfield8_t< rw_t, timsk1_addr, TOIE1  >;
+
+        using value_type = whole::value_type;
 
         inline auto enabled_input_capture_interrupt()
         {
@@ -1273,13 +1298,13 @@ namespace tc1
 
     namespace tifr1
     {
-        using value_type = uint8_t;
-
         using whole = register8_t< rc_w1_t, tifr1_addr >;
         using icf1  = bitfield8_t< rc_w1_t, tifr1_addr, ICF1  >;
         using ocf1b = bitfield8_t< rc_w1_t, tifr1_addr, OCF1B >;
         using ocf1a = bitfield8_t< rc_w1_t, tifr1_addr, OCF1A >;
         using tov1  = bitfield8_t< rc_w1_t, tifr1_addr, TOV1  >;
+
+        using value_type = whole::value_type;
 
         inline auto input_capture_flag()
         {
@@ -1389,9 +1414,12 @@ namespace tcp
 
     namespace gtccr
     {
+        using whole   = register8_t< rw_t, gtccr_addr >;
         using tsm     = bitfield8_t< rw_t, gtccr_addr, TSM >;
         using psrasy  = bitfield8_t< rw_t, gtccr_addr, PSRASY >;
         using psrsync = bitfield8_t< rw_t, gtccr_addr, PSRSYNC >;
+
+        using value_type = whole::value_type;
 
         inline auto synchronization_mode()
         {
@@ -1575,6 +1603,8 @@ namespace ac
         using acie  = bitfield8_t< rw_t, addr_acsr, ACIE >;
         using acic  = bitfield8_t< rw_t, addr_acsr, ACIC >;
         using acis  = bitfield8_t< rw_t, addr_acsr, ACIS1, ACIS0 >;
+
+        using value_type = whole::value_type;
 
         inline auto disabled_comparator()
         {
@@ -1771,9 +1801,12 @@ namespace adc
     {
         // see also admux::adjust()
 
+        using whole = register16_t< r_t, addr_adcl >;   // 16-bit result
         using adchl = register16_t< r_t, addr_adcl >;   // 16-bit result
         using adcl  =  register8_t< r_t, addr_adcl >;   //  8-bit lsb
         using adch  =  register8_t< r_t, addr_adch >;   //  2-bit msb
+
+        using value_type = whole::value_type;
 
         inline auto result()
         {
@@ -1799,6 +1832,8 @@ namespace adc
         using refs  = bitfield8_t< rw_t, addr_admux, REFS1, REFS0 >; // voltage reference
         using adlar = bitfield8_t< rw_t, addr_admux, ADLAR        >; // left adjust result
         using mux   = bitfield8_t< rw_t, addr_admux, MUX3 , MUX0  >; // input channel
+
+        using value_type = whole::value_type;
 
         inline auto reference()
         {
@@ -1842,6 +1877,8 @@ namespace adc
         using adif  = bitfield8_t< rc_w1_t, addr_adcsra, ADIF >;        // ADC Interrupt Flag
         using adie  = bitfield8_t< rw_t   , addr_adcsra, ADIE >;        // ADC Interrupt Enable
         using adps  = bitfield8_t< rw_t   , addr_adcsra, ADPS2, ADPS0 >;// ADC Prescaler Select Bits
+
+        using value_type = whole::value_type;
 
         inline auto enabled()
         {
@@ -1906,6 +1943,8 @@ namespace adc
         using whole = register8_t< rw_t, addr_adcsrb >;
         using acme  = bitfield8_t< rw_t, addr_adcsrb, ACME         >;    // ADC Analog Comparator Multiplexer Enabled
         using adts  = bitfield8_t< rw_t, addr_adcsrb, ADTS2, ADTS0 >;    // ADC Auto Trigger Source
+
+        using value_type = whole::value_type;
 
         inline auto enabled_comparator_mux()
         {
@@ -1979,23 +2018,51 @@ namespace spf  // self-programming flash
 {
 }
 
-// DAC - Digital-analog conversion via PWM:
+// Convenience types:
 
-namespace dac
+// LED on port, pin:
+
+template< port portid, uint8_t pin >
+struct led
+{
+    using led_t = typename gpio<portid>::template p<pin>;
+
+    static inline void on()     { led_t::set::set();    }
+    static inline void off()    { led_t::set::clear();  }
+    static inline void toggle() { led_t::set::toggle(); }
+    static inline void enable() { led_t::dir::set();    }
+};
+
+// 10-bit PWM on timer 1, output a (tc1, PB1):
+
+struct tc1_pwm_on_a_pb1
 {
     using value_type = uint16_t;
-}
 
-// LED on pb5:
+    static constexpr auto value_min = value_type{         0b0011 };
+    static constexpr auto value_max = value_type{ 0b11'1111'1111 };
 
-namespace led
-{
-    using led_t = gpio<port::B>::p<5>;
+    // init timer 1 for PWM-dac timing:
 
-    inline void on()     { led_t::set::set();    }
-    inline void off()    { led_t::set::clear();  }
-    inline void toggle() { led_t::set::toggle(); }
-    inline void enable() { led_t::dir::set();    }
+    static inline auto init()
+    {
+        gpio<port::B>::p<1>::dir::set();
+
+        // register tccr1a (non-inverting mode):
+        tc1::compare_output_mode_a( tc1::compare_output_mode::clear );
+
+        // register tccr1b:
+        tc1::waveform( tc1::waveforms::fast_pwm_phase_correct_10bit )
+        , tc1::clock ( tc1::clocks::clk_1 )
+            ;
+    }
+
+    // output PWM value:
+
+    static inline auto write( value_type value )
+    {
+        mcu::atomic( OCR1A, value );
+    }
 };
 
 } // namespace atmega328
