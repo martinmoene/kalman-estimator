@@ -928,7 +928,7 @@ namespace tc0
 
         return
             tccr0a::wgm0::write(            to_integral(w) & wg01_mask ),
-            tccr0b::wgm02::write_lazy( shr( to_integral(w),  WGM02 )   );
+            tccr0b::wgm02::write_lazy( shr( to_integral(w),  2 )       );
     }
 
     using tccr0a::compare_output_mode_a;
@@ -1020,6 +1020,8 @@ namespace tc1
 
     namespace tccr1a
     {
+        using value_type = uint8_t;
+
         using whole = register8_t< rw_t, tccr1a_addr >;
         using com1a = bitfield8_t< rw_t, tccr1a_addr, COM1A1, COM1A0 >;
         using com1b = bitfield8_t< rw_t, tccr1a_addr, COM1B1, COM1B0 >;
@@ -1052,6 +1054,8 @@ namespace tc1
 
     namespace tccr1b
     {
+        using value_type = uint8_t;
+
         using whole = register8_t< rw_t, tccr1b_addr >;
         using icnc1 = bitfield8_t< rw_t, tccr1b_addr, ICNC1 >;
         using ices1 = bitfield8_t< rw_t, tccr1b_addr, ICES1 >;
@@ -1096,6 +1100,8 @@ namespace tc1
 
     namespace tccr1c
     {
+        using value_type = uint8_t;
+
         using whole = register8_t< rw_t, tccr1c_addr >;
         using foc1a = bitfield8_t< rw_t, tccr1a_addr, FOC1A >;
         using foc1b = bitfield8_t< rw_t, tccr1a_addr, FOC1B >;
@@ -1125,6 +1131,8 @@ namespace tc1
 
     namespace tcnt1
     {
+        using value_type = uint16_t;
+
         using whole = register16_t< rw_t, tcnt1_addr  >;
         using lo    =  register8_t< rw_t, tcnt1l_addr >;
         using hi    =  register8_t< rw_t, tcnt1h_addr >;
@@ -1149,6 +1157,8 @@ namespace tc1
 
     namespace icr1
     {
+        using value_type = uint16_t;
+
         using whole = register16_t< rw_t, icr1_addr  >;
         using lo    =  register8_t< rw_t, icr1l_addr >;
         using hi    =  register8_t< rw_t, icr1h_addr >;
@@ -1168,6 +1178,8 @@ namespace tc1
 
     namespace ocr1a
     {
+        using value_type = uint16_t;
+
         using whole = register16_t< rw_t, ocr1a_addr  >;
         using lo    =  register8_t< rw_t, ocr1al_addr >;
         using hi    =  register8_t< rw_t, ocr1ah_addr >;
@@ -1187,6 +1199,8 @@ namespace tc1
 
     namespace ocr1b
     {
+        using value_type = uint16_t;
+
         using whole = register16_t< rw_t, ocr1b_addr  >;
         using lo    =  register8_t< rw_t, ocr1bl_addr >;
         using hi    =  register8_t< rw_t, ocr1bh_addr >;
@@ -1206,6 +1220,8 @@ namespace tc1
 
     namespace timsk1
     {
+        using value_type = uint8_t;
+
         using whole  = register8_t< rw_t, timsk1_addr >;
         using icie1  = bitfield8_t< rw_t, timsk1_addr, ICIE1  >;
         using ocie1b = bitfield8_t< rw_t, timsk1_addr, OCIE1B >;
@@ -1257,6 +1273,8 @@ namespace tc1
 
     namespace tifr1
     {
+        using value_type = uint8_t;
+
         using whole = register8_t< rc_w1_t, tifr1_addr >;
         using icf1  = bitfield8_t< rc_w1_t, tifr1_addr, ICF1  >;
         using ocf1b = bitfield8_t< rc_w1_t, tifr1_addr, OCF1B >;
@@ -1317,8 +1335,9 @@ namespace tc1
     {
         constexpr auto wg01_mask = bitmask<uint8_t>(WGM11, WGM10);
 
-        tccr1a::wgm1::write(      to_integral(w) & wg01_mask );
-        tccr1b::wgm1::write( shr( to_integral(w),  WGM12 )   );
+        return
+            tccr1a::wgm1::write(           to_integral(w) & wg01_mask ),
+            tccr1b::wgm1::write_lazy( shr( to_integral(w),  2 )   );
     }
 
     using tccr1a::compare_output_mode_a;
@@ -1671,9 +1690,12 @@ namespace adc
     static constexpr address_t addr_didr0  = base_addr + 6;
     static constexpr address_t addr_didr1  = base_addr + 7;
 
-    // adc conversion result type:
+    // adc conversion result type, 10-bit resolution:
 
     using result_t = uint16_t;
+
+    constexpr auto result_min = result_t{ 0b0 };
+    constexpr auto result_max = result_t{ 0b11'1111'1111 };
 
     // admux voltage reference:
 
@@ -1858,12 +1880,12 @@ namespace adc
 
         inline auto enabled_interrupt()
         {
-            return 0 != adps::read();
+            return 0 != adie::read();
         }
 
         inline auto enable_interrupt( bool on )
         {
-            return adps::write_lazy( on );
+            return adie::write_lazy( on );
         }
 
         inline auto prescale()
