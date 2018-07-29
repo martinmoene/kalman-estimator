@@ -10,8 +10,12 @@
 
 // configuration:
 
-#define LED_PORT  mcu::atmega328::port::B
-#define LED_PIN   5
+namespace config
+{
+    constexpr auto led_blink = 3;
+    constexpr auto led_pin   = 5;
+    constexpr auto led_port  = mcu::atmega328::port::B;
+}
 
 // clamped value:
 
@@ -25,7 +29,7 @@ constexpr T clamp( T v, T lo, T hi )
 
 namespace led
 {
-    using led_t = mcu::atmega328::led<LED_PORT, LED_PIN>;
+    using led_t = mcu::atmega328::led<config::led_port, config::led_pin>;
 
     inline auto on()     { led_t::on();     }
     inline auto off()    { led_t::off();    }
@@ -33,7 +37,7 @@ namespace led
     inline void init()   { led_t::enable(); }
 }
 
-// PWM DAC on timer 1 at 10-bit resolution (tc1):
+// PWM DAC output a of timer 1 at 10-bit resolution (tc1):
 
 namespace dac
 {
@@ -152,9 +156,8 @@ namespace beat
     ISR( TIMER0_COMPA_vect )
     {
         using namespace mbx;
-        using namespace mcu::atmega328;
 
-        core::scoped_sreg _;
+        mcu::atmega328::core::scoped_sreg _;
 
         static uint8_t cnt_10ms = 10;
         static uint8_t cnt_100ms = 10;
@@ -197,7 +200,7 @@ int main()
 
     // quickly blink LED 3 times:
 
-    for( auto i = 6; i != 0; --i )
+    for( auto i = 2 * config::led_blink; i != 0; --i )
     {
         while( ! mbx::mbx_100ms )
             ;
