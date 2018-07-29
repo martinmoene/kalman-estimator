@@ -27,15 +27,10 @@ constexpr T clamp( T v, T lo, T hi )
 
 // Onboard LED at PB5 (Arduino pin 13):
 
-namespace led
+struct led : mcu::atmega328::led<config::led_port, config::led_pin>
 {
-    using led_t = mcu::atmega328::led<config::led_port, config::led_pin>;
-
-    inline auto on()     { led_t::on();     }
-    inline auto off()    { led_t::off();    }
-    inline auto toggle() { led_t::toggle(); }
-    inline void init()   { led_t::enable(); }
-}
+    static inline void init() { enable(); }
+};
 
 // PWM DAC output a of timer 1 at 10-bit resolution (tc1):
 
