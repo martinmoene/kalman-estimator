@@ -17,7 +17,7 @@ std      = 'c++17'
 opt      = '-O2'
 mcu      = 'atmega328p'
 fcpu     = '16000000L'
-filename = 'fade-led-avr.cpp'
+filename = 'avr-blink-led-isr.cpp'
 verbose  = '-vv'
 
 cmd = 'python ../../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -Dled_FEATURE_BLINK_MS={ms} {filename}'

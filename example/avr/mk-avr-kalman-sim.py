@@ -10,17 +10,19 @@
 
 import os
 
-blink_ms = '200'
-#blink_ms = '0'
+nt       = 'double'
+nt       = 'fp32_t'
 
 std      = 'c++17'
 opt      = '-O2'
 mcu      = 'atmega328p'
 fcpu     = '16000000L'
-filename = 'atmega328.cpp'
+filename = 'avr-kalman-sim.cpp'
 verbose  = '-vv'
 include  = '../../include'
 
-cmd = 'python ../../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -Dled_FEATURE_BLINK_MS={ms} -I {include} {filename}'
+tpl = 'python ../../script/avr-gcc.py {verbose} -std={std} {opt} -mmcu={mcu} -fcpu={fcpu} -DKE_NUMERIC_TYPE={nt} -I{include} {filename}'
+cmd = tpl.format(nt=nt, verbose=verbose, std=std, opt=opt, mcu=mcu, fcpu=fcpu, include=include, filename=filename)
 
-os.system( cmd.format(verbose=verbose, std=std, opt=opt, mcu=mcu, fcpu=fcpu, ms=blink_ms, include=include, filename=filename) )
+print(     cmd )
+os.system( cmd )
