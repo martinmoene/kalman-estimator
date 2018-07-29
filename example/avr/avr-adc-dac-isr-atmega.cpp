@@ -100,7 +100,7 @@ namespace adc
 
     // atomic read of ADC conversion result:
 
-    inline value_type read()
+    inline value_type result()
     {
         return mcu::atomic( adc_result );
     }
@@ -235,7 +235,7 @@ int main()
         {
             mbx_100ms = false;
 
-            if ( adc::read() > adc::result_max / 2 )
+            if ( adc::result() > adc::result_max / 2 )
                 led::on();
         }
 
@@ -245,7 +245,7 @@ int main()
 
             led::off();
 
-            dac::write( adc::read() );
+            dac::write( adc::result() );
         }
     }
 }
