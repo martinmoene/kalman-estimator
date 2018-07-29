@@ -49,7 +49,10 @@ namespace dac
 
     // init timer 1 for PWM-dac timing:
 
-    inline void init() { dac_t::init(); }
+    inline void init()
+    {
+        dac_t::init();
+    }
 
     // output DAC value:
 
@@ -74,7 +77,7 @@ namespace adc
 
     // setup ADC:
 
-    void init()
+    inline void init()
     {
         namespace ai = mcu::atmega328::adc;
 
@@ -97,7 +100,7 @@ namespace adc
 
     // atomic read of ADC conversion result:
 
-    value_type read()
+    inline value_type read()
     {
         return mcu::atomic( adc_result );
     }
@@ -130,7 +133,7 @@ namespace beat
 {
     // setup timer 0 for heartbeat:
 
-    void init()
+    inline void init()
     {
         using namespace mcu::atmega328;
 
