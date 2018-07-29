@@ -201,9 +201,9 @@ int main()
 
     sei();
 
-    // quickly blink LED 3 times:
+    // quickly blink LED a few times:
 
-    for( auto i = 2 * config::led_blink; i != 0; --i )
+    for( auto i = uint8_t{ 2 * config::led_blink }; i != 0; --i )
     {
         while( ! mbx::mbx_100ms )
             ;
