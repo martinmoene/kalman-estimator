@@ -26,14 +26,15 @@
 		<Unit filename="../../example/avr/blink-led-isr-avr.cpp" />
 		<Unit filename="../../example/avr/fade-led-avr.cpp" />
 		<Unit filename="../../example/avr/input-adc-isr-avr.cpp" />
+		<Unit filename="../../example/avr/io-adc-dac-isr-avr-atmega.cpp" />
 		<Unit filename="../../example/avr/io-adc-dac-isr-avr.cpp" />
-		<Unit filename="../../example/avr/io-adc-dac-isr-reg-avr.cpp" />
 		<Unit filename="../../example/avr/kalman-sim-avr.cpp" />
 		<Unit filename="../../example/avr/mk-atmega328.py" />
 		<Unit filename="../../example/avr/mk-blink-led-avr.py" />
 		<Unit filename="../../example/avr/mk-blink-led-isr-avr.py" />
 		<Unit filename="../../example/avr/mk-fade-led-avr.py" />
 		<Unit filename="../../example/avr/mk-input-adc-isr-avr.py" />
+		<Unit filename="../../example/avr/mk-io-adc-dac-isr-avr-atmega.py" />
 		<Unit filename="../../example/avr/mk-io-adc-dac-isr-avr.py" />
 		<Unit filename="../../example/avr/mk-kalman-sim-avr.py" />
 		<Unit filename="../../example/avr/mk-register.py" />
