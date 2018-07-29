@@ -13,6 +13,8 @@ from __future__ import print_function
 import os
 import sys
 
+mcu = 'atmega328p'
+
 def main():
     try:
         global avr_gcc_root; avr_gcc_root = os.environ['AVR_GCC_ROOT']
@@ -20,7 +22,7 @@ def main():
         raise RuntimeError("expected environment variable {} to be set to root of AVR-GCC.".format(e))
 
     cxx = avr_gcc_root + os.path.normpath('/bin/avr-g++')
-    cmd = '"{cxx}" -E -dM - < nul'.format(cxx=cxx)
+    cmd = '"{cxx}" -E -dM -mmcu={mcu} - < nul'.format(cxx=cxx, mcu=mcu)
 
     os.system( cmd)
 
