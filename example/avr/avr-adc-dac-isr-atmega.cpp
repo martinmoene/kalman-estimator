@@ -63,39 +63,38 @@ namespace adc
 {
     // result type and range:
 
-    using value_type = mcu::atmega328::adc::result_t;
+    using mcu::atmega328::adc::conversion::result_t;
+    using mcu::atmega328::adc::conversion::result_min;
+    using mcu::atmega328::adc::conversion::result_max;
 
-    using mcu::atmega328::adc::result_min;
-    using mcu::atmega328::adc::result_max;
-
-    volatile value_type adc_result;
+    volatile result_t adc_result;
 
     // setup ADC:
 
     inline void init()
     {
-        namespace ai = mcu::atmega328::adc;
+        using namespace mcu::atmega328::adc;
 
         // register admux:
-        ai::reference( ai::voltage_ref::avcc )
-        , ai::channel( ai::input::ch0 )
+        set( input::reference::avcc )
+        , set( input::channel::ch0 )
             ;
 
         // register adccsrb:
-        ai::trigger_source( ai::auto_trigger_source::free_run );
+        set( trigger::on::free_run );
 
         // register adcsra:
-        ai::prescale( ai::factor::x128 )
-        , ai::auto_trigger( true )
-        , ai::enable( true )
-        , ai::enable_interrupt( true )
-        , ai::start_conversion()
+        set( prescale::factor::x128 )
+        , set( enable::adc::on )
+        , set( enable::interrupt::on )
+        , set( enable::auto_trigger::on )
+        , conversion::start()
             ;
     }
 
     // atomic read of ADC conversion result:
 
-    inline value_type result()
+    inline result_t result()
     {
         return mcu::atomic( adc_result );
     }
@@ -106,7 +105,7 @@ namespace adc
     {
         mcu::atmega328::core::scoped_sreg _;
 
-        adc_result = mcu::atmega328::adc::result();
+        adc_result = mcu::atmega328::adc::conversion::result();
     }
 }
 
@@ -130,7 +129,7 @@ namespace beat
 
     inline void init()
     {
-        using namespace mcu::atmega328;
+        using namespace mcu::atmega328::tc0;
 
         constexpr auto prescale = 64;
         constexpr auto count1ms = F_CPU_HZ / 1000 / prescale;
@@ -138,14 +137,12 @@ namespace beat
         static_assert( count1ms == 250 );
 
         // register timsk1:
-//      tc0::interrupt_on_a( true )
-//      tc0::compare_a_with( count1ms )
-        tc0::enable_output_compare_a_match_interrupt( true );
-        tc0::output_compare_a( count1ms );
+        set( enable::interrupt::on::match_a::on );
+        set( value::compare::a( count1ms ) );
 
         // registers tccr1a, tccr1b
-        tc0::waveform( tc0::waveforms::ctc /*_ocr0a*/ )
-        , tc0::clock ( tc0::clocks::clk_64 )
+        set( output::waveform::ctc )
+        , set( input::clock::x64 )
             ;
     }
 
