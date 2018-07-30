@@ -22,12 +22,19 @@ namespace atmega328 {
 // MCU control, status and peripherals:
 //
 
-// Convert to uint8_t:
+// Convert to class enums to underlying type:
+
+template<typename T, size_t = sizeof(T)> struct utype;
+template<typename T> struct utype<T,1> { using type = uint8_t; };
+template<typename T> struct utype<T,2> { using type = uint16_t; };
+
+template<typename T> using utype_t = typename utype<T>::type;
+
 
 template< typename Id >
 constexpr auto to_integral( Id id )
 {
-    return static_cast< uint8_t >( id );
+    return static_cast< utype_t<Id> >( id );
 }
 
 // 11. AVR CPU Core
@@ -152,9 +159,6 @@ namespace core
 
 namespace mem
 {
-    using eeprom_data_t    = uint8_t;
-    using eeprom_address_t = uint16_t;
-
     static constexpr address_t eear_addr   = 0x41;
     static constexpr address_t eedr_addr   = 0x40;
     static constexpr address_t eecr_addr   = 0x3f;
@@ -163,108 +167,141 @@ namespace mem
     static constexpr address_t gpior1_addr = 0x4a;
     static constexpr address_t gpior0_addr = 0x3e;
 
-    // EEPROM programming mode, see 8.6.3 eecr
+    // eeprom
 
-    enum class eeprom_programming_modes : uint8_t
+    namespace eeprom
     {
-        erase_write = 0     // 3.4 ms, atomic operation
-        , erase_only        // 1.8 ms
-        , write_only        // 1.8 ms
-        , reserved3         // -
-    };
+        enum class data : uint8_t{};
+        enum class address : uint16_t{};
 
-    using eear = register_t< eeprom_address_t, rw_t, eear_addr >;
-    using eedr = register_t< eeprom_data_t   , rw_t, eedr_addr >;
-
-    inline auto eeprom_address()
-    {
-        return eear::read();
-    }
-
-    inline auto eeprom_address( eeprom_address_t address )
-    {
-        eear::write( address );
-    }
-
-    inline auto eeprom_data()
-    {
-        return eedr::read();
-    }
-
-    inline auto eeprom_data( eeprom_data_t data )
-    {
-        eedr::write( data );
-    }
-
-    // 8.6.3 - EECR: The EEPROM Control Register
-    //
-    // 5,4: EEPM1 and EEPM0: EEPROM Programming Mode Bits
-    // 3: EERIE: EEPROM Ready Interrupt Enable
-    // 2: EEMPE: EEPROM Master Write Enable
-    // 1: EEPE: EEPROM Write Enable
-    // 0: EERE: EEPROM Read Enable
-
-    namespace eecr
-    {
-        using whole = register8_t< rw_t, eecr_addr >;
-        using eepm  = bitfield8_t< rw_t, eecr_addr , EEPM1, EEPM0 >;
-        using eerie = bitfield8_t< rw_t, eecr_addr , EERIE        >;
-        using eempe = bitfield8_t< rw_t, eecr_addr , EEMPE        >;
-        using eepe  = bitfield8_t< rw_t, eecr_addr , EEPE         >;
-        using eere  = bitfield8_t< rw_t, eecr_addr , EERE         >;
-
-        using value_type = whole::value_type;
-
-        inline auto eeprom_programming_mode()
+        namespace program
         {
-            return eeprom_programming_modes{ eepm::read() };
+            enum class mode : uint8_t
+            {
+                erase_write = 0     // 3.4 ms, atomic operation
+                , erase_only        // 1.8 ms
+                , write_only        // 1.8 ms
+                , reserved3         // -
+            };
         }
 
-        inline auto eeprom_programming_mode( eeprom_programming_modes mode )
+        namespace interrupt
         {
-            return eepm::write_lazy( to_integral(mode) );
+            enum class on_ready : uint8_t { off, on };
         }
 
-        inline auto enabled_eeprom_ready_interrupt()
+        namespace enable
         {
-            return eerie::read();
+            enum class read         : uint8_t { off, on };
+            enum class write        : uint8_t { off, on };
+            enum class master_write : uint8_t { off, on };
         }
 
-        inline auto enable_eeprom_ready_interrupt( bool on )
+        // 12.6.2 EEARH, EEARL: EEPROM Address Register Low and High Byte
+        // 12.6.3 EEDR : EEPROM Data Register
+
+        using eear = register_t< address, rw_t, eear_addr >;
+        using eedr = register_t< data   , rw_t, eedr_addr >;
+
+        inline auto current( address )
         {
-            return eerie::write_lazy( on );
+            return eear::read();
         }
 
-        inline auto enabled_eeprom_master_write()
+        inline auto set( address a )
         {
-            return eempe::read();
+            eear::write( a );
         }
 
-        inline auto enable_eeprom_master_write( bool on )
+        inline auto current( data )
         {
-            return eempe::write_lazy( on );
+            return eedr::read();
         }
 
-        inline auto enabled_eeprom_write()
+        inline auto set( data v )
         {
-            return eepe::read();
+            eedr::write( v );
         }
 
-        inline auto enable_eeprom_write( bool on )
+        // 8.6.3 - EECR: The EEPROM Control Register
+        //
+        // 5,4: EEPM1 and EEPM0: EEPROM Programming Mode Bits
+        // 3: EERIE: EEPROM Ready Interrupt Enable
+        // 2: EEMPE: EEPROM Master Write Enable
+        // 1: EEPE: EEPROM Write Enable
+        // 0: EERE: EEPROM Read Enable
+
+        namespace eecr
         {
-            return eepe::write_lazy( on );
+            using whole = register8_t< rw_t, eecr_addr >;
+            using eepm  = bitfield8_t< rw_t, eecr_addr , EEPM1, EEPM0 >;
+            using eerie = bitfield8_t< rw_t, eecr_addr , EERIE        >;
+            using eempe = bitfield8_t< rw_t, eecr_addr , EEMPE        >;
+            using eepe  = bitfield8_t< rw_t, eecr_addr , EEPE         >;
+            using eere  = bitfield8_t< rw_t, eecr_addr , EERE         >;
+
+            using value_type = whole::value_type;
+        }   // eecr
+
+        namespace program
+        {
+            inline auto current( mode )
+            {
+                return mode{ eecr::eepm::read() };
+            }
+
+            inline auto set( mode m )
+            {
+                return eecr::eepm::write_lazy( to_integral(m) );
+            }
         }
 
-        inline auto enabled_eeprom_read()
+        namespace interrupt
         {
-            return eere::read();
+            inline auto current( on_ready )
+            {
+                return on_ready{ eecr::eerie::read() };
+            }
+
+            inline auto set( on_ready i )
+            {
+                return eecr::eerie::write_lazy( to_integral(i) );
+            }
         }
 
-        inline auto enable_eeprom_read( bool on )
+        namespace enable
         {
-            return eere::write_lazy( on );
+            inline auto current( master_write )
+            {
+                return master_write{ eecr::eempe::read() };
+            }
+
+            inline auto set( master_write e )
+            {
+                return eecr::eempe::write_lazy( to_integral(e) );
+            }
+
+            inline auto current( write )
+            {
+                return write{ eecr::eepe::read() };
+            }
+
+            inline auto set( write e )
+            {
+                return eecr::eepe::write_lazy( to_integral(e) );
+            }
+
+            inline auto current( read )
+            {
+                return read{ eecr::eere::read() };
+            }
+
+            inline auto set( read e )
+            {
+                return eecr::eere::write_lazy( to_integral(e) );
+            }
         }
-    }   // eecr
+    } // namespace eeprom
 
     // 12.6.5/6/7 GPIOR2/1/0: General Purpose I/O Register 2/1/0
 
@@ -286,18 +323,6 @@ namespace mem
         template< uint8_t bit_id >
         using bit = bitfield8_t< rw_t, gpiorn_address, bit_id >;
     };
-
-    // provide functions in mem namespace:
-
-    using eecr::eeprom_programming_mode;
-    using eecr::enabled_eeprom_ready_interrupt;
-    using eecr::enable_eeprom_ready_interrupt;
-    using eecr::enabled_eeprom_master_write;
-    using eecr::enable_eeprom_master_write;
-    using eecr::enabled_eeprom_write;
-    using eecr::enable_eeprom_write;
-    using eecr::enabled_eeprom_read;
-    using eecr::enable_eeprom_read;
 }
 
 // 13. System Clock and Clock Options
