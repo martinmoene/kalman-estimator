@@ -172,7 +172,7 @@ struct getbit_t
 {
     static auto get( address_t address, index_t bit )
     {
-        return static_cast<T>( *to_pointer<T>(address) & bitmask<T>( bit ) );
+        return static_cast<T>( !! (*to_pointer<T>(address) & bitmask<T>( bit ) ) );
     }
 };
 
