@@ -159,71 +159,28 @@ namespace core
 
 namespace mem
 {
-    static constexpr address_t eear_addr   = 0x41;
-    static constexpr address_t eedr_addr   = 0x40;
-    static constexpr address_t eecr_addr   = 0x3f;
-
-    static constexpr address_t gpior2_addr = 0x4b;
-    static constexpr address_t gpior1_addr = 0x4a;
-    static constexpr address_t gpior0_addr = 0x3e;
-
-    // eeprom
-
-    namespace eeprom
+    namespace reg
     {
-        enum class data : uint8_t{};
-        enum class address : uint16_t{};
+        // register addresses:
 
-        namespace program
-        {
-            enum class mode : uint8_t
-            {
-                erase_write = 0     // 3.4 ms, atomic operation
-                , erase_only        // 1.8 ms
-                , write_only        // 1.8 ms
-                , reserved3         // -
-            };
-        }
+        static constexpr address_t eear_addr   = 0x41;
+        static constexpr address_t eedr_addr   = 0x40;
+        static constexpr address_t eecr_addr   = 0x3f;
 
-        namespace interrupt
-        {
-            enum class on_ready : uint8_t { off, on };
-        }
-
-        namespace enable
-        {
-            enum class read         : uint8_t { off, on };
-            enum class write        : uint8_t { off, on };
-            enum class master_write : uint8_t { off, on };
-        }
+        static constexpr address_t gpior2_addr = 0x4b;
+        static constexpr address_t gpior1_addr = 0x4a;
+        static constexpr address_t gpior0_addr = 0x3e;
 
         // 12.6.2 EEARH, EEARL: EEPROM Address Register Low and High Byte
         // 12.6.3 EEDR : EEPROM Data Register
 
+        enum class data : uint8_t{};
+        enum class address : uint16_t{};
+
         using eear = register_t< address, rw_t, eear_addr >;
         using eedr = register_t< data   , rw_t, eedr_addr >;
 
-        inline auto current( address )
-        {
-            return eear::read();
-        }
-
-        inline auto set( address a )
-        {
-            eear::write( a );
-        }
-
-        inline auto current( data )
-        {
-            return eedr::read();
-        }
-
-        inline auto set( data v )
-        {
-            eedr::write( v );
-        }
-
-        // 8.6.3 - EECR: The EEPROM Control Register
+        // 12.6.4 EECR: EEPROM Control Register
         //
         // 5,4: EEPM1 and EEPM0: EEPROM Programming Mode Bits
         // 3: EERIE: EEPROM Ready Interrupt Enable
@@ -242,63 +199,105 @@ namespace mem
 
             using value_type = whole::value_type;
         }   // eecr
+    } // namespace reg
+
+    // eeprom
+
+    namespace eeprom
+    {
+        using reg::data;
+        using reg::address;
+
+        inline auto current( address )
+        {
+            return reg::eear::read();
+        }
+
+        inline auto set( address a )
+        {
+            reg::eear::write( a );
+        }
+
+        inline auto current( data )
+        {
+            return reg::eedr::read();
+        }
+
+        inline auto set( data v )
+        {
+            reg::eedr::write( v );
+        }
 
         namespace program
         {
+            enum class mode : uint8_t
+            {
+                erase_write = 0     // 3.4 ms, atomic operation
+                , erase_only        // 1.8 ms
+                , write_only        // 1.8 ms
+                , reserved3         // -
+            };
+
             inline auto current( mode )
             {
-                return mode{ eecr::eepm::read() };
+                return mode{ reg::eecr::eepm::read() };
             }
 
             inline auto set( mode m )
             {
-                return eecr::eepm::write_lazy( to_integral(m) );
-            }
-        }
-
-        namespace interrupt
-        {
-            inline auto current( on_ready )
-            {
-                return on_ready{ eecr::eerie::read() };
-            }
-
-            inline auto set( on_ready i )
-            {
-                return eecr::eerie::write_lazy( to_integral(i) );
+                return reg::eecr::eepm::write_lazy( to_integral(m) );
             }
         }
 
         namespace enable
         {
+            enum class read         : uint8_t { off, on };
+            enum class write        : uint8_t { off, on };
+            enum class master_write : uint8_t { off, on };
+
             inline auto current( master_write )
             {
-                return master_write{ eecr::eempe::read() };
+                return master_write{ reg::eecr::eempe::read() };
             }
 
             inline auto set( master_write e )
             {
-                return eecr::eempe::write_lazy( to_integral(e) );
+                return reg::eecr::eempe::write_lazy( to_integral(e) );
             }
 
             inline auto current( write )
             {
-                return write{ eecr::eepe::read() };
+                return write{ reg::eecr::eepe::read() };
             }
 
             inline auto set( write e )
             {
-                return eecr::eepe::write_lazy( to_integral(e) );
+                return reg::eecr::eepe::write_lazy( to_integral(e) );
             }
 
             inline auto current( read )
             {
-                return read{ eecr::eere::read() };
+                return read{ reg::eecr::eere::read() };
             }
 
             inline auto set( read e )
             {
-                return eecr::eere::write_lazy( to_integral(e) );
+                return reg::eecr::eere::write_lazy( to_integral(e) );
+            }
+        }
+
+        namespace interrupt
+        {
+            enum class on_ready : uint8_t { off, on };
+
+            inline auto current( on_ready )
+            {
+                return on_ready{ reg::eecr::eerie::read() };
+            }
+
+            inline auto set( on_ready i )
+            {
+                return reg::eecr::eerie::write_lazy( to_integral(i) );
             }
         }
     } // namespace eeprom
@@ -310,9 +309,9 @@ namespace mem
 
     // See also: http://bit.ly/mm-avr-gpior-usage
 
-    static constexpr address_t r2 = gpior2_addr;
-    static constexpr address_t r1 = gpior1_addr;
-    static constexpr address_t r0 = gpior0_addr;
+    static constexpr address_t r2 = reg::gpior2_addr;
+    static constexpr address_t r1 = reg::gpior1_addr;
+    static constexpr address_t r0 = reg::gpior0_addr;
 
     template< address_t gpiorn_address >
     struct gpio
@@ -332,25 +331,23 @@ namespace mem
 
 namespace clock
 {
-    static constexpr address_t osccal_addr = 0x66;
-    static constexpr address_t clkpr_addr  = 0x61;
-
-    // 13.12.1 OSCCAL: Oscillator Calibration Register:
-
-    namespace osccal
+    namespace reg
     {
-//    osccal_addr
+        static constexpr address_t osccal_addr = 0x66;
+        static constexpr address_t clkpr_addr  = 0x61;
 
-    }
+        // 13.12.1 OSCCAL: Oscillator Calibration Register:
 
-    // 13.12.2 CLKPR : Clock Prescaler Register:
+        namespace osccal
+        {
+        }
 
-//    clkpr_addr
-    namespace clkpr
-    {
+        // 13.12.2 CLKPR : Clock Prescaler Register:
 
-    }
-
+        namespace clkpr
+        {
+        }
+    } // namespace reg
 }
 
 // 14. Power Management and Sleep Modes
@@ -361,32 +358,30 @@ namespace clock
 
 namespace power
 {
-    static constexpr address_t smcr_addr   = 0x53;
-    static constexpr address_t mcusr_addr  = 0x54;
-    static constexpr address_t prr_addr    = 0x64;
-    // 14.12.1 SMCR : Sleep Mode Control Register:
-
-//    smcr_addr
-    namespace smcr
+    namespace reg
     {
+        static constexpr address_t smcr_addr   = 0x53;
+        static constexpr address_t mcusr_addr  = 0x54;
+        static constexpr address_t prr_addr    = 0x64;
 
-    }
+        // 14.12.1 SMCR : Sleep Mode Control Register:
 
-    // 14.12.2 MCUCR: MCU Control Register:
+        namespace smcr
+        {
+        }
 
-//    mcusr_addr
-    namespace mcusr
-    {
+        // 14.12.2 MCUCR: MCU Control Register:
 
-    }
+        namespace mcusr
+        {
+        }
 
-    // 14.12.3 PRR: Power Reduction Register:
+        // 14.12.3 PRR: Power Reduction Register:
 
-//    prr_addr
-    namespace prr
-    {
-
-    }
+        namespace prr
+        {
+        }
+    } // namespace reg
 }
 
 // 15. System Control and Reset
@@ -396,23 +391,23 @@ namespace power
 
 namespace reset
 {
-    static constexpr address_t mcucr_addr  = 0x55;
-    static constexpr address_t wdtcsr_addr = 0x60;
-
-    // 15.9.1 MCUSR : MCU Status Register:
-//    mcucr_addr
-    namespace mcucr
+    namespace reg
     {
+        static constexpr address_t mcucr_addr  = 0x55;
+        static constexpr address_t wdtcsr_addr = 0x60;
 
-    }
+        // 15.9.1 MCUSR : MCU Status Register:
 
-    // 15.9.2 WDTCSR: Watchdog Timer Control Register:
+        namespace mcucr
+        {
+        }
 
-//    wdtcsr_addr
-    namespace wdtcsr
-    {
+        // 15.9.2 WDTCSR: Watchdog Timer Control Register:
 
-    }
+        namespace wdtcsr
+        {
+        }
+    } // namespace reg
 }
 
 // 17. External Interrupts
@@ -434,6 +429,10 @@ enum class pcint : uint8_t { int0, int1, int2 };
 
 namespace ei
 {
+    namespace reg
+    {
+    } // namespace reg
+
     static constexpr address_t eicra_addr  = 0x69;
     static constexpr address_t eimsk_addr  = 0x3d;
     static constexpr address_t eifr_addr   = 0x3c;
@@ -1495,6 +1494,10 @@ namespace tc1
 
 namespace tcp
 {
+    namespace reg
+    {
+    } // namespace reg
+
     static constexpr address_t gtccr_addr = 0x43;
 
     namespace gtccr
@@ -1557,55 +1560,58 @@ namespace tcp
 
 namespace tc2
 {
-    static constexpr address_t tccr2a_addr = 0xb0;
-    static constexpr address_t tccr2b_addr = 0xb1;
-    static constexpr address_t tcnt2_addr  = 0xb2;
-    static constexpr address_t ocr2a_addr  = 0xb3;
-    static constexpr address_t ocr2b_addr  = 0xb4;
-    static constexpr address_t timsk2_addr = 0x70;
-    static constexpr address_t tifr2_addr  = 0x37;
-    static constexpr address_t assr_addr   = 0xb6;
-    static constexpr address_t gtccr_addr  = 0x43;
-
-    namespace tccr2a
+    namespace reg
     {
-    }
+        static constexpr address_t tccr2a_addr = 0xb0;
+        static constexpr address_t tccr2b_addr = 0xb1;
+        static constexpr address_t tcnt2_addr  = 0xb2;
+        static constexpr address_t ocr2a_addr  = 0xb3;
+        static constexpr address_t ocr2b_addr  = 0xb4;
+        static constexpr address_t timsk2_addr = 0x70;
+        static constexpr address_t tifr2_addr  = 0x37;
+        static constexpr address_t assr_addr   = 0xb6;
+        static constexpr address_t gtccr_addr  = 0x43;
 
-    namespace tccr2b
-    {
-    }
+        namespace tccr2a
+        {
+        }
 
-    namespace tcnt2
-    {
-    }
+        namespace tccr2b
+        {
+        }
 
-    namespace ocr2a
-    {
-    }
+        namespace tcnt2
+        {
+        }
 
-    namespace ocr2b
-    {
-    }
+        namespace ocr2a
+        {
+        }
 
-    namespace timsk2
-    {
-    }
+        namespace ocr2b
+        {
+        }
 
-    namespace tifr2
-    {
-    }
+        namespace timsk2
+        {
+        }
 
-    namespace assr
-    {
-    }
+        namespace tifr2
+        {
+        }
 
-    namespace gtccr
-    {
-    }
+        namespace assr
+        {
+        }
 
-    namespace gtccr
-    {
-    }
+        namespace gtccr
+        {
+        }
+
+        namespace gtccr
+        {
+        }
+    } // namespace reg
 }
 
 // 23. SPI - Serial Peripheral Interface (SPI)
@@ -1616,6 +1622,9 @@ namespace tc2
 
 namespace spi
 {
+    namespace reg
+    {
+    } // namespace reg
 }
 
 // 24. USART - Universal Synchronous Asynchronous Receiver Transceiver (USART)
@@ -1631,6 +1640,9 @@ namespace spi
 
 namespace usart
 {
+    namespace reg
+    {
+    } // namespace reg
 }
 
 // 26. TWI - Two-Wire Serial Interface (TWI)
@@ -1644,20 +1656,22 @@ namespace usart
 
 namespace twi
 {
-    static constexpr address_t addr_twbr  = 0xb8;
-    static constexpr address_t addr_twsr  = 0xb9;
-    static constexpr address_t addr_twar  = 0xba;
-    static constexpr address_t addr_twdr  = 0xbb;
-    static constexpr address_t addr_twcr  = 0xbc;
-    static constexpr address_t addr_twamr = 0xbd;
+    namespace reg
+    {
+        static constexpr address_t addr_twbr  = 0xb8;
+        static constexpr address_t addr_twsr  = 0xb9;
+        static constexpr address_t addr_twar  = 0xba;
+        static constexpr address_t addr_twdr  = 0xbb;
+        static constexpr address_t addr_twcr  = 0xbc;
+        static constexpr address_t addr_twamr = 0xbd;
 
-    using twbr  = register8_t< rw_t, addr_twbr >;
-    using twsr  = register8_t< rw_t, addr_twsr >;
-    using twar  = register8_t< rw_t, addr_twar >;
-    using twdr  = register8_t< rw_t, addr_twdr >;
-    using twcr  = register8_t< rw_t, addr_twcr >;
-    using twamr = register8_t< rw_t, addr_twamr >;
-
+        using twbr  = register8_t< rw_t, addr_twbr >;
+        using twsr  = register8_t< rw_t, addr_twsr >;
+        using twar  = register8_t< rw_t, addr_twar >;
+        using twdr  = register8_t< rw_t, addr_twdr >;
+        using twcr  = register8_t< rw_t, addr_twcr >;
+        using twamr = register8_t< rw_t, addr_twamr >;
+    } // namespace reg
 }
 
 // 27. AC - Analog Comparator (AC)
@@ -1667,6 +1681,12 @@ namespace twi
 
 namespace ac
 {
+    namespace reg
+    {
+    } // namespace reg
+
+    // register addresses:
+
     static constexpr address_t addr_acsr  = 0x50;
     static constexpr address_t addr_didr1 = 0x7f;
 
@@ -2097,6 +2117,9 @@ namespace adc
 
 namespace dbgw
 {
+    namespace reg
+    {
+    } // namespace reg
 }
 
 // 30. Boot Loader Support - Read-While-Write Self-programming (BTLDR)
@@ -2105,6 +2128,9 @@ namespace dbgw
 
 namespace spf  // self-programming flash
 {
+    namespace reg
+    {
+    } // namespace reg
 }
 
 // Convenience types:
