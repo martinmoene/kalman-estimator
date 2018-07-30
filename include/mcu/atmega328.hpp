@@ -6,6 +6,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+//
+// Datasheet referenced: Microchip Technology Inc. ATmega328/P AVR MCU. 2018.
+//
+
 #ifndef MCU_ATMEGA328_HPP_INCLUDED
 #define MCU_ATMEGA328_HPP_INCLUDED
 
