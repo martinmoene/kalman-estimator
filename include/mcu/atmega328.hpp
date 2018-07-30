@@ -1737,298 +1737,302 @@ namespace ac
 
 namespace adc
 {
-    // register addresses:
-
-    static constexpr address_t base_addr   = 0x78;
-    static constexpr address_t addr_adcl   = base_addr + 0;
-    static constexpr address_t addr_adch   = base_addr + 1;
-    static constexpr address_t addr_adcsra = base_addr + 2;
-    static constexpr address_t addr_adcsrb = base_addr + 3;
-    static constexpr address_t addr_admux  = base_addr + 4;
-    // + 5: reserved
-    static constexpr address_t addr_didr0  = base_addr + 6;
-    static constexpr address_t addr_didr1  = base_addr + 7;
-
-    // adc conversion result type, 10-bit resolution:
-
-    using result_t = uint16_t;
-
-    constexpr auto result_min = result_t{ 0b0 };
-    constexpr auto result_max = result_t{ 0b11'1111'1111 };
-
-    // admux voltage reference:
-
-    enum class voltage_ref : uint8_t
+    namespace reg
     {
-        aref = 0
-        , avcc
-        , reserved
-        , intern_1v1
-    };
+        // register addresses:
 
-    // admux adc result adjustment:
+        static constexpr address_t base_addr   = 0x78;
+        static constexpr address_t addr_adcl   = base_addr + 0;
+        static constexpr address_t addr_adch   = base_addr + 1;
+        static constexpr address_t addr_adcsra = base_addr + 2;
+        static constexpr address_t addr_adcsrb = base_addr + 3;
+        static constexpr address_t addr_admux  = base_addr + 4;
+        // + 5: reserved
+        static constexpr address_t addr_didr0  = base_addr + 6;
+        static constexpr address_t addr_didr1  = base_addr + 7;
 
-    enum class adjustment : uint8_t
+        // adc: ADCL and ADCH - The ADC Data Register:
+
+        namespace adc
+        {
+            // see also admux::adjust()
+
+            using whole = register16_t< r_t, addr_adcl >;   // 16-bit result
+            using adchl = register16_t< r_t, addr_adcl >;   // 16-bit result
+            using adcl  =  register8_t< r_t, addr_adcl >;   //  8-bit lsb
+            using adch  =  register8_t< r_t, addr_adch >;   //  2-bit msb
+
+            using value_type = whole::value_type;
+        }
+
+        // admux - ADC Multiplexer Selection Register:
+
+        namespace admux
+        {
+            using whole = register8_t< rw_t, addr_admux >;
+            using refs  = bitfield8_t< rw_t, addr_admux, REFS1, REFS0 >; // voltage reference
+            using adlar = bitfield8_t< rw_t, addr_admux, ADLAR        >; // left adjust result
+            using mux   = bitfield8_t< rw_t, addr_admux, MUX3 , MUX0  >; // input channel
+
+            using value_type = whole::value_type;
+        }
+
+        // adcsra - ADC Control and Status Register A:
+
+        namespace adcsra
+        {
+            using whole = register8_t< rw_t, addr_adcsra >;
+            using aden  = bitfield8_t< rw_t   , addr_adcsra, ADEN >;        // ADC Enable
+            using adsc  = bitfield8_t< rw_t   , addr_adcsra, ADSC >;        // ADC Start Conversion
+            using adate = bitfield8_t< rw_t   , addr_adcsra, ADATE>;        // ADC Auto Trigger Enable
+            using adif  = bitfield8_t< rc_w1_t, addr_adcsra, ADIF >;        // ADC Interrupt Flag
+            using adie  = bitfield8_t< rw_t   , addr_adcsra, ADIE >;        // ADC Interrupt Enable
+            using adps  = bitfield8_t< rw_t   , addr_adcsra, ADPS2, ADPS0 >;// ADC Prescaler Select Bits
+
+            using value_type = whole::value_type;
+        }
+
+        // adcsrb - ADC Control and Status Register B:
+
+        namespace adcsrb
+        {
+            using whole = register8_t< rw_t, addr_adcsrb >;
+            using acme  = bitfield8_t< rw_t, addr_adcsrb, ACME         >;    // ADC Analog Comparator Multiplexer Enabled
+            using adts  = bitfield8_t< rw_t, addr_adcsrb, ADTS2, ADTS0 >;    // ADC Auto Trigger Source
+
+            using value_type = whole::value_type;
+        }
+
+            // didr0 - Digital Input Disable Register 0:
+        // exampple: adc::didr0::write( bitmask( ADC1D, ADC0D ) );
+
+        using didr0 = bitfield8_t< rw_t, addr_didr0, ADC5D, ADC0D >;
+
+        // didr1 - Digital Input Disable Register 1:
+        // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
+
+        using didr1 = ac::didr1;
+    }
+
+    namespace conversion
     {
-        right = 0
-        , left
-    };
+        // adc conversion result type, 10-bit resolution:
 
-    // admux input channel:
+        using result_t = reg::adc::value_type;
 
-    enum class input : uint8_t
-    {
-        ch0 = 0
-        , ch1
-        , ch2
-        , ch3
-        , ch4
-        , ch5
-        , ch6
-        , ch7
-        , ch8
-        , reserved9
-        , reserved10
-        , reserved11
-        , reserved12
-        , reserved13
-        , internal_1v1  // 1.1 V
-        , gnd           // 0 V
-    };
+        constexpr auto result_min = result_t{ 0b0 };
+        constexpr auto result_max = result_t{ 0b11'1111'1111 };
 
-    // adcsra prescaler factor:
+        // admux adc result adjustment:
 
-    enum class factor : uint8_t
-    {
-        x02 = 0
-        , x2
-        , x4
-        , x8
-        , x16
-        , x32
-        , x64
-        , x128
-    };
+        enum class adjustment : uint8_t
+        {
+            right = 0
+            , left
+        };
 
-    // adcsrb trigger source:
-
-    enum class auto_trigger_source : uint8_t
-    {
-        free_run = 0
-        , analog_comparator
-        , external_interrupt_0
-        , timer_counter_0_cmp_match_a
-        , timer_counter_0_overflow
-        , timer_counter_1_cmp_match_b
-        , timer_counter_1_overflow
-        , timer_counter_1_capture_event
-    };
-
-    // adc: ADCL and ADCH - The ADC Data Register:
-
-    namespace adc
-    {
-        // see also admux::adjust()
-
-        using whole = register16_t< r_t, addr_adcl >;   // 16-bit result
-        using adchl = register16_t< r_t, addr_adcl >;   // 16-bit result
-        using adcl  =  register8_t< r_t, addr_adcl >;   //  8-bit lsb
-        using adch  =  register8_t< r_t, addr_adch >;   //  2-bit msb
-
-        using value_type = whole::value_type;
+        inline auto start()
+        {
+            return reg::adcsra::adsc::write_lazy( true );
+        }
 
         inline auto result()
         {
-            return adchl::read();
+            return reg::adc::adchl::read();
         }
 
-        inline auto result_lsb()
+        inline auto lsb()
         {
-            return adcl::read();
+            return reg::adc::adcl::read();
         }
 
-        inline auto result_msb()
+        inline auto msb()
         {
-            return adch::read();
+            return reg::adc::adch::read();
+        }
+
+        inline auto current( adjustment )
+        {
+            return adjustment{ reg::admux::adlar::read() };
+        }
+
+        inline auto set( adjustment a )
+        {
+            return reg::admux::adlar::write_lazy( to_integral(a) );
         }
     }
 
-    // admux - ADC Multiplexer Selection Register:
-
-    namespace admux
+    namespace input
     {
-        using whole = register8_t< rw_t, addr_admux >;
-        using refs  = bitfield8_t< rw_t, addr_admux, REFS1, REFS0 >; // voltage reference
-        using adlar = bitfield8_t< rw_t, addr_admux, ADLAR        >; // left adjust result
-        using mux   = bitfield8_t< rw_t, addr_admux, MUX3 , MUX0  >; // input channel
+        // admux voltage reference:
 
-        using value_type = whole::value_type;
-
-        inline auto reference()
+        enum class reference: uint8_t
         {
-            return voltage_ref{ refs::read() };
+            aref = 0
+            , avcc
+            , reserved
+            , intern_1v1
+        };
+
+        // admux input channel:
+
+        enum class channel: uint8_t
+        {
+            ch0 = 0
+            , ch1
+            , ch2
+            , ch3
+            , ch4
+            , ch5
+            , ch6
+            , ch7
+            , ch8
+            , reserved9
+            , reserved10
+            , reserved11
+            , reserved12
+            , reserved13
+            , internal_1v1  // 1.1 V
+            , gnd           // 0 V
+        };
+
+        inline auto current( reference )
+        {
+            return reference{ reg::admux::refs::read() };
         }
 
-        inline auto reference( voltage_ref vref )
+        inline auto set( reference r )
         {
-            return refs::write_lazy( to_integral(vref) );
+            return reg::admux::refs::write_lazy( to_integral(r) );
         }
 
-        inline auto adjust()
+        inline auto current( channel )
         {
-            return adjustment{ adlar::read() };
+            return channel{ reg::admux::mux::read() };
         }
 
-        inline auto adjust( adjustment adjust )
+        inline auto set( channel c )
         {
-            return adlar::write_lazy( adjust == adjustment::left );
+            return reg::admux::mux::write_lazy( to_integral(c) );
         }
+    }
 
-        inline auto channel()
-        {
-            return input{ mux::read() };
-        }
-
-        inline auto channel( input ch )
-        {
-            return mux::write_lazy( to_integral(ch) );
-        }
-    };
-
-    // adcsra - ADC Control and Status Register A:
-
-    namespace adcsra
+    namespace enable
     {
-        using whole = register8_t< rw_t, addr_adcsra >;
-        using aden  = bitfield8_t< rw_t   , addr_adcsra, ADEN >;        // ADC Enable
-        using adsc  = bitfield8_t< rw_t   , addr_adcsra, ADSC >;        // ADC Start Conversion
-        using adate = bitfield8_t< rw_t   , addr_adcsra, ADATE>;        // ADC Auto Trigger Enable
-        using adif  = bitfield8_t< rc_w1_t, addr_adcsra, ADIF >;        // ADC Interrupt Flag
-        using adie  = bitfield8_t< rw_t   , addr_adcsra, ADIE >;        // ADC Interrupt Enable
-        using adps  = bitfield8_t< rw_t   , addr_adcsra, ADPS2, ADPS0 >;// ADC Prescaler Select Bits
+        enum class adc : uint8_t { off, on };
+        enum class interrupt : uint8_t { off, on };
+        enum class comparator: uint8_t { off, on };
+        enum class auto_trigger : uint8_t { off, on };
 
-        using value_type = whole::value_type;
-
-        inline auto enabled()
+        inline auto current( adc )
         {
-            return aden::read();
+            return adc{ reg::adcsra::aden::read() };
         }
 
-        inline auto enable( bool on = true )
+        inline auto set( adc e )
         {
-            return aden::write_lazy( on );
+            return reg::adcsra::aden::write_lazy( to_integral(e) ) ;
         }
 
-        inline auto start_conversion()
+        inline auto current( interrupt )
         {
-            return adsc::write_lazy( true );
+            return interrupt{ reg::adcsra::adie::read() };
         }
 
-        inline auto auto_trigger()
+        inline auto set( interrupt e )
         {
-            return 0 != adate::read();
+            return reg::adcsra::adie::write_lazy( to_integral(e) );
         }
 
-        inline auto auto_trigger( bool on )
+        inline auto current( auto_trigger )
         {
-            return adate::write_lazy( on );
+            return auto_trigger{ reg::adcsra::adate::read() };
         }
 
-        inline auto interrupt_flag()
+        inline auto set( auto_trigger e )
         {
-            return adif::read();
+            return reg::adcsra::adate::write_lazy( to_integral(e) );
         }
 
-        inline auto clear_interrupt_flag()
+        inline auto current( comparator )
         {
-            return adif::clear();
+            return comparator{ reg::adcsrb::acme::read() };
         }
 
-        inline auto enabled_interrupt()
+        inline auto set( comparator e )
         {
-            return 0 != adie::read();
+             return reg::adcsrb::acme::write_lazy( to_integral(e) );
         }
+    }
 
-        inline auto enable_interrupt( bool on )
-        {
-            return adie::write_lazy( on );
-        }
-
-        inline auto prescale()
-        {
-            return factor{ adps::read() };
-        }
-
-        inline auto prescale( factor x )
-        {
-            return adps::write_lazy( to_integral(x) );
-        }
-    };
-
-    // adcsrb - ADC Control and Status Register B:
-
-    namespace adcsrb
+    namespace interrupt
     {
-        using whole = register8_t< rw_t, addr_adcsrb >;
-        using acme  = bitfield8_t< rw_t, addr_adcsrb, ACME         >;    // ADC Analog Comparator Multiplexer Enabled
-        using adts  = bitfield8_t< rw_t, addr_adcsrb, ADTS2, ADTS0 >;    // ADC Auto Trigger Source
+        enum class flag : uint8_t{};
 
-        using value_type = whole::value_type;
-
-        inline auto enabled_comparator_mux()
+        inline auto current( flag )
         {
-            return 0 != acme::read();
+            return 0 != reg::adcsra::adif::read();
         }
 
-        inline auto enable_comparator_mux( bool on )
+        inline auto clear( flag )
         {
-            return acme::write_lazy( on );
+            reg::adcsra::adif::clear();
+        }
+    }
+
+    namespace trigger
+    {
+        // adcsrb trigger source:
+
+        enum class on : uint8_t
+        {
+            free_run = 0
+            , ac
+            , ei0
+            , tc0_match_a
+            , tc0_overflow
+            , tc1_match_b
+            , tc1_overflow
+            , tc1_capture_event
+        };
+
+        inline auto current( on )
+        {
+            return on{ reg::adcsrb::adts::read() };
         }
 
-        inline auto trigger_source()
+        inline auto set( on evt )
         {
-            return auto_trigger_source{ adts::read() };
+            return reg::adcsrb::adts::write_lazy( to_integral(evt) );
+        }
+    }
+
+    namespace prescale
+    {
+        // adcsra prescaler factor:
+
+        enum class factor : uint8_t
+        {
+            x02 = 0
+            , x2
+            , x4
+            , x8
+            , x16
+            , x32
+            , x64
+            , x128
+        };
+
+        inline auto current( factor )
+        {
+            return factor{ reg::adcsra::adps::read() };
         }
 
-        inline auto trigger_source( auto_trigger_source x )
+        inline auto set( factor f )
         {
-            return adts::write_lazy( to_integral(x) );
+            return reg::adcsra::adps::write_lazy( to_integral(f) );
         }
-    };
-
-    // didr0 - Digital Input Disable Register 0:
-    // exampple: adc::didr0::write( bitmask( ADC1D, ADC0D ) );
-
-    using didr0 = bitfield8_t< rw_t, addr_didr0, ADC5D, ADC0D >;
-
-    // didr1 - Digital Input Disable Register 1:
-    // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
-
-    using didr1 = ac::didr1;
-
-    // provide functions in adc namespace:
-
-    using adc::result;
-    using adc::result_lsb;
-    using adc::result_msb;
-
-    using admux::reference;
-    using admux::adjust;
-    using admux::channel;
-
-    using adcsra::enable;
-    using adcsra::enabled;
-    using adcsra::start_conversion;
-    using adcsra::auto_trigger;
-    using adcsra::interrupt_flag;
-    using adcsra::clear_interrupt_flag;
-    using adcsra::enable_interrupt;
-    using adcsra::enabled_interrupt;
-    using adcsra::prescale;
-
-    using adcsrb::enabled_comparator_mux;
-    using adcsrb::enable_comparator_mux;
-    using adcsrb::trigger_source;
+    }
 }
 
 // debugWIRE On-chip Debug System:
