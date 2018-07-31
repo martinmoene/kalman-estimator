@@ -345,7 +345,7 @@ constexpr matrix<T,N,M> operator*( matrix<T,N,M> const & A, matrix<T,1,1> const 
 // A1x1 * A
 
 template< typename T, int N, int M >
-constexpr matrix<T,N,M> operator*( matrix<T,1,1> const & A, matrix<T,N,M> const & v )
+constexpr matrix<T,N,M> operator*( matrix<T,1,1> const & v, matrix<T,N,M> const & A )
 {
     return A * v(0);
 }
