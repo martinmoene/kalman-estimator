@@ -1726,123 +1726,147 @@ namespace ac
 {
     namespace reg
     {
+        // register addresses:
+
+        static constexpr address_t addr_acsr  = 0x50;
+        static constexpr address_t addr_didr1 = 0x7f;
+
+        // 27.3.1 ACSR : Analog Comparator Control and Status Register
+
+        namespace acsr
+        {
+            using whole = register8_t< rw_t, addr_acsr >;
+            using acd   = bitfield8_t< rw_t, addr_acsr, ACD  >;
+            using acbg  = bitfield8_t< rw_t, addr_acsr, ACBG >;
+            using aco   = bitfield8_t< r_t , addr_acsr, ACO  >;
+            using aci   = bitfield8_t< rc_w1_t, addr_acsr, ACI  >;
+            using acie  = bitfield8_t< rw_t, addr_acsr, ACIE >;
+            using acic  = bitfield8_t< rw_t, addr_acsr, ACIC >;
+            using acis  = bitfield8_t< rw_t, addr_acsr, ACIS1, ACIS0 >;
+
+            using value_type = whole::value_type;
+        }
+
+        // 27.3.2 DIDR1: Digital Input Disable Register 1
+        // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
+
+        using didr1 = bitfield8_t< rw_t, addr_didr1, AIN1D, AIN0D >;
     } // namespace reg
 
-    // register addresses:
 
-    static constexpr address_t addr_acsr  = 0x50;
-    static constexpr address_t addr_didr1 = 0x7f;
-
-    enum class interrupt : uint8_t
+    namespace input
     {
-        toggle = 0      // comparator interrupt on output toggle
-        , reserved1     // -
-        , falling_edge  // comparator interrupt on falling output edge
-        , rising_edge   // comparator interrupt on rising output edge
-    };
-
-    namespace acsr
-    {
-        using whole = register8_t< rw_t, addr_acsr >;
-        using acd   = bitfield8_t< rw_t, addr_acsr, ACD  >;
-        using acbg  = bitfield8_t< rw_t, addr_acsr, ACBG >;
-        using aco   = bitfield8_t< r_t , addr_acsr, ACO  >;
-        using aci   = bitfield8_t< rc_w1_t, addr_acsr, ACI  >;
-        using acie  = bitfield8_t< rw_t, addr_acsr, ACIE >;
-        using acic  = bitfield8_t< rw_t, addr_acsr, ACIC >;
-        using acis  = bitfield8_t< rw_t, addr_acsr, ACIS1, ACIS0 >;
-
-        using value_type = whole::value_type;
-
-        inline auto disabled_comparator()
+        namespace select
         {
-            return acd::read();
-        }
+            enum class bandgap_ref: uint8_t { off, on };
 
-        inline auto disable_comparator( bool on )
-        {
-            return acd::write_lazy( on );
-        }
+            inline auto current( bandgap_ref )
+            {
+                return bandgap_ref{ reg::acsr::acbg::read() };
+            }
 
-        inline auto fixed_bandgap()
-        {
-            return acbg::read();
-        }
-
-        inline auto fixed_bandgap( bool on )
-        {
-            return acbg::write_lazy( on );
-        }
-
-        inline auto comparator_output()
-        {
-            return aco::read();
-        }
-
-        inline auto interrupt_flag()
-        {
-            return aci::read();
-        }
-
-        inline auto clear_interrupt_flag()
-        {
-            aci::clear();
-        }
-
-        inline auto enabled_interrupt()
-        {
-            return acie::read();
-        }
-
-        inline auto enable_interrupt( bool on )
-        {
-            return acie::write_lazy( on );
-        }
-
-        inline auto enabled_input_capture();
-        inline auto enable_input_capture( bool on );
-
-        // disable/restore interrupt enable bit:
-
-        struct scoped_interrupt_guard
-        {
-            const bool ei = enabled_interrupt();
-            scoped_interrupt_guard() { enable_interrupt(false); }
-            ~scoped_interrupt_guard() { enable_interrupt(ei); }
-        };
-
-        inline auto interrupt_on()
-        {
-            return interrupt{ acis::read() };
-        }
-
-        inline auto interrupt_on( interrupt what )
-        {
-            return acis::write_lazy( to_integral( what ) );
+            inline auto set( bandgap_ref e )
+            {
+                 return reg::acsr::acbg::write_lazy( to_integral(e) );
+            }
         }
     }
 
-    // didr1  - Digital Input Disable Register 1:
-    // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
+    namespace output
+    {
+        struct state{};
 
-    using didr1 = bitfield8_t< rw_t, addr_didr1, AIN1D, AIN0D >;
+        inline auto current( state )
+        {
+            return reg::acsr::aco::read();
+        }
 
-    // provide types and functions in ac namespace:
+        namespace interrupt
+        {
+            // output interrupt mode:
 
-    using acsr::scoped_interrupt_guard;
+            enum class on : uint8_t
+            {
+                toggle = 0      // comparator interrupt on output toggle
+                , reserved1     // -
+                , falling_edge  // comparator interrupt on falling output edge
+                , rising_edge   // comparator interrupt on rising output edge
+            };
 
-    using acsr::disabled_comparator;
-    using acsr::disable_comparator;
-    using acsr::fixed_bandgap;
-    using acsr::fixed_bandgap;
-    using acsr::comparator_output;
-    using acsr::interrupt_flag;
-    using acsr::clear_interrupt_flag;
-    using acsr::enabled_interrupt;
-    using acsr::enable_interrupt;
-    using acsr::enabled_input_capture;
-    using acsr::enable_input_capture;
-    using acsr::interrupt_on;
+            inline auto current( on )
+            {
+                return on{ reg::acsr::acis::read() };
+            }
+
+            inline auto set( on m )
+            {
+                return reg::acsr::acis::write_lazy( to_integral(m) );
+            }
+        }
+    }
+
+    namespace enable
+    {
+        enum class interrupt : uint8_t { off, on };
+
+        inline auto current( interrupt )
+        {
+            return interrupt{ reg::acsr::acie::read() };
+        }
+
+        inline auto set( interrupt e )
+        {
+            return reg::acsr::acie::write_lazy( to_integral(e) );
+        }
+
+        namespace input
+        {
+            enum class capture : uint8_t { off, on };
+
+            inline auto current( capture )
+            {
+                return capture{ reg::acsr::acic::read() };
+            }
+
+            inline auto set( capture e )
+            {
+                return reg::acsr::acic::write_lazy( to_integral(e) );
+            }
+        }
+    }
+
+    namespace disable
+    {
+        namespace analog
+        {
+            enum class comparator: uint8_t { off, on };
+
+            inline auto current( comparator )
+            {
+                return comparator{ reg::acsr::acd::read() };
+            }
+
+            inline auto set( comparator e )
+            {
+                 return reg::acsr::acd::write_lazy( to_integral(e) );
+            }
+        }
+    }
+
+    namespace interrupt
+    {
+        struct flag{};
+
+        inline auto current( flag )
+        {
+            return 0 != reg::acsr::aci::read();
+        }
+
+        inline auto clear( flag )
+        {
+            reg::acsr::aci::clear();
+        }
+    }
 }
 
 // 28. ADC - Analog-to-Digital Converter (ADC)
@@ -1930,7 +1954,7 @@ namespace adc
         // didr1 - Digital Input Disable Register 1:
         // exampple: adc::didr1::write( bitmask( AIN1D, AIN0D ) );
 
-        using didr1 = ac::didr1;
+        using didr1 = ac::reg::didr1;
     }
 
     namespace conversion
