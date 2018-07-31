@@ -38,7 +38,7 @@ namespace dac
 {
     using dac_t = mcu::atmega328::tc1_pwm_on_a_pb1;
 
-    // result type:
+    // dac value type:
 
     using value_type = dac_t::value_type;
 
@@ -136,11 +136,11 @@ namespace beat
 
         static_assert( count1ms == 250 );
 
-        // register timsk1:
+        // register timsk0:
         set( enable::interrupt::on::match_a::on );
         set( value::compare::a( count1ms ) );
 
-        // registers tccr1a, tccr1b
+        // registers tccr1a, tccr10
         set( output::waveform::ctc )
         , set( input::clock::x64 )
             ;
