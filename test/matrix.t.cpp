@@ -465,11 +465,16 @@ CASE( "algorithm:     [a ; b]  - [c ; d]     " " [mat][sub]" )
 
 CASE( "algorithm:         [a]  . [b]         " " [mat][1x1][mul]" )
 {
-    matrix<int,1,1> A = { 2 };
+    matrix<int,1,1> v = { 2 };
+    matrix<int,2,2> A = { 1, 2, 3, 4 };
+    matrix<int,2,2> R = { 2*1, 2*2, 2*3, 2*4 };
+    matrix<int,2,2> B, C;
 
-    A = A * A;
+    B = v * A;
+    C = A * v;
 
-    EXPECT( A(0) == 4 );
+    EXPECT( std20::equal( B.begin(), B.end(), R.begin() ) );
+    EXPECT( std20::equal( C.begin(), C.end(), R.begin() ) );
 }
 
 CASE( "algorithm:     [a ; b]  . [c ; d]     " " [mat][mul]" )
