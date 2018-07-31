@@ -399,7 +399,7 @@ public:
         static_assert( hi >= lo   , "register: bit index hi must be >= bit index lo");
     }
 
-    // Read a field, special case single bit read:
+    // Read a field, special case single-bit and all-bits read:
 
     static auto read()
     {
@@ -419,7 +419,7 @@ public:
         }
     }
 
-    // Write a field, special case single bit write:
+    // Write a field, special case single-bit and all-bits write:
 
     static void write( value_type value )
     {
