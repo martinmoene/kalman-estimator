@@ -113,12 +113,41 @@ namespace adc
 
 namespace mbx
 {
-    // Timer 0 overflow ISR:
+    // mailbox with automatic reset:
 
-    volatile bool mbx_1ms = false;
-    volatile bool mbx_10ms = false;
-    volatile bool mbx_100ms = false;
-    volatile bool mbx_1000ms = false;
+    struct mbx
+    {
+        volatile bool flag = false;
+
+        void operator=( bool x )
+        {
+            flag = x;
+        }
+
+        explicit operator bool()
+        {
+            struct scoped_reset
+            {
+                volatile bool & x;
+
+                scoped_reset( volatile bool & x_) : x( x_ ) {}
+
+                ~scoped_reset() { x = false; }
+            };
+
+            if ( flag )
+            {
+                scoped_reset _( flag );
+                return true;
+            }
+            return false;
+        }
+    };
+
+    mbx mbx_1ms;
+    mbx mbx_10ms;
+    mbx mbx_100ms;
+    mbx mbx_1000ms;
 }
 
 // Heartbeat in 1 ms, 10 ms, 100 ms and 1 s on timer 0 (tc0):
@@ -158,6 +187,8 @@ namespace beat
         static uint8_t cnt_100ms = 10;
         static uint8_t cnt_1000ms = 10;
 
+        mbx_1ms = true;
+
         if ( --cnt_10ms > 0 )
             return ;
 
@@ -195,12 +226,13 @@ int main()
 
     // quickly blink LED a few times:
 
+    using namespace mbx;
+
     for( auto i = uint8_t{ 2 * config::led_blink }; i != 0; --i )
     {
-        while( ! mbx::mbx_100ms )
+        while( ! mbx_100ms )
             ;
 
-        mbx::mbx_100ms = false;
         led::toggle();
     }
 
@@ -211,30 +243,22 @@ int main()
 
     for(;;)
     {
-        using namespace mbx;
-
         if ( mbx_1ms )
         {
-            mbx_1ms = false;
         }
 
         if ( mbx_10ms )
         {
-            mbx_10ms = false;
         }
 
         if ( mbx_100ms )
         {
-            mbx_100ms = false;
-
             if ( adc::result() > adc::result_max / 2 )
                 led::on();
         }
 
         if ( mbx_1000ms )
         {
-            mbx_1000ms = false;
-
             led::off();
 
             dac::write( adc::result() );
