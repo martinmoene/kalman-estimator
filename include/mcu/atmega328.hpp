@@ -1539,55 +1539,62 @@ namespace tcp
 {
     namespace reg
     {
+        static constexpr address_t gtccr_addr = 0x43;
+
+        // 21.4.1 GTCCR: General Timer/Counter Control Register
+
+        namespace gtccr
+        {
+            using whole   = register8_t< rw_t, gtccr_addr >;
+            using tsm     = bitfield8_t< rw_t, gtccr_addr, TSM >;
+            using psrasy  = bitfield8_t< rw_t, gtccr_addr, PSRASY >;
+            using psrsync = bitfield8_t< rw_t, gtccr_addr, PSRSYNC >;
+
+            using value_type = whole::value_type;
+        }
+
     } // namespace reg
 
-    static constexpr address_t gtccr_addr = 0x43;
+    enum class synchronization : uint8_t { off, on };
 
-    namespace gtccr
+    inline auto current( synchronization )
     {
-        using whole   = register8_t< rw_t, gtccr_addr >;
-        using tsm     = bitfield8_t< rw_t, gtccr_addr, TSM >;
-        using psrasy  = bitfield8_t< rw_t, gtccr_addr, PSRASY >;
-        using psrsync = bitfield8_t< rw_t, gtccr_addr, PSRSYNC >;
-
-        using value_type = whole::value_type;
-
-        inline auto synchronization_mode()
-        {
-            return tsm::read();
-        }
-
-        inline auto synchronization_mode( bool on )
-        {
-            return tsm::write_lazy( on );
-        }
-
-        inline auto prescaler_reset_timer_counter2()
-        {
-            return psrasy::read();
-        }
-
-        inline auto prescaler_reset_timer_counter2( bool on )
-        {
-            return psrasy::write_lazy( on );
-        }
-
-        inline auto prescaler_reset_timer_counter01()
-        {
-            return psrsync::read();
-        }
-
-        inline auto prescaler_reset_timer_counter01( bool on )
-        {
-            return psrsync::write_lazy( on );
-        }
+        return synchronization{ reg::gtccr::tsm::read() };
     }
 
-    // provide functions in tcp namespace:
+    inline auto set( synchronization e )
+    {
+        return reg::gtccr::tsm::write_lazy( to_integral(e) );
+    }
 
-    using gtccr::synchronization_mode;
-    using gtccr::prescaler_reset_timer_counter2;
-    using gtccr::prescaler_reset_timer_counter01;
+    namespace reset
+    {
+        namespace prescaler
+        {
+            enum class tc2  : uint8_t { off, on };
+            enum class tc01 : uint8_t { off, on };
+
+            inline auto current( tc2 )
+            {
+                return tc2{ reg::gtccr::psrasy::read() };
+            }
+
+            inline auto set( tc2 e )
+            {
+                return reg::gtccr::psrasy::write_lazy( to_integral(e) );
+            }
+
+            inline auto current( tc01 )
+            {
+                return tc01{ reg::gtccr::psrsync::read() };
+            }
+
+            inline auto set( tc01 e )
+            {
+                return reg::gtccr::psrsync::write_lazy( to_integral(e) );
+            }
+        }
+    }
 }
 
 // 22. 8-bit Timer/Counter2 (TC2) with PWM and Asynchronous Operation
