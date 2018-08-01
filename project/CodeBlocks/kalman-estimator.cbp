@@ -73,8 +73,8 @@
 		<Unit filename="../../test/tc.bat" />
 		<Unit filename="../../test/tg.bat" />
 		<Unit filename="../../time/CMakeLists.txt" />
-		<Unit filename="../../time/kalman-time-avr.cpp" />
-		<Unit filename="../../time/mk-kalman-time-avr.py" />
+		<Unit filename="../../time/avr-kalman-time.cpp" />
+		<Unit filename="../../time/mk-avr-kalman-time.py" />
 		<Extensions>
 			<code_completion />
 			<envvars />

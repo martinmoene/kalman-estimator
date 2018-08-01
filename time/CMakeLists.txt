@@ -9,7 +9,7 @@ cmake_minimum_required( VERSION 3.5 )
 
 project( time LANGUAGES CXX)
 
-set( BASENAME kalman-time-avr )
+set( BASENAME avr-kalman-time )
 set( TARGET   ${BASENAME} )
 set( SOURCES  ${BASENAME}.cpp )
 set( HDRDIR   ${PROJECT_SOURCE_DIR}/../include )
