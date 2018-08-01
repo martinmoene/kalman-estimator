@@ -74,16 +74,16 @@ Plan:
 - [x] Create [Cmake toolchain for AVR](cmake/toolchain-avr-gcc.cmake).
 - [x] Create Cmake configuration scripts: [toplevel](./CMakeLists.txt), [example](example/CMakeLists.txt), [example/avr](example/avr/CMakeLists.txt), [example/desktop](example/desktop/CMakeLists.txt), [test](test/CMakeLists.txt), [time](time/CMakeLists.txt)
 - [x] Create basic blink LED example:
-  - [x] Write [blink LED code](example/avr/blink-led-avr.cpp)
-  - [x] [Compile code to .hex](example/avr/mk-blink-led-avr.py)
+  - [x] Write [blink LED code](example/avr/avr-blink-led.cpp)
+  - [x] [Compile code to .hex](example/avr/mk-avr-blink-led.py)
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
 - [x] Time free-running loop on Trinket board for Kalman simulation with blink LED, varying floating/fixed point, updating/fixed Kalman gain and optimizations, see table 1. below.
-  - [x] Write [code to time](time/kalman-time-avr.cpp)
-  - [x] [Compile code to .hex](time/mk-kalman-time-avr.py)
+  - [x] Write [code to time](time/avr-kalman-time.cpp)
+  - [x] [Compile code to .hex](time/mk-avr-kalman-time.py)
   - [x] [Upload code using avrdude and run it](script/avr-upload.py)
-- [x] Create code example with an [interrupt-timed blinking LED](example/avr/blink-led-isr-avr.cpp) ([compile](example/avr/mk-blink-led-isr-avr.py)).
-- [x] Create code example [reading the ADC](example/avr/input-adc-isr-avr.cpp).
-- [x] Create code example [writing a pulse-width modulated DAC](example/avr/fade-led-avr.cpp).
+- [x] Create code example with an [interrupt-timed blinking LED](example/avr/avr-blink-led-isr.cpp) ([compile](example/avr/mk-avr-blink-led-isr.py)).
+- [x] Create code example [reading the ADC](example/avr/avr-adc-isr.cpp).
+- [x] Create code example [writing a pulse-width modulated DAC](example/avr/avr-fade-led.cpp).
 - [x] Create [bitfield and register abstractions](include/mcu/register.hpp).
 - [ ] Create [atmega328 abstraction](include/mcu/atmega328.hpp), see [issue #1](https://github.com/martinmoene/kalman-estimator/issues/1).
 - [ ] Create code example with a timed ADC-DAC loop with a [circular buffer](https://github.com/martinmoene/ring-span-lite). 
@@ -97,7 +97,7 @@ Plan:
 
 Relative Performance | F [kHz] | Type                    | Kalman gain | Optimization | Code size [B] |
 --------------------:|--------:|-------------------------|-------------|--------------|----------:|
-640                  | 1600    | [Blink LED](example/blink-led-avr.cpp)| &nbsp; | -O2 | 174       |
+640                  | 1600    | [Blink LED](example/avr/avr-blink-led.cpp)| &nbsp; | -O2 | 174       |
 &nbsp;               | &nbsp;  | &nbsp;                  | &nbsp;      | &nbsp;       | &nbsp;    |
 0.18                 |  0.473  | double                  | updating    | -Os          | 4,968     |
 0.2                  |  0.548  | double                  | updating    | -O2          | 5,492     |
