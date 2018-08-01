@@ -1706,6 +1706,22 @@ namespace usart
 
 namespace twi
 {
+    namespace protocol
+    {
+        struct start{};
+        struct stop{};
+        struct ack{};
+        struct wcoll{};
+
+        enum class data : uint8_t{};
+        enum class address : uint8_t{};
+    }
+
+    namespace control
+    {
+        enum class rate : uint8_t{};
+    }
+
     namespace reg
     {
         static constexpr address_t addr_twbr  = 0xb8;
@@ -1715,13 +1731,223 @@ namespace twi
         static constexpr address_t addr_twcr  = 0xbc;
         static constexpr address_t addr_twamr = 0xbd;
 
-        using twbr  = register8_t< rw_t, addr_twbr >;
-        using twsr  = register8_t< rw_t, addr_twsr >;
-        using twar  = register8_t< rw_t, addr_twar >;
-        using twdr  = register8_t< rw_t, addr_twdr >;
-        using twcr  = register8_t< rw_t, addr_twcr >;
-        using twamr = register8_t< rw_t, addr_twamr >;
+        // 26.9.1 TWBR : TWI Bit Rate Register
+        // 26.9.4 TWDR : TWI Data Register
+
+        using control::rate;
+        using protocol::data;
+
+        using twbr = register_t< rate, rw_t, addr_twbr >;
+        using twdr = register_t< data, rw_t, addr_twdr >;
+
+        // 26.9.2 TWSR: TWI Status Register
+
+        namespace twsr
+        {
+            using whole = register8_t< rw_t, addr_twsr >;
+            using tws   = bitfield8_t< r_t , addr_twsr, TWS7 , TWS3  >;
+            using twps  = bitfield8_t< rw_t, addr_twsr, TWPS1, TWPS0 >;
+        }
+
+        // 26.9.3 TWAR: TWI (Slave) Address Register
+
+        namespace twar
+        {
+            using whole = register8_t< rw_t, addr_twar >;
+            using twa   = bitfield8_t< rw_t, addr_twar, TWA6, TWA0 >;
+            using twgce = bitfield8_t< rw_t, addr_twar, TWGCE      >;
+        }
+
+        // 26.9.5 TWCR: TWI Control Register
+
+        namespace twcr
+        {
+            using whole = register8_t< rw_t, addr_twcr >;
+            using twint = bitfield8_t< rc_w1_t, addr_twcr, TWINT >;
+            using twea  = bitfield8_t< rw_t, addr_twcr, TWEA  >;
+            using twsta = bitfield8_t< rw_t, addr_twcr, TWSTA >;
+            using twsto = bitfield8_t< rw_t, addr_twcr, TWSTO >;
+            using twwc  = bitfield8_t< rw_t, addr_twcr, TWWC  >;
+            using twen  = bitfield8_t< rw_t, addr_twcr, TWEN  >;
+            using twie  = bitfield8_t< rw_t, addr_twcr, TWIE  >;
+        }
+
+        // 26.9.6 TWAMR: TWI (Slave) Address Mask Register
+
+        namespace twamr
+        {
+            using whole = register8_t< rw_t, addr_twamr >;
+            using twam  = bitfield8_t< rw_t, addr_twamr, TWAM6, TWAM0 >;
+        }
     } // namespace reg
+
+    namespace protocol
+    {
+        enum class status : uint8_t
+        {
+            S_transmitted  = 0x08
+            , RS_transmitted = 0x10
+            , SLAW_transmitted_ACK = 0x18
+            , SLAW_transmitted_NACK = 0x20
+            , Data_transmitted_ACK = 0x28
+            , Data_transmitted_NACK = 0x30
+            , Arbitration_lost = 0x38
+        };
+
+        inline auto current( status )
+        {
+            return status{ reg::twsr::tws::read() };
+        }
+
+        inline auto current( start )
+        {
+            return reg::twcr::twsta::read();
+        }
+
+        inline auto set( start )
+        {
+            return reg::twcr::twsta::write_lazy( true );
+        }
+
+        inline auto current( stop )
+        {
+            return reg::twcr::twsto::read();
+        }
+
+        inline auto set( stop )
+        {
+            return reg::twcr::twsto::write_lazy( true );
+        }
+
+        inline auto current( ack )
+        {
+            return reg::twcr::twea::read();
+        }
+
+        inline auto set( ack )
+        {
+            return reg::twcr::twea::write_lazy( true );
+        }
+
+        inline auto current( wcoll )
+        {
+            return reg::twcr::twwc::read();
+        }
+
+//        inline auto write( wcoll ? )
+//        {
+//            reg::twcr::twwc::write( ? );
+//        }
+
+        inline auto current( data )
+        {
+            return reg::twdr::read();
+        }
+
+        inline auto set( data d )
+        {
+            reg::twdr::write( d );
+        }
+
+        inline auto current( address )
+        {
+            return address{ reg::twar::twa::read() };
+        }
+
+        inline auto set( address a )
+        {
+            return reg::twar::twa::write_lazy( to_integral(a) );
+        }
+    }
+
+//    namespace input {}
+//    namespace output{}
+
+    namespace control
+    {
+        inline auto current( rate )
+        {
+            return reg::twbr::read();
+        }
+
+        inline auto set( rate r )
+        {
+            reg::twbr::write( r );
+        }
+
+        namespace prescale
+        {
+            enum class factor : uint8_t
+            {
+                x1 = 0
+                , x4
+                , x16
+                , x64
+            };
+
+            inline auto current( factor )
+            {
+                return factor{ reg::twsr::twps::read() };
+            }
+
+            inline auto set( factor f )
+            {
+                return reg::twsr::twps::write( to_integral(f) );
+            }
+        }
+    }
+
+    namespace enable
+    {
+        enum class interface : uint8_t { off, on };
+        enum class interrupt : uint8_t { off, on };
+        enum class general_call : uint8_t { off, on };
+
+        inline auto current( interface )
+        {
+            return interface{ reg::twcr::twen::read() };
+        }
+
+        inline auto set( interface e )
+        {
+            return reg::twcr::twen::write_lazy( to_integral(e) );
+        }
+
+        inline auto current( interrupt )
+        {
+            return interrupt{ reg::twcr::twie::read() };
+        }
+
+        inline auto set( interrupt e )
+        {
+            return reg::twcr::twie::write_lazy( to_integral(e) );
+        }
+
+        inline auto current( general_call )
+        {
+            return general_call{ reg::twar::twgce::read() };
+        }
+
+        inline auto set( general_call e )
+        {
+            return reg::twar::twgce::write_lazy( to_integral(e) );
+        }
+    }
+
+    namespace interrupt
+    {
+        struct flag{};
+
+        inline auto current( flag )
+        {
+            return 0 != reg::twcr::twint::read();
+        }
+
+        inline auto clear( flag )
+        {
+            reg::twcr::twint::clear();
+        }
+    }
 }
 
 // 27. AC - Analog Comparator (AC)
