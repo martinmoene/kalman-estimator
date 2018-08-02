@@ -130,15 +130,12 @@ namespace mbx
             {
                 volatile bool & x;
 
-                scoped_reset( volatile bool & x_) : x( x_ ) {}
-
                 ~scoped_reset() { x = false; }
             };
 
             if ( flag )
             {
-                scoped_reset _( flag );
-                return true;
+                return scoped_reset{ flag }, true;
             }
             return false;
         }
