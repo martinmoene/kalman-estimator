@@ -541,14 +541,14 @@ struct scoped_interrupt_guard
 template< typename T >
 T atomic( T const & value )
 {
-    if constexpr( sizeof(T) > 1 ) { scoped_interrupt_guard _; return value; }
+    if constexpr( sizeof(T) > 1 ) { return scoped_interrupt_guard{}, value; }
     else                          {                           return value; }
 }
 
 template< typename T, typename U >
 void atomic( T & dest, U value )
 {
-    if constexpr( sizeof(T) > 1 ) { scoped_interrupt_guard _; dest = value; }
+    if constexpr( sizeof(T) > 1 ) { scoped_interrupt_guard{}, dest = value; }
     else                          {                           dest = value; }
 }
 
