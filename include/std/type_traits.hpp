@@ -15,6 +15,13 @@
 namespace std20 {
 
     using std::remove_reference;
+    using std::remove_reference_t;
+    using std::remove_const;
+    using std::remove_const_t;
+    using std::remove_volatile;
+    using std::remove_volatile_t;
+    using std::remove_cv;
+    using std::remove_cv_t;
     using std::integral_constant;
     using std::is_integral;
     using std::is_integral_v;
@@ -33,6 +40,23 @@ namespace std20 {
 template< typename T > struct remove_reference      { typedef T type; };
 template< typename T > struct remove_reference<T&>  { typedef T type; };
 template< typename T > struct remove_reference<T&&> { typedef T type; };
+
+template< typename T > struct remove_const          { typedef T type; };
+template< typename T > struct remove_const<const T> { typedef T type; };
+
+template< typename T > struct remove_volatile             { typedef T type; };
+template< typename T > struct remove_volatile<volatile T> { typedef T type; };
+
+template< typename T >
+struct remove_cv
+{
+    typedef typename remove_volatile<typename remove_const<T>::type>::type type;
+};
+
+template< typename T > using remove_reference_t = typename remove_reference<T>::type;
+template< typename T > using remove_const_t     = typename remove_const<T>::type;
+template< typename T > using remove_volatile_t  = typename remove_volatile<T>::type;
+template< typename T > using remove_cv_t        = typename remove_cv<T>::type;
 
 template< typename T, T v >
 struct integral_constant
