@@ -44,9 +44,9 @@ using promote_t = typename promote<T>::type;
 
 // Compile-time power-of-2:
 
-constexpr int power2( int n )
+constexpr auto power2( std20::int64_t n )
 {
-    int result = 1;
+    std20::int64_t result = 1;
     while( n-- > 0 )
         result *= 2;
     return result;
