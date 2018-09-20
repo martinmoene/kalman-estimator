@@ -1,15 +1,19 @@
 #include "num/biquad-cascade-io.hpp"
 #include <algorithm>
+#include <string>
 #include <vector>
 
 const auto Bqmax = 7;
 const auto Nsamp = 100;
 
+using Count = int;
+using Text  = std::string;
+
 using value_type = double;
 
 using BiQuad = num::BiQuadT<value_type>;
 
-template< int N >
+template< Count N >
 using BiQuadCascade = num::BiQuadCascadeT<value_type, N>;
 
 // generate range [first, last] in steps of step:
@@ -29,15 +33,13 @@ auto range( T first, T last , U cnt )
     return result;
 }
 
-template< int BqMax >
-auto print( int Nsamp, char const * const text, char const * const design, BiQuadCascade<BqMax> && bqc )
+template< typename Rng, Count BqMax >
+auto print( Rng rng, Text text, Text design, BiQuadCascade<BqMax> && bqc )
 {
     std::cout <<
         "\n" << text << " " << design << ":\n" << bqc <<
         "\nFilter magnitude response for normalized frequency:\n" <<
         "\nfn = [";
-
-    const auto rng = range( 0.0, 0.4, Nsamp );
 
     for( auto fn : rng )
     {
@@ -67,7 +69,7 @@ int main()
 {
     print
     (
-        Nsamp,
+        range( 0.0, 0.4, Nsamp ),
         "Bi-quad filter design", "[b,a] = cheby1(6,3,0.4)",
         BiQuadCascade<Bqmax>
         (
@@ -79,7 +81,7 @@ int main()
 
     print
     (
-        Nsamp,
+        range( 0.0, 0.4, Nsamp ),
         "Bi-quad filter design", "[b,a] = cheby2(6,20,0.4)",
         BiQuadCascade<Bqmax>
         (
