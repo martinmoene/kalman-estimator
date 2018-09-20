@@ -332,7 +332,7 @@ auto response( BiQuadT<T,S> const & bq, identity_t<T> fnorm )
 {
     using Complex = typename BiQuadT<T,S>::Complex;
 
-    const auto Pi = T{ 3.1415926535897932384626433832795028841971 };
+    const auto Pi = T( 3.1415926535897932384626433832795028841971 );
 
     const auto a = bq.coeff_a();
     const auto b = bq.coeff_b();
