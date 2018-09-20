@@ -253,7 +253,7 @@ CASE( "biquad-cascade: Allows to use a user-defined arithmetic type for the bi-q
     step( bqc, 1.23f );
 }
 
-CASE( "biquad-cascade: is_stable() is true if the all bi-quads of the cascade are stable" )
+CASE( "biquad-cascade: is_stable() is true if all bi-quads of the cascade are stable" )
 {
     using BiQuad = BiQuadT<float>;
 
