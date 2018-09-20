@@ -56,21 +56,21 @@ public:
     {
         assert( 0 <= i && i < next );
 
-        return biquad[i].A();
+        return biquad[i].coeff_a();
     }
 
     auto coeff_b( index_type i ) const
     {
         assert( 0 <= i && i < next );
 
-        return biquad[i].B();
+        return biquad[i].coeff_b();
     }
 
     auto state( index_type i ) const
     {
         assert( 0 <= i && i < next );
 
-        return biquad[i].W();
+        return biquad[i].state();
     }
 
     // Modifiers:
