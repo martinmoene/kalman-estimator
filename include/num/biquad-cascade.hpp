@@ -47,7 +47,7 @@ public:
         return next;
     }
 
-    auto reserved() const
+    static auto reserved()
     {
         return N;
     }
@@ -82,6 +82,8 @@ public:
 
     void append( BiQuad bq )
     {
+        assert( next < reserved() );
+
         biquad[next++] = bq;
     }
 
@@ -98,7 +100,7 @@ public:
 
     void insert( index_type i, BiQuad bq )
     {
-        assert( 0 <= i && i < next );
+        assert( 0 <= i && i < next && next < reserved() );
 
         for ( auto k = next; k != i; --k )
         {
@@ -109,7 +111,7 @@ public:
         biquad[i] = bq;
     }
 
-    // replace biquad, return previous content:
+    // replace bi-quad, return previous content:
 
     auto replace( index_type i, BiQuad bq )
     {
