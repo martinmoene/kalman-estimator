@@ -17,6 +17,7 @@ namespace std20 {
 using std::move;
 
 // constexpr swap():
+// T must meet the requirements of MoveAssignable and MoveConstructible.
 
 template< typename T >
 constexpr void swap(  T & a, T & b ) noexcept
@@ -41,6 +42,7 @@ constexpr typename remove_reference<T>::type && move( T && t ) noexcept
 }
 
 // constexpr swap():
+// T must meet the requirements of MoveAssignable and MoveConstructible.
 
 template< typename T >
 constexpr void swap(  T & a, T & b ) noexcept
