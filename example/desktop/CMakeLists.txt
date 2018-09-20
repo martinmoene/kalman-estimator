@@ -23,6 +23,8 @@ endif()
 # Sources (.cpp) and their base names:
 
 set( SOURCES
+    biquad.cpp
+    biquad-cascade.cpp
     kalman-sim.cpp
     covariance-error.cpp
 )

@@ -35,6 +35,8 @@
 		<Unit filename="../../example/avr/mk-avr-fade-led.py" />
 		<Unit filename="../../example/avr/mk-avr-kalman-sim.py" />
 		<Unit filename="../../example/desktop/CMakeLists.txt" />
+		<Unit filename="../../example/desktop/biquad-cascade.cpp" />
+		<Unit filename="../../example/desktop/biquad.cpp" />
 		<Unit filename="../../example/desktop/covariance-error.cpp" />
 		<Unit filename="../../example/desktop/kalman-sim.cpp" />
 		<Unit filename="../../example/desktop/kalman-sim.out.txt" />
@@ -45,6 +47,10 @@
 		<Unit filename="../../example/matlab/kalman.m" />
 		<Unit filename="../../include/mcu/atmega328.hpp" />
 		<Unit filename="../../include/mcu/register.hpp" />
+		<Unit filename="../../include/num/biquad-cascade-io.hpp" />
+		<Unit filename="../../include/num/biquad-cascade.hpp" />
+		<Unit filename="../../include/num/biquad-io.hpp" />
+		<Unit filename="../../include/num/biquad.hpp" />
 		<Unit filename="../../include/num/fixed-point-io.hpp" />
 		<Unit filename="../../include/num/fixed-point.hpp" />
 		<Unit filename="../../include/num/kalman-io.hpp" />
@@ -53,6 +59,7 @@
 		<Unit filename="../../include/num/matrix.hpp" />
 		<Unit filename="../../include/num/vector-io.hpp" />
 		<Unit filename="../../include/std/algorithm.hpp" />
+		<Unit filename="../../include/std/complex.hpp" />
 		<Unit filename="../../include/std/cstdint.hpp" />
 		<Unit filename="../../include/std/limits.hpp" />
 		<Unit filename="../../include/std/type_traits.hpp" />
@@ -62,6 +69,8 @@
 		<Unit filename="../../script/avr-gcc.py" />
 		<Unit filename="../../script/avr-upload.py" />
 		<Unit filename="../../test/CMakeLists.txt" />
+		<Unit filename="../../test/biquad-cascade.t.cpp" />
+		<Unit filename="../../test/biquad.t.cpp" />
 		<Unit filename="../../test/fixed-point.t.cpp" />
 		<Unit filename="../../test/lest.hpp" />
 		<Unit filename="../../test/main-avr.t.cpp" />

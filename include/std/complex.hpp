@@ -15,6 +15,7 @@
 namespace std20 {
 
 using std::complex;
+using std::polar;
 
 } // namespace std20
 

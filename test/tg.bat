@@ -22,7 +22,7 @@ set flags=-Wpedantic -Wno-padded -Wno-missing-noreturn
 set   gpp=g++
 
 set ke_program=main.t.exe
-set ke_sources=main.t.cpp stdcpp.t.cpp fixed-point.t.cpp matrix.t.cpp
+set ke_sources=main.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
 
 %gpp% -std=%std% -O2 -Wall -Wextra %flags% %ke_feature% %lest_defines% -o %ke_program% -I../include %ke_sources% && %ke_program%
 
