@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-const auto Nsamp = 100;
+const auto Nsamp = 100;     // print this number of samples
 
 using Count = int;
 using Text  = std::string;

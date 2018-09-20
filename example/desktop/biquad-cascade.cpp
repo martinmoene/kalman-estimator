@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-const auto Bqmax = 7;
-const auto Nsamp = 100;
+const auto Bqmax = 7;       // maximum number of bi-quads in cascade
+const auto Nsamp = 100;     // print this number of samples
 
 using Count = int;
 using Text  = std::string;
@@ -16,7 +16,7 @@ using BiQuad = num::BiQuadT<value_type>;
 template< Count N >
 using BiQuadCascade = num::BiQuadCascadeT<value_type, N>;
 
-// generate range [first, last] in steps of step:
+// generate range [first, last] in cnt steps:
 
 template< typename T, typename U >
 auto range( T first, T last , U cnt )
