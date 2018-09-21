@@ -26,7 +26,7 @@ CASE( "biquad-cascade: Allows to default construct an empty cascade" )
     EXPECT( bqc.reserved() == N );
 }
 
-CASE( "biquad-cascade: Allows to construct from 1 up to Nmax bi-quads" )
+CASE( "biquad-cascade: Allows to construct a cascade from 1 up to Nmax bi-quads" )
 {
     const auto N = 3;
 
@@ -44,6 +44,24 @@ CASE( "biquad-cascade: Allows to construct from 1 up to Nmax bi-quads" )
     EXPECT( bqc.coeff_b( 0 ).b0 == 1 );
     EXPECT( bqc.coeff_b( 1 ).b0 == 2 );
     EXPECT( bqc.coeff_b( 2 ).b0 == 3 );
+}
+
+CASE( "biquad-cascade: Allows to construct a bi-quad cascade using a user-defined arithmetic type" )
+{
+    // std::complex stands-in for a user-defined arithmetic type:
+
+    using udt = std::complex<float>;
+
+    using BiQuad = BiQuadT<udt>;
+
+    BiQuadCascadeT<udt, 3> bqc
+    (
+        BiQuad{  { 1, 11, 111 }}
+        , BiQuad{{ 2, 22, 222 }}
+        , BiQuad{{ 3, 33, 333 }}
+    );
+
+    step( bqc, 1.23f );
 }
 
 CASE( "biquad-cascade: Allows to obtain the maximum number of bi-quads the cascade can hold" )
@@ -235,24 +253,6 @@ CASE( "biquad-cascade: Allows to iterate over the cascade" )
     EXPECT( cnt == bqc.size() );
 }
 
-CASE( "biquad-cascade: Allows to use a user-defined arithmetic type for the bi-quads" )
-{
-    // std::complex stands-in for a user-defined arithmetic type:
-
-    using udt = std::complex<float>;
-
-    using BiQuad = BiQuadT<udt>;
-
-    BiQuadCascadeT<udt, 3> bqc
-    (
-        BiQuad{  { 1, 11, 111 }}
-        , BiQuad{{ 2, 22, 222 }}
-        , BiQuad{{ 3, 33, 333 }}
-    );
-
-    step( bqc, 1.23f );
-}
-
 CASE( "biquad-cascade: is_stable() is true if all bi-quads of the cascade are stable" )
 {
     using BiQuad = BiQuadT<float>;
@@ -300,7 +300,6 @@ CASE( "biquad-cascade: reset() clears the state of all bi-quads of the cascade" 
     EXPECT( bqc.state( 1 ).v1 == 0 );
     EXPECT( bqc.state( 1 ).v2 == 0 );
 }
-
 
 CASE( "biquad-cascade: response() yields the cascade's complex response for the given normalized frequency" )
 {
@@ -376,7 +375,7 @@ auto print( Text text, Text design, BiQuadCascadeT<T,BqMax> && bqc )
 }
 } // anonymous namespace
 
-CASE( "biquad-cascade: printing" " [.app][biquad][cascade]" )
+CASE( "biquad-cascade: printing" " [.app][.print][biquad][cascade]" )
 {
     const auto BqMax = 7;
 
