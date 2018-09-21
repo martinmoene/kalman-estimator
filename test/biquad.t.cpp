@@ -209,6 +209,24 @@ CASE( "biquad: solve() solves a quadratic polynomial: ax^2 + bx + c -> k(x - z1)
 // -----------------------------------------------------------------------
 // Applets
 
-CASE( "biquad: printing" " [.app][.print][biquad]" )
+namespace{
+
+using Text = std::string;
+
+template< typename T >
+auto print( Text text, Text design, BiQuadT<T> && bq )
 {
+    std::cout << "\n" << text << " " << design << ":\n" << bq << "\n";
+}
+} // anonymous namespace
+
+CASE( "biquad: printing" " [.app][.print][biquad][2]" )
+{
+    using BiQuad = BiQuadT<double>;
+
+    print
+    (
+        "Bi-quad filter design", "[b,a] = cheby2(2,20,0.4)",
+        BiQuad{{ 0.1333591, 0.0072304, 0.1333591 }, { -1.1604647, 0.4344132 }}
+    );
 }

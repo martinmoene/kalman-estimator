@@ -375,7 +375,7 @@ auto print( Text text, Text design, BiQuadCascadeT<T,BqMax> && bqc )
 }
 } // anonymous namespace
 
-CASE( "biquad-cascade: printing" " [.app][.print][biquad][cascade]" )
+CASE( "biquad-cascade: printing" " [.app][.print][biquad][6][cascade]" )
 {
     const auto BqMax = 7;
 
