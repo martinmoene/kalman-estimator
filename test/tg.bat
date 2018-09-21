@@ -9,8 +9,10 @@ set std=%1
 set args=%2 %3 %4 %5 %6 %7 %8 %9
 if "%1" == "" set std=c++17
 
+set   gpp=g++
+
 call :CompilerVersion version
-echo g++ %version%: %std% %args%
+echo %gpp% %version%: %std% %args%
 
 set ke_feature=^
     -DKE_USE_STATIC_EXPECT=1
@@ -19,7 +21,6 @@ set lest_defines=^
     -Dlest_FEATURE_AUTO_REGISTER
 
 set flags=-Wpedantic -Wno-padded -Wno-missing-noreturn
-set   gpp=g++
 
 set ke_program=main.t.exe
 set ke_sources=main.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
@@ -38,7 +39,7 @@ set tmpsource=%tmpprogram%.c
 echo #include ^<stdio.h^>     > %tmpsource%
 echo int main(){printf("%%d.%%d.%%d\n",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);} >> %tmpsource%
 
-g++ -o %tmpprogram% %tmpsource% >nul
+%gpp% -o %tmpprogram% %tmpsource% >nul
 for /f %%x in ('%tmpprogram%') do set version=%%x
 del %tmpprogram%.* >nul
 endlocal & set %1=%version%& goto :EOF
