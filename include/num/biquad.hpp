@@ -71,6 +71,29 @@ struct SolutionT
     Complex s0, s1;
 };
 
+// Solve a quadratic polynomial: ax^2 + bx + c -> k(x - z1)(x - z2)
+
+template< typename V >
+auto solve( V a, V b, V c )
+{
+    using Solution = SolutionT<V>;
+    using Complex  = typename Solution::Complex;
+
+    // normalize:
+    b /= a;
+    c /= a;
+
+    // sqrt(b^2 - 4 * a * c)
+
+    const auto ds = sqrt( Complex{ b * b, 0 } - 4 * c );
+
+    // (-b +/- ds) / 2a
+
+    const auto vt2 = V{2};
+
+    return Solution{ (-b + ds) / vt2, (-b - ds) / vt2 };
+}
+
 // normalized a:
 
 template< typename V >
@@ -295,25 +318,6 @@ private:
         return z1i
             ? Pair<value_type>{  -2 * z1r, z1r * z1r + z1i * z1i }
             : Pair<value_type>{ -z1r -z2r, z1r * z2r             };
-    }
-
-    // Solve a quadratic polynomial: ax^2 + bx + c -> k(x - z1)(x - z2)
-
-    auto solve( value_type a, value_type b, value_type c ) const
-    {
-        // normalize:
-        b /= a;
-        c /= a;
-
-        // sqrt(b^2 - 4 * a * c)
-
-        const auto ds = sqrt( Complex{ b * b, 0 } - 4 * c );
-
-        // (-b +/- ds) / 2a
-
-        const auto vt2 = value_type{2};
-
-        return Solution{ (-b + ds) / vt2, (-b - ds) / vt2 };
     }
 
 private:
