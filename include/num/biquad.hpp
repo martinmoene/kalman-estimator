@@ -353,6 +353,9 @@ auto response( BiQuadT<T,S> const & bq, identity_t<T> fnorm )
 
 using biquad::BiQuadT;
 
+using biquad::solve;
+using biquad::response;
+
 } // namespace num
 
 #endif // NUM_BIQUAD_HPP_INCLUDED
