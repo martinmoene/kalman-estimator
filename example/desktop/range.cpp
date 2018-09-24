@@ -15,9 +15,9 @@ int main()
 {
     using namespace core;
 
-    std::cout << "\nToDo - infinite, stop at 42: range( 0 ): ";
+    std::cout << "\nrange( 20 ), infinite, break at 42: ";
 
-    for ( auto i : range( 0 ) )
+    for ( auto i : range( 20 ) )
     {
         std::cout << i << " ";
 

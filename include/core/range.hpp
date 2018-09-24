@@ -1,6 +1,3 @@
-// ToDo
-// - infinite_range_proxy
-
 //
 // Copyright 2018 by Martin Moene
 //
@@ -28,7 +25,7 @@ namespace core { namespace ranges {
 namespace detail {
 
 template <typename T>
-struct range_iter_base // : std::iterator<std::input_iterator_tag, T>
+struct range_iter_base
 {
     using value_type = typename std::iterator_traits<T*>::value_type;
     using pointer    = typename std::iterator_traits<T*>::pointer;
@@ -110,7 +107,7 @@ auto range_impl( T first, T last ) -> range_proxy<T>
 template< typename T >
 struct step_range_proxy
 {
-    struct iterator // : std::iterator<std::input_iterator_tag, T>
+    struct iterator
     {
         using value_type = typename std::iterator_traits<T*>::value_type;
         using pointer    = typename std::iterator_traits<T*>::pointer;
@@ -119,10 +116,11 @@ struct step_range_proxy
         using iterator_category = std::input_iterator_tag;
         using difference_type   = typename std::iterator_traits<T*>::difference_type;
 
-        iterator( T current_, T step_)
+        iterator( T current_, T step_, bool infinite_)
         : current( current_)
         , first( current_)
         , step( step_)
+        , infinite( infinite_)
         {}
 
         T operator*() const
@@ -147,7 +145,7 @@ struct step_range_proxy
 
         bool operator==( iterator const & other ) const
         {
-            return current >= other.current;
+            return !infinite && current >= other.current;
         }
 
         bool operator!=( iterator const & other ) const
@@ -156,15 +154,16 @@ struct step_range_proxy
         }
 
     private:
+        T factor = 0;
         T current;
         T first;
         T step;
-        T factor = 0;
+        bool infinite;
     };
 
-    step_range_proxy(T first_, T last_, T step_)
-    : first( first_, step_)
-    , last(  last_ , step_)
+    step_range_proxy(T first_, T last_, T step_, bool infinite_ = false )
+    : first( first_, step_, infinite_ )
+    , last(  last_ , step_, infinite_ )
     {}
 
     iterator begin() const { return first; }
@@ -179,14 +178,8 @@ template <typename T>
 struct infinite_range_proxy : step_range_proxy<T>
 {
     infinite_range_proxy( T first_ = T(), T step_ = T(1) )
-    : step_range_proxy<T>( first_, first_, step_)
+    : step_range_proxy<T>( first_, first_, step_, true /*infinite*/ )
     {}
-
-    struct iterator : step_range_proxy<T>::iterator
-    {
-        bool operator==( iterator const & ) const { return false; }
-        bool operator!=( iterator const & ) const { return true; }
-    };
 };
 
 template< typename T >
