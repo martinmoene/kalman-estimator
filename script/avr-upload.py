@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-#
 # Copyright 2018 by Martin Moene
 #
 # https://github.com/martinmoene/kalman-estimator

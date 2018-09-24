@@ -1,9 +1,8 @@
-//
 // Copyright 2018 by Martin Moene
 //
 // https://github.com/martinmoene/kalman-estimator
 //
-// Distributed under the Boost Software License, Version 1.0. 
+// Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "num/matrix-io.hpp"
@@ -30,26 +29,26 @@ int main()
               0, 1 };
     H_t H = { real_t(1.0),      // Output / measurement matrix
               real_t(0.0) };
-    
+
     auto R = measnoise * measnoise;     // Measurement noise covariance
     auto P = accelnoise * accelnoise    // Process noise variance
            * A_t( { dt*dt*dt*dt/4, dt*dt*dt/2, dt*dt*dt/2, dt*dt } );
     auto PJ = P;
-    
+
     real_t t = 0;
     for ( auto k = real_t(1.0); k > 0.001; k /= 2, t += dt )
     {
         using num::eye;
-        
-        std::cout 
+
+        std::cout
             << "\ndt:" << t << " P:\n" << P
             << "\ndt:" << t << " PJ:\n" << PJ
             ;
 
         K_t K = { 0.1f+k, 0.1f+k };
-        
+
         P = P - K * H * P;
-        
+
         auto A = eye<real_t,S>() - K * H;
         PJ = A * PJ * transposed(A) + K * R * transposed(K);
     }

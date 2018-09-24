@@ -1,4 +1,3 @@
-//
 // Copyright 2018 by Martin Moene
 //
 // https://github.com/martinmoene/kalman-estimator
@@ -232,6 +231,22 @@ int main()
 
         led::toggle();
     }
+
+#if 0
+{
+    namespace i2c = mcu::atmega328::twi;
+
+    i2c::sync::init( i2c::control::rate{0xff} );
+
+    for(;;)
+    {
+        led::off();
+
+        if( i2c::sync::write( 0x55, 0x00 ) )
+            led::on();
+    }
+}
+#endif // 0
 
     // continuously:
     // - each 100ms measure adc and put LEDon when adc result is in upper half;

@@ -1,4 +1,3 @@
-//
 // Copyright 2018 by Martin Moene
 //
 // https://github.com/martinmoene/kalman-estimator
@@ -100,7 +99,29 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
 {
     const auto maxBiquad = 7;
 
-    auto bqc = dsp::make_biquad_cascade<T,maxBiquad>( coeff );
+// [A,B,P] = bscheb2( 100, 10, 35, 15, 30, 1, 10 )
+// A =
+//
+//   1.00000  -0.32557   0.47164   0.00000   0.00000
+//   1.00000  -0.60648   0.85511  -0.42187   0.58278
+//
+// B =
+//
+//   0.73582  -0.32557   0.73582   0.00000   0.00000
+//   0.71650  -0.51417   1.00490  -0.51417   0.71650
+//
+// P =
+//
+//    1.00000    1.79360    2.20709   -1.79360    0.22123    0.50885    3.00000    2.06970    3.00000   12.79294   31.28641    0.60615
+
+    dsp::BiQuadCascadeT<T, maxBiquad> bqc;
+
+//    bqc.append({ { 1.00000,  -0.32557,   0.47164 }, {   0.00000 , 0.00000 } });
+    bqc.append({ { 1.00000,  -0.60648,   0.85511 }, {  -0.42187 , 0.58278 } });
+//    bqc.append({ { 0.73582,  -0.32557,   0.73582 }, {   0.00000 , 0.00000 } });
+//    bqc.append({ { 0.71650,  -0.51417,   1.00490 }, {  -0.51417 , 0.71650 } });
+
+//    auto bqc = dsp::make_biquad_cascade<T,maxBiquad>( coeff );
 
     std::cout <<
         "\n"     << line(115, '=') <<
@@ -114,16 +135,37 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
         "\n"   << text << " '" << design << "':\n" << bqc <<
         "\n% " << line(65) <<
         "\n% Matlab/Octave filter magnitude response for normalized frequency:\n" <<
-        "\nfn = [...";
+        "\nfn = [";
+
+    for ( auto fn : rng )
+    {
+        std::cout << fn << " ";
+    }
+
+    std::cout <<
+        "];\n"
+        "\ny = [";
+
+    for ( auto fn : rng )
+    {
+        std::cout << abs( response( bqc, fn ) ) << " ";
+    }
 
     // edit C++ function call 'chebyX_lp_hp' to Matlab call 'lhchebyX':
 
     const auto matlab_design = replaced( replaced( design,
         "dsp::", "" ),
-        "cheby2_bs", "bscheb2" );
+        "chebyshev2_bs", "bscheb2" );
 
     std::cout <<
-        "\n[A,B,P] = " << matlab_design;
+        "];\n"
+        "\nplot(fn, y);"
+        "\n" <<
+        "\n% " << line(42, '-') <<
+        "\n"
+        "\n[A,B,P] = " << matlab_design <<
+        "\n% Corresponding Matlab/Octave filter design:"
+        "\n";
 }
 
 #define STRINGIFY(a)  STRINGIFY_(a)
