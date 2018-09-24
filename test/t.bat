@@ -1,3 +1,11 @@
+::
+:: Copyright 2018 by Martin Moene
+::
+:: https://github.com/martinmoene/kalman-estimator
+::
+:: Distributed under the Boost Software License, Version 1.0.
+:: (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 @echo off & setlocal enableextensions enabledelayedexpansion
 ::
 :: t.bat - compile & run tests (MSVC).
@@ -27,7 +35,7 @@ set msvc_defines=^
     -D_SCL_SECURE_NO_WARNINGS
 
 set ke_program=main.t.exe
-set ke_sources=main.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
+set ke_sources=main.t.cpp core.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
 
 cl -W3 -EHsc %std% %ke_feature% %lest_defines% %msvc_defines% -I../include %ke_sources% && %ke_program%
 endlocal & goto :EOF

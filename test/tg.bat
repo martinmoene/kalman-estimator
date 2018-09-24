@@ -1,3 +1,11 @@
+::
+:: Copyright 2018 by Martin Moene
+::
+:: https://github.com/martinmoene/kalman-estimator
+::
+:: Distributed under the Boost Software License, Version 1.0.
+:: (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 @echo off & setlocal enableextensions enabledelayedexpansion
 ::
 :: tg.bat - compile & run tests (GNUC).
@@ -23,7 +31,7 @@ set lest_defines=^
 set flags=-Wpedantic -Wno-padded -Wno-missing-noreturn
 
 set ke_program=main.t.exe
-set ke_sources=main.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
+set ke_sources=main.t.cpp core.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
 
 %gpp% -std=%std% -O2 -Wall -Wextra %flags% %ke_feature% %lest_defines% -o %ke_program% -I../include %ke_sources% && %ke_program%
 

@@ -1,3 +1,11 @@
+::
+:: Copyright 2018 by Martin Moene
+::
+:: https://github.com/martinmoene/kalman-estimator
+::
+:: Distributed under the Boost Software License, Version 1.0.
+:: (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 @echo off & setlocal enableextensions enabledelayedexpansion
 ::
 :: tc.bat - compile & run tests (clang).
@@ -23,7 +31,7 @@ set lest_defines=^
 set flags=-Wpedantic -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-missing-noreturn -Wno-documentation-unknown-command -Wno-documentation-deprecated-sync -Wno-documentation -Wno-weak-vtables -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-exit-time-destructors -Wno-global-constructors
 
 set ke_program=main.t.exe
-set ke_sources=main.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
+set ke_sources=main.t.cpp core.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
 
 "%clang%" -std=%std% -O2 -Wall -Wextra %flags% %ke_feature%  %lest_defines% -fms-compatibility-version=19.00 -isystem "%VCInstallDir%include" -isystem "%WindowsSdkDir_71A%include" -I../include -o %ke_program% %ke_sources% && %ke_program%
 

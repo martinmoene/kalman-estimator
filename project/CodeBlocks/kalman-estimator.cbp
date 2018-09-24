@@ -42,9 +42,11 @@
 		<Unit filename="../../example/desktop/kalman-sim.out.txt" />
 		<Unit filename="../../example/desktop/matrix.cpp" />
 		<Unit filename="../../example/desktop/mk-kalman-sim.py" />
+		<Unit filename="../../example/desktop/range.cpp" />
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
 		<Unit filename="../../example/matlab/kalman.m" />
+		<Unit filename="../../include/core/range.hpp" />
 		<Unit filename="../../include/core/vector-io.hpp" />
 		<Unit filename="../../include/dsp/biquad-cascade-io.hpp" />
 		<Unit filename="../../include/dsp/biquad-cascade.hpp" />
@@ -74,6 +76,7 @@
 		<Unit filename="../../test/CMakeLists.txt" />
 		<Unit filename="../../test/biquad-cascade.t.cpp" />
 		<Unit filename="../../test/biquad.t.cpp" />
+		<Unit filename="../../test/core.t.cpp" />
 		<Unit filename="../../test/fixed-point.t.cpp" />
 		<Unit filename="../../test/lest.hpp" />
 		<Unit filename="../../test/main-avr.t.cpp" />
