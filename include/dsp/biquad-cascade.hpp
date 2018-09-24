@@ -9,7 +9,7 @@
 #ifndef NUM_BIQUAD_CASCADE_HPP_INCLUDED
 #define NUM_BIQUAD_CASCADE_HPP_INCLUDED
 
-#include "num/biquad.hpp"
+#include "dsp/biquad.hpp"
 
 namespace num { namespace biquad_cascade {
 

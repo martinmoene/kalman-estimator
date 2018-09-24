@@ -9,7 +9,7 @@
 #ifndef NUM_KALMAN_HPP_INCLUDED
 #define NUM_KALMAN_HPP_INCLUDED
 
-#include "matrix.hpp"
+#include "num/matrix.hpp"
 
 #define kalman_MAJOR  0
 #define kalman_MINOR  0

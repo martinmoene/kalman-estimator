@@ -6,8 +6,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "num/biquad.hpp"
-#include "num/biquad-io.hpp"
+#include "dsp/biquad.hpp"
+#include "dsp/biquad-io.hpp"
 #include "lest.hpp"
 
 #define CASE( name ) lest_CASE( specification(), name )

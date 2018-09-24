@@ -10,7 +10,7 @@
 
 #include "num/fixed-point.hpp"
 #include "num/matrix.hpp"
-#include "num/kalman.hpp"
+#include "dsp/kalman.hpp"
 
 // Fixed point numeric type for Kalman estimator:
 

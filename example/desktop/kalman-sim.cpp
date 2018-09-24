@@ -7,9 +7,9 @@
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "num/fixed-point-io.hpp"
-#include "num/kalman.hpp"
-#include "num/kalman-io.hpp"
-#include "num/vector-io.hpp"
+#include "dsp/kalman.hpp"
+#include "dsp/kalman-io.hpp"
+#include "core/vector-io.hpp"
 
 #include <random>
 

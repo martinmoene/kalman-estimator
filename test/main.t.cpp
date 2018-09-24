@@ -7,8 +7,8 @@
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "num/fixed-point.hpp"
-#include "num/kalman.hpp"
 #include "num/matrix.hpp"
+#include "dsp/kalman.hpp"
 #include "lest.hpp"
 
 // Suppress:
