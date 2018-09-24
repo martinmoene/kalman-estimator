@@ -62,6 +62,7 @@
 		<Unit filename="../../include/mcu/00-ltc2485.h" />
 		<Unit filename="../../include/mcu/atmega328.hpp" />
 		<Unit filename="../../include/mcu/register.hpp" />
+		<Unit filename="../../include/num/constants.hpp" />
 		<Unit filename="../../include/num/fixed-point-io.hpp" />
 		<Unit filename="../../include/num/fixed-point-poo37.hpp" />
 		<Unit filename="../../include/num/fixed-point.hpp" />
@@ -71,6 +72,7 @@
 		<Unit filename="../../include/std/complex.hpp" />
 		<Unit filename="../../include/std/cstdint.hpp" />
 		<Unit filename="../../include/std/limits.hpp" />
+		<Unit filename="../../include/std/tuple.hpp" />
 		<Unit filename="../../include/std/type_traits.hpp" />
 		<Unit filename="../../include/std/utility.hpp" />
 		<Unit filename="../../issue/avr-issue-tpl-fun.cpp" />

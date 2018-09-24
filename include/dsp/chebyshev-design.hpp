@@ -14,6 +14,7 @@
 #define DSP_CHEBYSHEV_DESIGN_HPP_INCLUDED
 
 #include "dsp/biquad-cascade.hpp"
+#include "num/constants.hpp"
 #include "core/range.hpp"
 
 #include <algorithm>
@@ -27,9 +28,6 @@
 // DSP types and algorithms:
 
 namespace dsp { namespace chebyshev_design {
-
-template< typename T >
-constexpr T pi = 3.1415926535897932384626433832795028841971;
 
 // a less-distractive way to write a static_cast:
 
@@ -109,7 +107,7 @@ inline auto prewarp( P f, Q fs )
 {
     using T = std::common_type_t<float, P, Q>;
 
-    return std::tan( pi<T> * f / fs );
+    return std::tan( num::pi<T> * f / fs );
 }
 
 // Chebyshev 1 lowpass, highpass
@@ -144,7 +142,7 @@ auto chebyshev1_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
 
     const auto a     = std::asinh( estop ) / N;
     const auto W3    = real( Wpass * std::cosh( std::acosh( complex_t{1} / complex_t{epass} ) / complex_t(N) ) );
-    const auto f3    = (fs / pi<T> ) * std::atan( std::pow( W3, s ) );
+    const auto f3    = (fs / num::pi<T> ) * std::atan( std::pow( W3, s ) );
     const auto W0    = std::sinh( a ) * Wpass;
 
     DigitalCoeffT<T> coeff{ Wpass, Wstop, epass, estop, Nex, N, f3, a };
@@ -162,7 +160,7 @@ auto chebyshev1_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
 
     for ( auto i : core::range( 1, K+1 ) )        // [1..K+1)
     {
-        const auto th = pi<T> * (N - 1 + 2 * i) / (2 * N);
+        const auto th = num::pi<T> * (N - 1 + 2 * i) / (2 * N);
         const auto Wi = Wpass * sin(th);
         const auto D  =  1 - 2 * W0 * cos( th ) + W0 * W0 + Wi * Wi;
         const auto G  = (W0 * W0 + Wi * Wi ) / D;
@@ -220,7 +218,7 @@ auto chebyshev2_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
 
     const auto a     = std::asinh( estop ) / N;
     const auto W3    = real( Wstop / std::cosh( std::acosh( complex_t{estop} ) / complex_t(N) ) );
-    const auto f3    = (fs / pi<T> ) * std::atan( std::pow( W3, s ) );
+    const auto f3    = (fs / num::pi<T> ) * std::atan( std::pow( W3, s ) );
     const auto W0    = std::sinh( a ) / Wstop;      // reciprocal of text
 
     DigitalCoeffT<T> coeff{ Wpass, Wstop, epass, estop, Nex, N, f3, a };
@@ -238,7 +236,7 @@ auto chebyshev2_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
 
     for ( auto i : core::range( 1, K+1 ) )        // [1..K+1)
     {
-        const auto th = pi<T> * (N - 1 + 2 * i) / (2 * N);
+        const auto th = num::pi<T> * (N - 1 + 2 * i) / (2 * N);
         const auto Wi = sin(th) / Wstop;        // reciprocal of text
         const auto D  =  1 - 2 * W0 * cos( th ) + W0 * W0 + Wi * Wi;
         const auto G  = (1 + Wi * Wi ) / D;
