@@ -147,7 +147,7 @@ public:
     }
 
 private:
-    // the bi-quad sections:
+    // the bi-quad sections (std:array if not for AVR):
     BiQuad biquad[N];
 
     // insertion point:
