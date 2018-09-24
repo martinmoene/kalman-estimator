@@ -49,7 +49,7 @@ else( AVR )
 
 set( MAIN_BASE main )
 set( HDRNAME   matrix.hpp    )
-set( SOURCES   ${MAIN_BASE}.t.cpp core.t.cpp stdcpp.t.cpp fixed-point.t.cpp matrix.t.cpp )
+set( SOURCES   ${MAIN_BASE}.t.cpp core.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp )
 
 set( HDRDIR  ${PROJECT_SOURCE_DIR}/../include )
 #set( HDRPATH ${HDRDIR}/${HDRNAME} )

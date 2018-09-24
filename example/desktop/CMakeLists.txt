@@ -25,8 +25,11 @@ endif()
 set( SOURCES
     biquad.cpp
     biquad-cascade.cpp
-    kalman-sim.cpp
+    chebyshev-design.cpp
     covariance-error.cpp
+    kalman-sim.cpp
+    matrix.cpp
+    range.cpp
 )
 
 # Function to create a target:
