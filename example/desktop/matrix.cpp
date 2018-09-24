@@ -43,7 +43,7 @@ int main()
         "\nr =\n" << r ;
 
     std::cout <<
-        "\neye<3,int>() =\n" << num::eye<3,int>() ;
+        "\neye<3,int>() =\n" << num::eye<int, 3>();
 }
 
 
