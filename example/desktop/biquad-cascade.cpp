@@ -9,7 +9,6 @@
 #include "dsp/biquad-cascade-io.hpp"
 #include "core/range.hpp"
 #include "core/text.hpp"
-#include <algorithm>
 #include <string>
 #include <vector>
 
