@@ -6,13 +6,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NUM_BIQUAD_CASCADE_IO_HPP_INCLUDED
-#define NUM_BIQUAD_CASCADE_IO_HPP_INCLUDED
+#ifndef DSP_BIQUAD_CASCADE_IO_HPP_INCLUDED
+#define DSP_BIQUAD_CASCADE_IO_HPP_INCLUDED
 
 #include "biquad-cascade.hpp"
 #include "biquad-io.hpp"
 
-namespace num { namespace biquad_cascade {
+namespace dsp { namespace biquad_cascade {
 
 template< typename T, int N >
 std::ostream & operator<<( std::ostream & os, BiQuadCascadeT<T,N> const & bqc )
@@ -32,6 +32,6 @@ std::ostream & operator<<( std::ostream & os, BiQuadCascadeT<T,N> const & bqc )
 }
 
 } // namespace biquad_cascade
-} // namespace num
+} // namespace dsp
 
-#endif // NUM_BIQUAD_CASCADE_IO_HPP_INCLUDED
+#endif // DSP_BIQUAD_CASCADE_IO_HPP_INCLUDED

@@ -9,8 +9,8 @@
 // Parts are inspired on 'control' by Tom Lankhorst.
 // https://github.com/tomlankhorst/control
 
-#ifndef NUM_BIQUAD_HPP_INCLUDED
-#define NUM_BIQUAD_HPP_INCLUDED
+#ifndef DSP_BIQUAD_HPP_INCLUDED
+#define DSP_BIQUAD_HPP_INCLUDED
 
 #include "std/complex.hpp"
 #include "std/utility.hpp"  // std20::swap()
@@ -21,7 +21,7 @@
 # include <cassert>
 #endif
 
-namespace num { namespace biquad {
+namespace dsp { namespace biquad {
 
 // Identity: use to prevent a parameter to participate in template type deduction:
 
@@ -356,6 +356,6 @@ using biquad::BiQuadT;
 using biquad::solve;
 using biquad::response;
 
-} // namespace num
+} // namespace dsp
 
-#endif // NUM_BIQUAD_HPP_INCLUDED
+#endif // DSP_BIQUAD_HPP_INCLUDED

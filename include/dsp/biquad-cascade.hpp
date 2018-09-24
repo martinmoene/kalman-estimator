@@ -6,12 +6,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NUM_BIQUAD_CASCADE_HPP_INCLUDED
-#define NUM_BIQUAD_CASCADE_HPP_INCLUDED
+#ifndef DSP_BIQUAD_CASCADE_HPP_INCLUDED
+#define DSP_BIQUAD_CASCADE_HPP_INCLUDED
 
 #include "dsp/biquad.hpp"
 
-namespace num { namespace biquad_cascade {
+namespace dsp { namespace biquad_cascade {
 
 // Identity: use to prevent a parameter to participate in template type deduction:
 
@@ -233,6 +233,6 @@ auto step_df2_transposed( BiQuadCascadeT<T,N> & filters, identity_t<T> v )
 
 using biquad_cascade::BiQuadCascadeT;
 
-} // namespace num
+} // namespace dsp
 
-#endif // NUM_BIQUAD_CASCADE_HPP_INCLUDED
+#endif // DSP_BIQUAD_CASCADE_HPP_INCLUDED
