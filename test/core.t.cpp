@@ -52,6 +52,21 @@ CASE( "core: range(0)" )
     EXPECT( vec[42] == 42 );
 }
 
+CASE( "core: range(0).step(3)" )
+{
+    std::vector<int> vec;
+
+    for ( auto i : range( 0 ).step(3) )
+    {
+        vec.push_back( i );
+
+        if ( i == 9 )
+            break;
+    }
+
+    EXPECT( vec == std::vector<int>({0,3,6,9}) );
+}
+
 CASE( "core: range(0, 4)" )
 {
     auto it = range(0, 4);

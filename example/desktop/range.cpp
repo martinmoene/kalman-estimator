@@ -25,6 +25,16 @@ int main()
             break;
     }
 
+    std::cout << "\nrange( 0 ).step( 2 ), infinite, break at 7: ";
+
+    for ( auto i : range( 0 ).step( 2 ) )
+    {
+        std::cout << i << " ";
+
+        if ( i >= 7 )
+            break;
+    }
+
     std::cout << "\nrange( 0, 10 ): ";
 
     for ( auto i : range( 0, 10 ) )

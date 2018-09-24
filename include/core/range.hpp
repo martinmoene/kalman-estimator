@@ -23,6 +23,8 @@ namespace core { namespace ranges {
 
 namespace detail {
 
+// range iterator
+
 template <typename T>
 struct range_iter_base
 {
@@ -71,6 +73,8 @@ protected:
     T current;
 };
 
+// a 'classic' iterator range proxy:
+
 template< typename T >
 struct range_proxy
 {
@@ -94,47 +98,23 @@ private:
     iterator last;
 };
 
-//
+// a stepping iterator range proxy:
 
-template< typename T >
-auto range_impl( T first, T last ) -> range_proxy<T>
-{
-    return { first, last };
-}
-
-//
 template< typename T >
 struct step_range_proxy
 {
-    struct iterator
+    struct iterator : detail::range_iter_base<T>
     {
-        using value_type = typename std::iterator_traits<T*>::value_type;
-        using pointer    = typename std::iterator_traits<T*>::pointer;
-        using reference  = typename std::iterator_traits<T*>::reference;
-
-        using iterator_category = std::input_iterator_tag;
-        using difference_type   = typename std::iterator_traits<T*>::difference_type;
-
         iterator( T current_, T step_, bool infinite_)
-        : current( current_)
+        : detail::range_iter_base<T>( current_ )
         , first( current_)
         , step( step_)
         , infinite( infinite_)
         {}
 
-        T operator*() const
-        {
-            return current;
-        }
-
-        T const * operator->() const
-        {
-            return &current;
-        }
-
         iterator & operator++()
         {
-            current = first + ++factor * step; return *this;
+            this->current = first + ++factor * step; return *this;
         }
 
         iterator operator++( int )
@@ -144,7 +124,7 @@ struct step_range_proxy
 
         bool operator==( iterator const & other ) const
         {
-            return !infinite && current >= other.current;
+            return !infinite && this->current >= other.current;
         }
 
         bool operator!=( iterator const & other ) const
@@ -154,7 +134,6 @@ struct step_range_proxy
 
     private:
         T factor = 0;
-        T current;
         T first;
         T step;
         bool infinite;
@@ -173,19 +152,38 @@ private:
     iterator last;
 };
 
+// a range [first..inf), default=0, step=1:
+
 template <typename T>
 struct infinite_range_proxy : step_range_proxy<T>
 {
     infinite_range_proxy( T first_ = T(), T step_ = T(1) )
     : step_range_proxy<T>( first_, first_, step_, true /*infinite*/ )
     {}
+
+    auto step( T step_)
+    {
+        return infinite_range_proxy( *step_range_proxy<T>::begin(), step_);
+    }
 };
+
+// a range [first..last), step=1:
+
+template< typename T >
+auto range_impl( T first, T last ) -> range_proxy<T>
+{
+    return { first, last };
+}
+
+// a range [first..last), step:
 
 template< typename T >
 auto range_impl( T first, T last, T step ) -> step_range_proxy<T>
 {
     return { first, last, step };
 }
+
+// a range [first..inf), step:
 
 template< typename T >
 auto infinite_range_impl( T first, T step ) -> infinite_range_proxy<T>
@@ -195,7 +193,7 @@ auto infinite_range_impl( T first, T step ) -> infinite_range_proxy<T>
 
 } // namespace detail
 
-// a range, one at a time:
+// a range [first, last), step=1:
 
 template< typename P, typename Q >
 auto range( P first, Q last )
@@ -205,7 +203,7 @@ auto range( P first, Q last )
     return detail::range_impl<T>( first, last );
 }
 
-// a range, step at a time:
+// a range [first, last), step:
 
 template< typename P, typename Q, typename R >
 auto range( P first, Q last, R step )
@@ -215,7 +213,7 @@ auto range( P first, Q last, R step )
     return detail::range_impl<T>( first, last, step );
 }
 
-// an infinite range, one at a time:
+// a range [first, inf), step=1:
 
 template< typename T >
 auto range( T begin )
@@ -231,7 +229,7 @@ auto indices( T (&)[N] ) -> detail::range_proxy<std::size_t>
     return { 0, N };
 }
 
-// indices for a container:
+// indices for a container, require method size(), unless MSVC:
 
 #ifndef _MSC_VER
 
@@ -263,6 +261,8 @@ auto indices( std::initializer_list<T> && cont ) -> detail::range_proxy<typename
 }
 
 } // ranges
+
+// provide in namespace core:
 
 using ranges::range;
 using ranges::indices;
