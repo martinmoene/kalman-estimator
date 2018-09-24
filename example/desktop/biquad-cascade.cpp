@@ -7,6 +7,8 @@
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "dsp/biquad-cascade-io.hpp"
+#include "core/range.hpp"
+#include "core/text.hpp"
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -14,39 +16,25 @@
 const auto Bqmax = 7;       // maximum number of bi-quads in cascade
 const auto Nsamp = 100;     // print this number of samples
 
-using Count = int;
-using Text  = std::string;
+using core::Text;
+using core::line;
 
+using Count = int;
 using value_type = double;
 
-using BiQuad = num::BiQuadT<value_type>;
+using BiQuad = dsp::BiQuadT<value_type>;
 
 template< Count N >
-using BiQuadCascade = num::BiQuadCascadeT<value_type, N>;
-
-// generate range [first, last] in cnt steps:
-
-template< typename T, typename U >
-auto range( T first, T last , U cnt )
-{
-    const auto step = (last - first) / (cnt - 1);
-
-    std::vector<value_type> result( cnt );
-
-    std::generate(
-        result.begin(), result.end(),
-        [step, n = 0] () mutable { return step * n++; }
-    );
-
-    return result;
-}
+using BiQuadCascade = dsp::BiQuadCascadeT<value_type, N>;
 
 template< typename Rng, Count BqMax >
 auto print( Rng rng, Text text, Text design, BiQuadCascade<BqMax> && bqc )
 {
-    std::cout <<
-        "\n" << text << " " << design << ":\n" << bqc <<
-        "\nFilter magnitude response for normalized frequency:\n" <<
+    std::cout  <<
+        "\n"   << line(115, '=') <<
+        "\n"   << text << " " << design << ":\n" << bqc <<
+        "\n% " << line(65, '-') <<
+        "\n% Matlab/Octave filter magnitude response for normalized frequency:\n" <<
         "\nfn = [";
 
     for( auto fn : rng )
@@ -66,18 +54,28 @@ auto print( Rng rng, Text text, Text design, BiQuadCascade<BqMax> && bqc )
     std::cout <<
         "];\n"
         "\nplot(fn, y);"
-        "\n" <<
-        "\n% Filter design:\n" <<
+        "\n"   <<
+        "\n% " << line(42, '-') <<
+        "\n% Corresponding Matlab/Octave filter design:" <<
+        "\n"   <<
+        "\npkg load signal\n" <<
         design <<
-        "\nbqc = tf2sos(b,a)\n"
+        "\nbqc = tf2sos(b,a)"
         "\nfreqz(b,a);\n";
 }
 
 int main()
 {
+    using core::range;
+
+    const auto Flo   = 0.0;
+    const auto Fhi   = 0.5;
+    const auto Nsamp = 201;
+    const auto Fstep = (Fhi - Flo) / (Nsamp - 1);
+
     print
     (
-        range( 0.0, 0.4, Nsamp ),
+        range( Flo, Fhi + Fstep, Fstep ),
         "Bi-quad filter design", "[b,a] = cheby1(6,3,0.4)",
         BiQuadCascade<Bqmax>
         (
@@ -89,8 +87,8 @@ int main()
 
     print
     (
-        range( 0.0, 0.4, Nsamp ),
-        "Bi-quad filter design", "[b,a] = cheby2(6,20,0.4)",
+        range( Flo, Fhi + Fstep, Fstep ),
+       "Bi-quad filter design", "[b,a] = cheby2(6,20,0.4)",
         BiQuadCascade<Bqmax>
         (
             BiQuad{   { 0.158682, 0.245885, 0.158682 }, {  0.239123, 0.084944 } }
