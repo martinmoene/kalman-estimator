@@ -39,7 +39,7 @@ extern lest::tests & specification();
 
 struct approx
 {
-    bool operator()( double a, double b )
+    bool operator()( double a, double b ) const
     {
         return a == lest::approx(b);
     }
