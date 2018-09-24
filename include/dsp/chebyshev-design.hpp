@@ -14,7 +14,7 @@
 #define DSP_CHEBYSHEV_DESIGN_HPP_INCLUDED
 
 #include "dsp/biquad-cascade.hpp"
-#include "num/constants.hpp"
+#include "dsp/filter-design.hpp"
 #include "core/range.hpp"
 
 #include <algorithm>
@@ -28,14 +28,6 @@
 // DSP types and algorithms:
 
 namespace dsp { namespace chebyshev_design {
-
-// a less-distractive way to write a static_cast:
-
-template< typename T >
-inline auto to_int( T x )
-{
-    return static_cast<int>( x );
-}
 
 // ToDo
 using biquad::AT;
@@ -92,22 +84,12 @@ struct DigitalCoeffT
     AlgoInfoT<T> info;
 };
 
-// filter type selection (lp, hp, ...)
+// a less-distractive way to write a static_cast:
 
-enum class FilterResponse
+template< typename T >
+inline auto to_int( T x )
 {
-    lowpass,
-    highpass,
-};
-
-// algorithm: pre-warp frequency:
-
-template< typename P, typename Q >
-inline auto prewarp( P f, Q fs )
-{
-    using T = std::common_type_t<float, P, Q>;
-
-    return std::tan( num::pi<T> * f / fs );
+    return static_cast<int>( x );
 }
 
 // Chebyshev 1 lowpass, highpass
@@ -121,13 +103,13 @@ inline auto prewarp( P f, Q fs )
 template< typename T >
 auto chebyshev1_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass, T Astop )
 {
-    assert( kind == FilterResponse::lowpass || kind == FilterResponse::highpass );
+    assert( kind == FilterResponse::low_pass || kind == FilterResponse::high_pass );
     assert( fpass < fs / 2 );
     assert( fstop < fs / 2 );
 
     using complex_t = std::complex<T>;
 
-    const auto s = kind == FilterResponse::lowpass ? T{1} : T{-1};
+    const auto s = kind == FilterResponse::low_pass ? T{1} : T{-1};
 
     const auto Wpass = std::pow( prewarp( fpass, fs ), s );
     const auto Wstop = std::pow( prewarp( fstop, fs ), s );
@@ -196,14 +178,14 @@ inline auto chebyshev1_lp_hp( FilterResponse kind, FS fs, FP fpass, FT fstop, AP
 template< typename T >
 auto chebyshev2_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass, T Astop )
 {
-    assert( kind == FilterResponse::lowpass || kind == FilterResponse::highpass );
+    assert( kind == FilterResponse::low_pass || kind == FilterResponse::high_pass );
     assert( fpass < fs / 2 );
     assert( fstop < fs / 2 );
 
     using core::range;
     using complex_t = std::complex<T>;
 
-    const auto s = kind == FilterResponse::lowpass ? T{1} : T{-1};
+    const auto s = kind == FilterResponse::low_pass ? T{1} : T{-1};
 
     const auto Wpass = std::pow( prewarp( fpass, fs ), s );
     const auto Wstop = std::pow( prewarp( fstop, fs ), s );
@@ -362,7 +344,6 @@ inline auto make_biquad_cascade( DigitalCoeffT<T> const & coeff )
 
 } // namespace chebyshev_design
 
-using chebyshev_design::FilterResponse;
 using chebyshev_design::DigitalCoeffT;
 
 using chebyshev_design::chebyshev1_lp_hp;

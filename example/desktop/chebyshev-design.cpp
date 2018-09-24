@@ -71,8 +71,8 @@ void print_pass( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
         "dsp::", "" ),
         "chebyshev1_lp_hp", "lhcheb1" ),
         "chebyshev2_lp_hp", "lhcheb2" ),
-        "FilterResponse::lowpass", "1" ),
-        "FilterResponse::highpass", "-1" );
+        "FilterResponse::low_pass", "1" ),
+        "FilterResponse::high_pass", "-1" );
 
     std::cout <<
         "];\n"
@@ -107,12 +107,12 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
         "\nai: " << coeff.info     <<
         "\nb: "  << coeff.b        <<
         "\na: "  << coeff.a        <<
-        "\n"     << line(115, '-') <<
+        "\n"     << line(115) <<
         "\n";
 
     std::cout  <<
         "\n"   << text << " '" << design << "':\n" << bqc <<
-        "\n% " << line(65, '-') <<
+        "\n% " << line(65) <<
         "\n% Matlab/Octave filter magnitude response for normalized frequency:\n" <<
         "\nfn = [...";
 
@@ -130,11 +130,11 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
 #define STRINGIFY_(a)  #a
 
 #if CONFIG_USE_LOWPASS
-# define CHEBY1_PASS  chebyshev1_lp_hp( dsp::FilterResponse::lowpass, 100, 20, 24, 1, 10 )
-# define CHEBY2_PASS  chebyshev2_lp_hp( dsp::FilterResponse::lowpass, 100, 20, 24, 1, 10 )
+# define CHEBY1_PASS   dsp::chebyshev1_lp_hp( dsp::FilterResponse::low_pass, 100, 20, 24, 1, 10 )
+# define CHEBY2_PASS   dsp::chebyshev2_lp_hp( dsp::FilterResponse::low_pass, 100, 20, 24, 1, 10 )
 #else
-# define CHEBY1_PASS  chebyshev1_lp_hp( dsp::FilterResponse::highpass, 100, 24, 20, 1, 10 )
-# define CHEBY2_PASS  chebyshev2_lp_hp( dsp::FilterResponse::highpass, 100, 24, 20, 1, 10 )
+# define CHEBY1_PASS   dsp::chebyshev1_lp_hp( dsp::FilterResponse::high_pass, 100, 24, 20, 1, 10 )
+# define CHEBY2_PASS   dsp::chebyshev2_lp_hp( dsp::FilterResponse::high_pass, 100, 24, 20, 1, 10 )
 #endif
 
 #if CONFIG_USE_BAND_STOP
@@ -142,6 +142,16 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
 #else
 # define  CHEBY2_BAND  dsp::chebyshev2_bp( 100, 35, 15, 30, 20, 1, 10 )
 #endif
+
+void print_ISP()
+{
+    std::cout <<
+        "\n"
+        "\n" << line(71) <<
+        "\nSophocles J. Orfanidis. Introduction to Signal Processing."
+        "\nMatlab functions: http://www.ece.rutgers.edu/~orfanidi/intro2sp/#mfunct"
+        "\n";
+}
 
 int main()
 {
@@ -172,6 +182,8 @@ int main()
         "Bi-quad filter design", STRINGIFY( CHEBY2_BAND ),
         CHEBY2_BAND
     );
+
+    print_ISP();
 }
 
 // cl -EHsc -std:c++17 -I../../include chebyshev-design.cpp && chebyshev-design.exe

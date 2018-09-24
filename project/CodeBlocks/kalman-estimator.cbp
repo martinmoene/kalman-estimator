@@ -56,6 +56,8 @@
 		<Unit filename="../../include/dsp/biquad.hpp" />
 		<Unit filename="../../include/dsp/chebyshev-design-io.hpp" />
 		<Unit filename="../../include/dsp/chebyshev-design.hpp" />
+		<Unit filename="../../include/dsp/filter-design.hpp" />
+		<Unit filename="../../include/dsp/filter.hpp" />
 		<Unit filename="../../include/dsp/kalman-io.hpp" />
 		<Unit filename="../../include/dsp/kalman.hpp" />
 		<Unit filename="../../include/mcu/00-i2c.h" />
