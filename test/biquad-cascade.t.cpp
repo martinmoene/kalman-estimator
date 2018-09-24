@@ -14,7 +14,7 @@
 
 extern lest::tests & specification();
 
-using namespace num;
+using namespace dsp;
 
 CASE( "biquad-cascade: Allows to default construct an empty cascade" )
 {

@@ -15,7 +15,7 @@
 extern lest::tests & specification();
 
 using lest::approx;
-using namespace num;
+using namespace dsp;
 
 CASE( "biquad: Allows to default construct a bi-quad with zero-initialized coefficients" )
 {
