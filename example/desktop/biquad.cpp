@@ -17,7 +17,7 @@ using Text  = std::string;
 
 using value_type = double;
 
-using BiQuad = num::BiQuadT<value_type>;
+using BiQuad = dsp::BiQuadT<value_type>;
 
 // generate range [first, last] in cnt steps:
 
