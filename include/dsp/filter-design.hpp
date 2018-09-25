@@ -13,6 +13,15 @@
 
 namespace dsp {
 
+// biquad realization form (direct form 1, 2, transposed):
+
+enum class BiquadForm
+{
+    df1,
+    df2,
+    df2_transposed
+};
+
 // algorithm: pre-warp frequency:
 
 template< typename P, typename Q >
