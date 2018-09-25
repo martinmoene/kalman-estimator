@@ -17,7 +17,6 @@ const auto Nsamp = 100;     // print this number of samples
 using core::Text;
 using core::line;
 
-using Count = int;
 using value_type = double;
 
 using BiQuad = dsp::BiQuadT<value_type>;
@@ -28,7 +27,7 @@ auto print( Rng rng, Text text, Text design, BiQuad && bq )
     std::cout <<
         "\n"   << line(115, '=') <<
         "\n" << text << " " << design << ":\n" << bq <<
-        "\n% " << line(65, '-') <<
+        "\n% " << line(65) <<
         "\n% Matlab/Octave filter magnitude response for normalized frequency:\n" <<
         "\nfn = [";
 
@@ -50,7 +49,7 @@ auto print( Rng rng, Text text, Text design, BiQuad && bq )
         "];\n"
         "\nplot(fn, y);"
         "\n" <<
-        "\n% " << line(42, '-') <<
+        "\n% " << line(42) <<
         "\n% Corresponding Matlab/Octave filter design:" <<
         "\n"   <<
         "\npkg load signal\n" <<

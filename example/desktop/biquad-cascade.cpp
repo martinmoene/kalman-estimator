@@ -31,7 +31,7 @@ auto print( Rng rng, Text text, Text design, BiQuadCascade<BqMax> && bqc )
     std::cout  <<
         "\n"   << line(115, '=') <<
         "\n"   << text << " " << design << ":\n" << bqc <<
-        "\n% " << line(65, '-') <<
+        "\n% " << line(65) <<
         "\n% Matlab/Octave filter magnitude response for normalized frequency:\n" <<
         "\nfn = [";
 
@@ -53,7 +53,7 @@ auto print( Rng rng, Text text, Text design, BiQuadCascade<BqMax> && bqc )
         "];\n"
         "\nplot(fn, y);"
         "\n"   <<
-        "\n% " << line(42, '-') <<
+        "\n% " << line(42) <<
         "\n% Corresponding Matlab/Octave filter design:" <<
         "\n"   <<
         "\npkg load signal\n" <<
