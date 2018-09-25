@@ -5,7 +5,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "core/range.hpp"
+#include "core/core.hpp"
 #include "lest.hpp"
 #include <vector>
 
@@ -34,6 +34,22 @@
 extern lest::tests & specification();
 
 using namespace core;
+
+CASE( "core: as<T>( value )" )
+{
+    using lest::approx;
+
+    EXPECT( as<int>( 7    ) == 7 );
+    EXPECT( as<int>( 7L   ) == 7 );
+    EXPECT( as<int>( 7LL  ) == 7 );
+
+    EXPECT( as<int>( 7U   ) == 7 );
+    EXPECT( as<int>( 7L   ) == 7 );
+    EXPECT( as<int>( 7LL  ) == 7 );
+
+    EXPECT( as<int>( 7.7f ) == 7 );
+    EXPECT( as<int>( 7.7  ) == 7 );
+}
 
 CASE( "core: range(0)" )
 {

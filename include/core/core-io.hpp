@@ -8,12 +8,9 @@
 // This code is based on cpp11-range by Konrad Rudolph,
 // https://github.com/klmr/cpp11-range
 
-#ifndef CORE_CORE_HPP_INCLUDED
-#define CORE_CORE_HPP_INCLUDED
+#ifndef CORE_CORE_IO_HPP_INCLUDED
+#define CORE_CORE_IO_HPP_INCLUDED
 
-#include "range.hpp"
-#include "shims.hpp"
-#include "text.hpp"
-#include "traits.hpp"
+#include "vector-io.hpp"
 
-#endif // CORE_CORE_HPP_INCLUDED
+#endif // CORE_CORE_IO_HPP_INCLUDED
