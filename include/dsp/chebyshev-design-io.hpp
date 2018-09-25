@@ -5,10 +5,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// Contains C++ implementations of code from the book:
-// Sophocles J. Orfanidis. Introduction to Signal Processing,
-// http://www.ece.rutgers.edu/~orfanidi/intro2sp/
-
 #ifndef DSP_CHEBYSHEV_DESIGN_IO_HPP_INCLUDED
 #define DSP_CHEBYSHEV_DESIGN_IO_HPP_INCLUDED
 
