@@ -36,6 +36,7 @@
 		<Unit filename="../../example/avr/mk-avr-kalman-sim.e.py" />
 		<Unit filename="../../example/desktop/CMakeLists.txt" />
 		<Unit filename="../../example/desktop/biquad-cascade.e.cpp" />
+		<Unit filename="../../example/desktop/biquad-design.e.cpp" />
 		<Unit filename="../../example/desktop/biquad.e.cpp" />
 		<Unit filename="../../example/desktop/chebyshev-design.e.cpp" />
 		<Unit filename="../../example/desktop/covariance-error.e.cpp" />
@@ -47,12 +48,16 @@
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
 		<Unit filename="../../example/matlab/kalman.m" />
+		<Unit filename="../../include/core/core-io.hpp" />
 		<Unit filename="../../include/core/core.hpp" />
 		<Unit filename="../../include/core/range.hpp" />
+		<Unit filename="../../include/core/shims.hpp" />
 		<Unit filename="../../include/core/text.hpp" />
+		<Unit filename="../../include/core/traits.hpp" />
 		<Unit filename="../../include/core/vector-io.hpp" />
 		<Unit filename="../../include/dsp/biquad-cascade-io.hpp" />
 		<Unit filename="../../include/dsp/biquad-cascade.hpp" />
+		<Unit filename="../../include/dsp/biquad-design.hpp" />
 		<Unit filename="../../include/dsp/biquad-io.hpp" />
 		<Unit filename="../../include/dsp/biquad.hpp" />
 		<Unit filename="../../include/dsp/chebyshev-design-io.hpp" />
