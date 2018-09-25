@@ -1,4 +1,3 @@
-//
 // Copyright 2018 by Martin Moene
 //
 // https://github.com/martinmoene/kalman-estimator
@@ -15,7 +14,7 @@
 
 #include "dsp/biquad-cascade.hpp"
 #include "dsp/filter-design.hpp"
-#include "core/range.hpp"
+#include "core/core.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -68,6 +67,8 @@ struct AlgoInfoT
 template< typename T >
 struct DigitalCoeffT
 {
+    using value_type = T;
+
     template< typename... Args >
     DigitalCoeffT( Args... args )
     : info{ args...}
@@ -84,14 +85,6 @@ struct DigitalCoeffT
     AlgoInfoT<T> info;
 };
 
-// a less-distractive way to write a static_cast:
-
-template< typename T >
-inline auto to_int( T x )
-{
-    return static_cast<int>( x );
-}
-
 // Chebyshev 1 lowpass, highpass
 //
 // Lowpass/Highpass Chebyshev Type 1 Filter Design, lhcheb1.m
@@ -107,6 +100,7 @@ auto chebyshev1_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
     assert( fpass < fs / 2 );
     assert( fstop < fs / 2 );
 
+    using core::as;
     using complex_t = std::complex<T>;
 
     const auto s = kind == FilterResponse::low_pass ? T{1} : T{-1};
@@ -118,7 +112,7 @@ auto chebyshev1_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
     const auto estop = std::sqrt( std::pow<T>( 10, Astop / 10 ) - 1 );
 
     const auto Nex   = std::acosh( estop / epass ) / std::acosh( Wstop / Wpass );
-    const auto N     = to_int( std::ceil( Nex ) );
+    const auto N     = as<int>( std::ceil( Nex ) );
     const auto r     = N % 2;
     const auto K     = ( N - r ) / 2;
 
@@ -182,7 +176,7 @@ auto chebyshev2_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
     assert( fpass < fs / 2 );
     assert( fstop < fs / 2 );
 
-    using core::range;
+    using core::as;
     using complex_t = std::complex<T>;
 
     const auto s = kind == FilterResponse::low_pass ? T{1} : T{-1};
@@ -194,7 +188,7 @@ auto chebyshev2_lp_hp_impl( FilterResponse kind, T fs, T fpass, T fstop, T Apass
     const auto estop = std::sqrt( std::pow<T>( 10, Astop / 10 ) - 1 );
 
     const auto Nex   = std::acosh( estop / epass ) / std::acosh( Wstop / Wpass );
-    const auto N     = to_int( std::ceil( Nex ) );
+    const auto N     = as<int>( std::ceil( Nex ) );
     const auto r     = N % 2;
     const auto K     = ( N - r ) / 2;
 
@@ -262,6 +256,11 @@ inline auto chebyshev2_lp_hp( FilterResponse kind, FS fs, FP fpass, FT fstop, AP
 template< typename T >
 auto chebyshev2_bs_impl( T fs, T fpa, T fpb, T fsa, T fsb, T Apass, T Astop )
 {
+    assert( fpa < fs / 2 );
+    assert( fpb < fs / 2 );
+
+
+
     DigitalCoeffT<T> coeff;
 
     return coeff;
@@ -329,10 +328,10 @@ inline auto chebyshev2_bs( FS fs, FPA fpa, FPB fpb, FSA fsa, FSB fsb, AP Apass, 
 
 // algorithm: create a bi-quad cascade from digital filter coefficients:
 
-template< typename T, int N >
-inline auto make_biquad_cascade( DigitalCoeffT<T> const & coeff )
+template< int N, typename Coeff >
+inline auto make_biquad_cascade( Coeff const & coeff )
 {
-    BiQuadCascadeT<T, N> bqc;
+    BiQuadCascadeT<typename Coeff::value_type, N> bqc;
 
     for ( auto i : core::indices( coeff ) )
     {

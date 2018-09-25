@@ -7,7 +7,7 @@
 
 #include "dsp/chebyshev-design-io.hpp"
 #include "dsp/biquad-cascade-io.hpp"
-#include "core/text.hpp"
+#include "core/core.hpp"
 
 #ifndef  CONFIG_USE_LOWPASS
 # define CONFIG_USE_LOWPASS  1
@@ -28,24 +28,24 @@ using core::replaced;
 // 3. the corresponding Matlab/Octave filter design code to create
 //    a frequency response plot in dB.
 
-template< typename Rng, typename T >
-void print_pass( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && coeff )
+template< typename Rng, typename Coeff >
+void print_pass( Rng && rng, Text text, Text design, Coeff && coeff )
 {
     const auto maxBiquad = 7;
 
-    auto bqc = dsp::make_biquad_cascade<T,maxBiquad>( coeff );
+    auto bqc = dsp::make_biquad_cascade<maxBiquad>( coeff );
 
     std::cout <<
         "\n"     << line(115, '=') <<
         "\nai: " << coeff.info     <<
         "\nb: "  << coeff.b        <<
         "\na: "  << coeff.a        <<
-        "\n"     << line(115, '-') <<
+        "\n"     << line(115)      <<
         "\n";
 
     std::cout  <<
         "\n"   << text << " '" << design << "':\n" << bqc <<
-        "\n% " << line(65, '-') <<
+        "\n% " << line(65) <<
         "\n% Matlab/Octave filter magnitude response for normalized frequency:\n" <<
         "\nfn = [";
 
@@ -63,6 +63,15 @@ void print_pass( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
         std::cout << abs( response( bqc, fn ) ) << " ";
     }
 
+    std::cout <<
+        "];\n"
+        "\nydbV = [";
+
+    for( auto fn : rng )
+    {
+        std::cout << dsp::dbV( abs( response( bqc, fn ) ), 1 ) << " ";
+    }
+
     // edit C++ function call 'chebyX_lp_hp' to Matlab call 'lhchebyX':
 
     const auto matlab_design =
@@ -75,9 +84,12 @@ void print_pass( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
 
     std::cout <<
         "];\n"
+        "\nsubplot(2, 1, 1 );"
         "\nplot(fn, y);"
+        "\nsubplot(2, 1, 2 );"
+        "\nplot(fn, ydbV);"
         "\n" <<
-        "\n% " << line(42, '-') <<
+        "\n% " << line(42) <<
         "\n% Corresponding Matlab/Octave filter design:" <<
         "\n"
         "\n[A,B,P] = " << matlab_design <<
@@ -94,9 +106,11 @@ void print_pass( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
         "\nfreqz(b,a);\n";
 }
 
-template< typename Rng, typename T >
-void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && coeff )
+template< typename Rng, typename Coeff >
+void print_band( Rng && rng, Text text, Text design, Coeff && coeff )
 {
+    using value_type = typename Coeff::value_type;
+
     const auto maxBiquad = 7;
 
 // [A,B,P] = bscheb2( 100, 10, 35, 15, 30, 1, 10 )
@@ -114,14 +128,14 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
 //
 //    1.00000    1.79360    2.20709   -1.79360    0.22123    0.50885    3.00000    2.06970    3.00000   12.79294   31.28641    0.60615
 
-    dsp::BiQuadCascadeT<T, maxBiquad> bqc;
+    dsp::BiQuadCascadeT<value_type, maxBiquad> bqc;
 
 //    bqc.append({ { 1.00000,  -0.32557,   0.47164 }, {   0.00000 , 0.00000 } });
     bqc.append({ { 1.00000,  -0.60648,   0.85511 }, {  -0.42187 , 0.58278 } });
 //    bqc.append({ { 0.73582,  -0.32557,   0.73582 }, {   0.00000 , 0.00000 } });
 //    bqc.append({ { 0.71650,  -0.51417,   1.00490 }, {  -0.51417 , 0.71650 } });
 
-//    auto bqc = dsp::make_biquad_cascade<T,maxBiquad>( coeff );
+//    auto bqc = dsp::make_biquad_cascade<maxBiquad>( coeff );
 
     std::cout <<
         "\n"     << line(115, '=') <<
@@ -151,6 +165,15 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
         std::cout << abs( response( bqc, fn ) ) << " ";
     }
 
+    std::cout <<
+        "];\n"
+        "\nydbV = [";
+
+    for( auto fn : rng )
+    {
+        std::cout << dsp::dbV( abs( response( bqc, fn ) ), 1 ) << " ";
+    }
+
     // edit C++ function call 'chebyX_lp_hp' to Matlab call 'lhchebyX':
 
     const auto matlab_design = replaced( replaced( design,
@@ -159,13 +182,16 @@ void print_band( Rng && rng, Text text, Text design, dsp::DigitalCoeffT<T> && co
 
     std::cout <<
         "];\n"
+        "\nsubplot(2, 1, 1 );"
         "\nplot(fn, y);"
+        "\nsubplot(2, 1, 2 );"
+        "\nplot(fn, ydbV);"
         "\n" <<
         "\n% " << line(42, '-') <<
         "\n"
         "\n[A,B,P] = " << matlab_design <<
         "\n% Corresponding Matlab/Octave filter design:"
-        "\n";
+        "\n...TBD...";
 }
 
 #define STRINGIFY(a)  STRINGIFY_(a)
