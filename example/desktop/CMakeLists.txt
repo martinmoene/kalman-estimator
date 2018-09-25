@@ -23,13 +23,13 @@ endif()
 # Sources (.cpp) and their base names:
 
 set( SOURCES
-    biquad.cpp
-    biquad-cascade.cpp
-    chebyshev-design.cpp
-    covariance-error.cpp
-    kalman-sim.cpp
-    matrix.cpp
-    range.cpp
+    biquad.e.cpp
+    biquad-cascade.e.cpp
+    chebyshev-design.e.cpp
+    covariance-error.e.cpp
+    kalman-sim.e.cpp
+    matrix.e.cpp
+    range.e.cpp
 )
 
 # Function to create a target:

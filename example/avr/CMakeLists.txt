@@ -17,12 +17,12 @@ set( DEFINITIONS "" )
 # Sources (.cpp) and their base names:
 
 set( SOURCES
-    avr-adc-dac-isr-atmega.cpp
-    avr-adc-isr.cpp
-    avr-blink-led-isr.cpp
-    avr-blink-led.cpp
-    avr-fade-led.cpp
-    avr-kalman-sim.cpp
+    avr-adc-dac-isr-atmega.e.cpp
+    avr-adc-isr.e.cpp
+    avr-blink-led-isr.e.cpp
+    avr-blink-led.e.cpp
+    avr-fade-led.e.cpp
+    avr-kalman-sim.e.cpp
 )
 
 # Function to create a target:

@@ -71,5 +71,5 @@ int main()
     print( range( Flo, Fhi + Fstep, Fstep ), "Bi-quad filter design", "[b,a] = cheby2(2,10,0.4)", BiQuad{ { 0.323496, 0.017539, 0.323496 }, { -0.66299, 0.32752 } } );
 }
 
-// cl -EHsc -std:c++17 -O2 -I../../include biquad.cpp && biquad.exe
-// g++ -Wall -std=c++17 -O2 -I../../include -o biquad.exe biquad.cpp && biquad.exe
+// cl -EHsc -std:c++17 -O2 -I../../include biquad.e.cpp && biquad.e.exe
+// g++ -Wall -std=c++17 -O2 -I../../include -o biquad.e.exe biquad.e.cpp && biquad.e.exe
