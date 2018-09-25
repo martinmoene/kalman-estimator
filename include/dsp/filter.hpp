@@ -14,6 +14,7 @@ namespace dsp {
 
 enum class FilterResponse
 {
+    all_pass,
     low_pass,
     high_pass,
     band_pass,
@@ -21,6 +22,15 @@ enum class FilterResponse
     low_shelf,
     high_shelf,
     peak_band_eq
+};
+
+// biquad realization form (direct form 1, 2, transposed):
+
+enum class BiquadForm
+{
+    df1,
+    df2,
+    df2_transposed
 };
 
 } // namespace dsp
