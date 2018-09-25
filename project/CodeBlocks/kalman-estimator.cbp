@@ -47,6 +47,7 @@
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
 		<Unit filename="../../example/matlab/kalman.m" />
+		<Unit filename="../../include/core/core.hpp" />
 		<Unit filename="../../include/core/range.hpp" />
 		<Unit filename="../../include/core/text.hpp" />
 		<Unit filename="../../include/core/vector-io.hpp" />
