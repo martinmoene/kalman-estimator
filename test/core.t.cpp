@@ -47,7 +47,7 @@ CASE( "core: range(0)" )
             break;
     }
 
-    EXPECT( vec.size() ==  43 ); // [0..42]
+    EXPECT( vec.size() ==  43u ); // [0..42]
     EXPECT( vec[ 0] ==  0 );
     EXPECT( vec[42] == 42 );
 }

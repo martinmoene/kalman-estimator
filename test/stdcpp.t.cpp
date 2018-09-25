@@ -83,29 +83,29 @@ TEST( limits )
     assert( std::numeric_limits<std::int32_t >::is_integer );
     assert( std::numeric_limits<std::int64_t >::is_integer );
 
-//  assert(  x == std::numeric_limits<float  >::digits );
-//  assert(  x == std::numeric_limits<double >::digits );
-//  assert(  x == std::numeric_limits<int    >::digits );
-    assert(  7 == std::numeric_limits<std::int8_t  >::digits );
-    assert( 15 == std::numeric_limits<std::int16_t >::digits );
-    assert( 31 == std::numeric_limits<std::int32_t >::digits );
-    assert( 63 == std::numeric_limits<std::int64_t >::digits );
+//  assert( std::numeric_limits<float  >::digits ==  x );
+//  assert( std::numeric_limits<double >::digits ==  x );
+//  assert( std::numeric_limits<int    >::digits ==  x );
+    assert( std::numeric_limits<std::int8_t  >::digits ==  7 );
+    assert( std::numeric_limits<std::int16_t >::digits == 15 );
+    assert( std::numeric_limits<std::int32_t >::digits == 31 );
+    assert( std::numeric_limits<std::int64_t >::digits == 63 );
 
-//  assert(  x == std::numeric_limits<float  >::min() );
-//  assert(  x == std::numeric_limits<double >::min() );
-//  assert(  x == std::numeric_limits<int    >::min() );
-    assert(              -128   == std::numeric_limits<std::int8_t  >::min() );
-    assert(            -32768   == std::numeric_limits<std::int16_t >::min() );
-    assert(       -2147483648LL == std::numeric_limits<std::int32_t >::min() );
-    assert(0x8000000000000000LL == std::numeric_limits<std::int64_t >::min() );
+//  assert( std::numeric_limits<float  >::min() == x );
+//  assert( std::numeric_limits<double >::min() == x );
+//  assert( std::numeric_limits<int    >::min() == x );
+    assert( std::numeric_limits<std::int8_t  >::min() ==        -128   );
+    assert( std::numeric_limits<std::int16_t >::min() ==      -32768   );
+    assert( std::numeric_limits<std::int32_t >::min() == -2147483648LL );
+    assert( std::numeric_limits<std::int64_t >::min() == static_cast<std::int64_t>(0x8000000000000000LL) );
 
-//  assert(  x == std::numeric_limits<float  >::max() );
-//  assert(  x == std::numeric_limits<double >::max() );
-//  assert(  x == std::numeric_limits<int    >::max() );
-    assert(              +127   == std::numeric_limits<std::int8_t  >::max() );
-    assert(            +32767   == std::numeric_limits<std::int16_t >::max() );
-    assert(       +2147483647L  == std::numeric_limits<std::int32_t >::max() );
-    assert(0x7fffffffffffffffLL == std::numeric_limits<std::int64_t >::max() );
+//  assert( std::numeric_limits<float  >::max() x );
+//  assert( std::numeric_limits<double >::max() x );
+//  assert( std::numeric_limits<int    >::max() x );
+    assert( std::numeric_limits<std::int8_t  >::max() ==               +127   );
+    assert( std::numeric_limits<std::int16_t >::max() ==             +32767   );
+    assert( std::numeric_limits<std::int32_t >::max() ==        +2147483647L  );
+    assert( std::numeric_limits<std::int64_t >::max() == 0x7fffffffffffffffLL );
 };
 
 TEST( type_traits )

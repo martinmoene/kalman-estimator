@@ -244,7 +244,7 @@ CASE( "biquad-cascade: Allows to iterate over the cascade" )
     );
 
     auto cnt = 0;
-    for ( auto & bq : bqc )
+    for ( [[maybe_unused]] auto & bq : bqc )
     {
         ++cnt;
     }
