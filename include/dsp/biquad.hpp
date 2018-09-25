@@ -11,6 +11,7 @@
 #ifndef DSP_BIQUAD_HPP_INCLUDED
 #define DSP_BIQUAD_HPP_INCLUDED
 
+#include "core/traits.hpp"
 #include "std/complex.hpp"
 #include "std/utility.hpp"  // std20::swap()
 
@@ -22,13 +23,7 @@
 
 namespace dsp { namespace biquad {
 
-// Identity: use to prevent a parameter to participate in template type deduction:
-
-template< typename T >
-struct identity { using type = T; };
-
-template< typename T >
-using identity_t = typename identity<T>::type;
+using core::identity_t;
 
 // a-coefficients:
 

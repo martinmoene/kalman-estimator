@@ -12,13 +12,7 @@
 
 namespace dsp { namespace biquad_cascade {
 
-// Identity: use to prevent a parameter to participate in template type deduction:
-
-template< typename T >
-struct identity { using type = T; };
-
-template< typename T >
-using identity_t = typename identity<T>::type;
+using core::identity_t;
 
 //
 // A cascade of bi-quad filter sections with arithmetic type T, maximum of N sections.
