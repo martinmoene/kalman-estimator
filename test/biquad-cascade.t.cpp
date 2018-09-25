@@ -61,6 +61,8 @@ CASE( "biquad-cascade: Allows to construct a bi-quad cascade using a user-define
     );
 
     step( bqc, 1.23f );
+
+    EXPECT( true );
 }
 
 CASE( "biquad-cascade: Allows to obtain the maximum number of bi-quads the cascade can hold" )
@@ -391,4 +393,6 @@ CASE( "biquad-cascade: printing" " [.app][.print][biquad][6][cascade]" )
             , BiQuad{ { 1.000000,-0.554665, 1.000000 }, { -0.701098, 0.797053 } }
         )
     );
+
+    EXPECT( true );
 }

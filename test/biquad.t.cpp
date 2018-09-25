@@ -71,6 +71,8 @@ CASE( "biquad: Allows to construct a bi-quad using a user-defined arithmetic typ
     BiQuad bq{{ 1, 11, 111 }};
 
     bq.step( 1.23f );
+
+    EXPECT( true );
 }
 
 CASE( "biquad: Allows to obtain the a-coefficients of the bi-quad via coeff_a()" )
@@ -228,4 +230,6 @@ CASE( "biquad: printing" " [.app][.print][biquad][2]" )
         "Bi-quad filter design", "[b,a] = cheby2(2,20,0.4)",
         BiQuad{{ 0.1333591, 0.0072304, 0.1333591 }, { -1.1604647, 0.4344132 }}
     );
+
+    EXPECT( true );
 }
