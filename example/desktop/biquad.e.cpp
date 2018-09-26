@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "dsp/biquad-io.hpp"
-#include "core/range.hpp"
-#include "core/text.hpp"
+#include "dsp/filter-design.hpp"
+#include "core/core.hpp"
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -45,7 +45,16 @@ auto print( Rng rng, Text text, Text design, BiQuad && bq )
 
     std::cout <<
         "];\n"
-        "\nplot(fn, y);"
+        "\nydbV = [";
+
+    for( auto fn : rng )
+    {
+        std::cout << dsp::dbV( abs( response( bq, fn ) ), 1 ) << " ";
+    }
+
+    std::cout <<
+        "];\n"
+        "\nplotyy(fn, y, fn, ydbV);"
         "\n" <<
         "\n% " << line(42) <<
         "\n% Corresponding Matlab/Octave filter design:" <<

@@ -6,6 +6,7 @@
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "dsp/biquad-cascade-io.hpp"
+#include "dsp/filter-design.hpp"
 #include "core/range.hpp"
 #include "core/text.hpp"
 #include <string>
@@ -51,7 +52,16 @@ auto print( Rng rng, Text text, Text design, BiQuadCascade<BqMax> && bqc )
 
     std::cout <<
         "];\n"
-        "\nplot(fn, y);"
+        "\nydbV = [";
+
+    for( auto fn : rng )
+    {
+        std::cout << dsp::dbV( abs( response( bqc, fn ) ), 1 ) << " ";
+    }
+
+    std::cout <<
+        "];\n"
+        "\nplotyy(fn, y, fn, ydbV);"
         "\n"   <<
         "\n% " << line(42) <<
         "\n% Corresponding Matlab/Octave filter design:" <<

@@ -84,10 +84,7 @@ void print_pass( Rng && rng, Text text, Text design, Coeff && coeff )
 
     std::cout <<
         "];\n"
-        "\nsubplot(2, 1, 1 );"
-        "\nplot(fn, y);"
-        "\nsubplot(2, 1, 2 );"
-        "\nplot(fn, ydbV);"
+        "\nplotyy(fn, y, fn, ydbV);"
         "\n" <<
         "\n% " << line(42) <<
         "\n% Corresponding Matlab/Octave filter design:" <<
@@ -182,10 +179,7 @@ void print_band( Rng && rng, Text text, Text design, Coeff && coeff )
 
     std::cout <<
         "];\n"
-        "\nsubplot(2, 1, 1 );"
-        "\nplot(fn, y);"
-        "\nsubplot(2, 1, 2 );"
-        "\nplot(fn, ydbV);"
+        "\nplotyy(fn, y, fn, ydbV);"
         "\n" <<
         "\n% " << line(42, '-') <<
         "\n"
