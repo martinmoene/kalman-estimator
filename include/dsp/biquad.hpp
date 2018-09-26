@@ -12,6 +12,7 @@
 #define DSP_BIQUAD_HPP_INCLUDED
 
 #include "core/traits.hpp"
+#include "num/constants.hpp"
 #include "std/complex.hpp"
 #include "std/utility.hpp"  // std20::swap()
 
@@ -330,12 +331,10 @@ auto response( BiQuadT<T,S> const & bq, identity_t<T> fnorm )
 {
     using Complex = typename BiQuadT<T,S>::Complex;
 
-    const auto Pi = T( 3.1415926535897932384626433832795028841971 );
-
     const auto a = bq.coeff_a();
     const auto b = bq.coeff_b();
 
-    const auto w = 2 * Pi * fnorm;
+    const auto w = 2 * num::pi<T> * fnorm;
     const auto czn1 = std20::polar(T{1}, -w     );
     const auto czn2 = std20::polar(T{1}, -2 * w );
 
