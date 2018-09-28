@@ -75,7 +75,7 @@ public:
 
     void append( BiQuad bq )
     {
-        assert( next < reserved() );
+        assert( next < this->reserved() );
 
         biquad[next++] = bq;
     }
@@ -93,7 +93,7 @@ public:
 
     void insert( index_type i, BiQuad bq )
     {
-        assert( 0 <= i && i < next && next < reserved() );
+        assert( 0 <= i && i < next && next < this->reserved() );
 
         for ( auto k = next; k != i; --k )
         {
