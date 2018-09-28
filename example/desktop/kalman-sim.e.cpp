@@ -169,5 +169,5 @@ int main()
         ;
 }
 
-// cl -EHsc -std:c++latest -I../include kalman-class.cpp && kalman-class.exe
-// g++ -Wall -std=c++17 -I../include -o kalman-class.exe kalman-class.cpp && kalman-class.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include kalman-sim.e.cpp && kalman-sim.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o kalman-sim.e.exe kalman-sim.e.cpp && kalman-sim.e.exe

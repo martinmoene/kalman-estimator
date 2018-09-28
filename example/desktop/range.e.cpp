@@ -92,5 +92,5 @@ int main()
     std::cout << "\n";
 }
 
-// cl -EHsc -std:c++17 -O2 -I../../include range.e.cpp && range.e.exe
-// g++ -Wall -std=c++17 -O2 -I../../include -o range.e.exe range.e.cpp && range.e.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include range.e.cpp && range.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o range.e.exe range.e.cpp && range.e.exe

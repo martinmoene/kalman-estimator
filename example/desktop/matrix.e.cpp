@@ -47,5 +47,5 @@ int main()
 }
 
 
-// cl -EHsc -O2 -I../include matrix.e.cpp && matrix.e.exe
-// g++ -Wall -O2 -I../include -o matrix.e.exe matrix.e.cpp && matrix.e.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include matrix.e.cpp && matrix.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o matrix.e.exe matrix.e.cpp && matrix.e.exe

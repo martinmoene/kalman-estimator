@@ -106,5 +106,5 @@ int main()
     );
 }
 
-// cl -EHsc -O2 -I../../include biquad-cascade.e.cpp && biquad-cascade.e.exe
-// g++ -Wall -O2 -I../../include -o biquad-cascade.e.exe biquad-cascade.e.cpp && biquad-cascade.e.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include biquad-cascade.e.cpp && biquad-cascade.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o biquad-cascade.e.exe biquad-cascade.e.cpp && biquad-cascade.e.exe

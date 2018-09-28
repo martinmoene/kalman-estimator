@@ -54,5 +54,5 @@ int main()
     }
 }
 
-// cl -EHsc -std:c++latest -I../include covariance-error.e.cpp && covariance-error.e.exe
-// g++ -Wall -std=c++17 -I../include -o covariance-error.e.exe covariance-error.e.cpp && covariance-error.e.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include covariance-error.e.cpp && covariance-error.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o covariance-error.e.exe covariance-error.e.cpp && covariance-error.e.exe

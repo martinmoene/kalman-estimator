@@ -248,5 +248,5 @@ int main()
     print_ISP();
 }
 
-// cl -EHsc -std:c++17 -I../../include chebyshev-design.e.cpp && chebyshev-design.e.exe
-// g++ -Wall -std=c++17 -I../../include -o chebyshev-design.e.exe chebyshev-design.e.cpp && chebyshev-design.e.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include chebyshev-design.e.cpp && chebyshev-design.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o chebyshev-design.e.exe chebyshev-design.e.cpp && chebyshev-design.e.exe

@@ -175,5 +175,5 @@ int main()
     );
 }
 
-// cl -EHsc -std:c++17 -O2 -I../../include biquad-design.e.cpp && biquad-design.e.exe
-// g++ -Wall -std=c++17 -O2 -I../../include -o biquad-design.e.exe biquad-design.e.cpp && biquad-design.e.exe
+// cl -std:c++17 -permissive- -EHsc -O2 -I../../include biquad-design.e.cpp && biquad-design.e.exe
+// g++ -std=c++17 -Wall -O2 -I../../include -o biquad-design.e.exe biquad-design.e.cpp && biquad-design.e.exe
