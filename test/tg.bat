@@ -27,12 +27,12 @@ set ke_feature=^
 set lest_defines=^
     -Dlest_FEATURE_AUTO_REGISTER
 
-set flags=-Wpedantic -Wno-padded -Wno-missing-noreturn
+set cxx_flags=-Wpedantic -Wno-padded -Wno-missing-noreturn
 
 set ke_program=main.t.exe
 set ke_sources=main.t.cpp core.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
 
-%gpp% -std=%std% -O2 -Wall -Wextra %flags% %ke_feature% %lest_defines% -o %ke_program% -I../include %ke_sources% && %ke_program%
+%gpp% -std=%std% -O2 -Wall -Wextra %cxx_flags% %ke_feature% %lest_defines% -o %ke_program% -isystem lest -I../include %ke_sources% && %ke_program%
 
 endlocal & goto :EOF
 

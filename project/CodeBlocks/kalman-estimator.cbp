@@ -92,7 +92,7 @@
 		<Unit filename="../../test/biquad.t.cpp" />
 		<Unit filename="../../test/core.t.cpp" />
 		<Unit filename="../../test/fixed-point.t.cpp" />
-		<Unit filename="../../test/lest.hpp" />
+		<Unit filename="../../test/lest/lest.hpp" />
 		<Unit filename="../../test/main-avr.t.cpp" />
 		<Unit filename="../../test/main.t.cpp" />
 		<Unit filename="../../test/matrix.t.cpp" />

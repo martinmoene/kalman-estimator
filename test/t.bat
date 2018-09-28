@@ -28,6 +28,9 @@ set ke_feature=^
 set lest_defines=^
     -Dlest_FEATURE_AUTO_REGISTER
 
+set msvc_flags=^
+    -permissive-
+    
 set msvc_defines=^
     -DNOMINMAX ^
     -D_CRT_SECURE_NO_WARNINGS ^
@@ -36,7 +39,7 @@ set msvc_defines=^
 set ke_program=main.t.exe
 set ke_sources=main.t.cpp core.t.cpp stdcpp.t.cpp biquad.t.cpp biquad-cascade.t.cpp fixed-point.t.cpp matrix.t.cpp
 
-cl -W3 -EHsc %std% %ke_feature% %lest_defines% %msvc_defines% -I../include %ke_sources% && %ke_program%
+cl -W3 -EHsc %std% %msvc_flags% %ke_feature% %lest_defines% %msvc_defines% -Ilest -I../include %ke_sources% && %ke_program%
 endlocal & goto :EOF
 
 :: subroutines:
