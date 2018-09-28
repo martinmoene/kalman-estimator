@@ -66,7 +66,7 @@ set( HAS_CPPLATEST_FLAG FALSE )
 if( MSVC )
     set( HAS_STD_FLAGS TRUE )
 
-    set( OPTIONS     -W3 -EHsc )
+    set( OPTIONS     -W3 -EHsc -permissive- )
     set( DEFINITIONS -Dlest_FEATURE_AUTO_REGISTER=1 -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX )
 
     if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.00 )
@@ -142,9 +142,9 @@ function( make_target target std )
             # Necessary for clang 3.x:
             target_compile_options( ${target} PRIVATE -std=c++${std} )
             # Ok for clang 4 and later:
-            # set( CMAKE_CXX_STANDARD ${std} )
-            # set( CMAKE_CXX_STANDARD_REQUIRED ON )
-            # set( CMAKE_CXX_EXTENSIONS OFF )
+            # set_property( TARGET ${target} PROPERTY CXX_STANDARD ${std} )
+            # set_property( TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED ON )
+            # set_property( TARGET ${target} PROPERTY CXX_EXTENSIONS OFF )
         endif()
     endif()
 endfunction()

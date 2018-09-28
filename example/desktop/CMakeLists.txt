@@ -15,9 +15,7 @@ set( OPTIONS "" )
 set( DEFINITIONS "" )
 
 if( MSVC )
-    set( OPTIONS ${OPTIONS} "-std:c++latest" )
-else()
-    set( OPTIONS ${OPTIONS} "-std=c++17" )
+    set( OPTIONS ${OPTIONS} -permissive- )
 endif()
 
 # Sources (.cpp) and their base names:
@@ -40,6 +38,9 @@ function( make_target source )
     target_compile_options    ( ${target} PRIVATE ${OPTIONS} )
     target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )
     target_link_libraries     ( ${target} PRIVATE kalman-estimator )
+    set_property       ( TARGET ${target} PROPERTY CXX_STANDARD 17 )
+    set_property(        TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED ON )
+    set_property       ( TARGET ${target} PROPERTY CXX_EXTENSIONS OFF )
 endfunction()
 
 # Targets:
