@@ -44,6 +44,8 @@
 		<Unit filename="../../example/desktop/kalman-sim.out.txt" />
 		<Unit filename="../../example/desktop/matrix.e.cpp" />
 		<Unit filename="../../example/desktop/mk-kalman-sim.py" />
+		<Unit filename="../../example/desktop/onepole-design.e.cpp" />
+		<Unit filename="../../example/desktop/onepole.e.cpp" />
 		<Unit filename="../../example/desktop/range.e.cpp" />
 		<Unit filename="../../example/matlab/kalman-sim.m" />
 		<Unit filename="../../example/matlab/kalman-sim.png" />
@@ -66,6 +68,9 @@
 		<Unit filename="../../include/dsp/filter.hpp" />
 		<Unit filename="../../include/dsp/kalman-io.hpp" />
 		<Unit filename="../../include/dsp/kalman.hpp" />
+		<Unit filename="../../include/dsp/onepole-design.hpp" />
+		<Unit filename="../../include/dsp/onepole-io.hpp" />
+		<Unit filename="../../include/dsp/onepole.hpp" />
 		<Unit filename="../../include/mcu/00-i2c.h" />
 		<Unit filename="../../include/mcu/00-ltc2485.h" />
 		<Unit filename="../../include/mcu/atmega328.hpp" />
