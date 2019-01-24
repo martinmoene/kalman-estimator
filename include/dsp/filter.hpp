@@ -8,29 +8,58 @@
 #ifndef DSP_FILTER_HPP_INCLUDED
 #define DSP_FILTER_HPP_INCLUDED
 
+#include "dsp/biquad-design.hpp"
+
 namespace dsp {
 
-// filter type selection (lp, hp, ...)
+/// Low-pass filter
 
-enum class FilterResponse
+template< typename T >
+class Lpf
 {
-    all_pass,
-    low_pass,
-    high_pass,
-    band_pass,
-    band_stop,
-    low_shelf,
-    high_shelf,
-    peak_band_eq
+public:
+    using value_type = T;
+    using BiQuad = dsp::BiQuadT<T>;
+
+    // dbGain not available for lpf, hpf:
+    const value_type dbGain = 0;
+
+    Lpf( value_type f3db, value_type fs, value_type Q )
+    : bq( make_biquad( dsp::biquad_design< dsp::FilterResponse::low_pass >( dbGain, f3db, fs, Q ) ) )
+    {}
+
+    auto operator()( value_type sample )
+    {
+        return bq.step( sample );
+    }
+
+private:
+    BiQuad bq;
 };
 
-// biquad realization form (direct form 1, 2, transposed):
+/// High-pass filter
 
-enum class BiquadForm
+template< typename T >
+class Hpf
 {
-    df1,
-    df2,
-    df2_transposed
+public:
+    using value_type = T;
+    using BiQuad = dsp::BiQuadT<T>;
+
+    // dbGain not available for lpf, hpf:
+    const value_type dbGain = 0;
+
+    Hpf( value_type f3db, value_type fs, value_type Q )
+    : bq( make_biquad( dsp::biquad_design< dsp::FilterResponse::high_pass >( dbGain, f3db, fs, Q ) ) )
+    {}
+
+    auto operator()( value_type sample )
+    {
+        return bq.step( sample );
+    }
+
+private:
+    BiQuad bq;
 };
 
 } // namespace dsp
