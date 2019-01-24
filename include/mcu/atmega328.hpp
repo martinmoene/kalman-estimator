@@ -1,4 +1,3 @@
-//
 // Copyright 2018 by Martin Moene
 //
 // https://github.com/martinmoene/kalman-estimator
@@ -696,8 +695,8 @@ struct gpio
     struct p
     {
         using dir = bitfield8_t< rw_t, ddr_addr , pin_id >;
-        using get = bitfield8_t< r_t , pin_addr , pin_id >;
-        using set = bitfield8_t< rw_t, port_addr, pin_id >;
+        using inp = bitfield8_t< rw_t, pin_addr , pin_id >;
+        using out = bitfield8_t< rw_t, port_addr, pin_id >;
     };
 };
 
@@ -1706,6 +1705,13 @@ namespace usart
 
 namespace twi
 {
+    namespace config
+    {
+        constexpr auto twi_port = port::C;
+        constexpr auto sda_pin  = PC4;
+        constexpr auto scl_pin  = PC5;
+    }
+
     namespace protocol
     {
         struct start{};
@@ -1763,7 +1769,8 @@ namespace twi
         namespace twcr
         {
             using whole = register8_t< rw_t, addr_twcr >;
-            using twint = bitfield8_t< rc_w1_t, addr_twcr, TWINT >;
+            using twintc= bitfield8_t< rc_w1_t, addr_twcr, TWINT >;
+            using twint = bitfield8_t< rw_t, addr_twcr, TWINT >;
             using twea  = bitfield8_t< rw_t, addr_twcr, TWEA  >;
             using twsta = bitfield8_t< rw_t, addr_twcr, TWSTA >;
             using twsto = bitfield8_t< rw_t, addr_twcr, TWSTO >;
@@ -1785,13 +1792,13 @@ namespace twi
     {
         enum class status : uint8_t
         {
-            S_transmitted  = 0x08
-            , RS_transmitted = 0x10
-            , SLAW_transmitted_ACK = 0x18
-            , SLAW_transmitted_NACK = 0x20
-            , Data_transmitted_ACK = 0x28
-            , Data_transmitted_NACK = 0x30
-            , Arbitration_lost = 0x38
+            S_transmitted           = 0x08 >> 3
+            , RS_transmitted        = 0x10 >> 3
+            , SLAW_transmitted_ACK  = 0x18 >> 3
+            , SLAW_transmitted_NACK = 0x20 >> 3
+            , Data_transmitted_ACK  = 0x28 >> 3
+            , Data_transmitted_NACK = 0x30 >> 3
+            , Arbitration_lost      = 0x38 >> 3
         };
 
         inline auto current( status )
@@ -1858,7 +1865,7 @@ namespace twi
         {
             return reg::twar::twa::write_lazy( to_integral(a) );
         }
-    }
+    } // protocol
 
 //    namespace input {}
 //    namespace output{}
@@ -1940,13 +1947,157 @@ namespace twi
 
         inline auto current( flag )
         {
-            return 0 != reg::twcr::twint::read();
+            return reg::twcr::twint::read();
+        }
+
+        inline auto set( flag )
+        {
+            return reg::twcr::twint::write_lazy( true );
         }
 
         inline auto clear( flag )
         {
-            reg::twcr::twint::clear();
+            reg::twcr::twintc::clear();
         }
+    }
+
+    namespace sync
+    {
+        using twi::protocol::status;
+
+        namespace detail_x
+        {
+//            using twi::protocol::status;
+
+            // setup bitrate to 400kHz
+            // - TWBR value to 0x0c
+            // - TWSR:TWPS prescaler to 1x
+            inline auto init(
+                twi::control::rate bitrate = twi::control::rate{ 0x0c } // 400 kHz
+                , twi::control::prescale::factor prescale = twi::control::prescale::factor::x1 )
+            {
+                set( bitrate );
+                set( prescale );
+                set( twi::enable::interface::on );
+
+                // enable internal pull-up resistors for sda, scl:
+                gpio<config::twi_port>::p<config::sda_pin>::inp::set();
+                gpio<config::twi_port>::p<config::scl_pin>::inp::set();
+            }
+
+            inline auto flag()   { return current( twi::interrupt::flag{} ); }
+            inline auto stat()   { return current( twi::protocol::status{} ); }
+
+            inline void start()  { set( twi::interrupt::flag{} ), set( twi::protocol::start{} ); }
+            inline void stop()   { set( twi::protocol::stop{}  ); }
+            inline void ack()    { set( twi::protocol::ack{}   ); }
+
+            inline void data(    uint8_t byte ) { set( twi::protocol::data{    byte } ); clear( twi::interrupt::flag{} ); }
+            inline void address( uint8_t byte ) { set( twi::protocol::address{ byte } ); }
+
+            inline bool expect( status s )
+            {
+                while ( ! flag() )
+                    ;
+
+                return stat() != s;
+            }
+        }
+        namespace detail
+        {
+//            using twi::protocol::status;
+
+            // setup bitrate to 400kHz
+            // - TWBR value to 0x0c
+            // - TWSR:TWPS prescaler to 1x
+            inline auto init(
+                twi::control::rate br = twi::control::rate{ 0x0c } // 400 kHz
+                , twi::control::prescale::factor ps = twi::control::prescale::factor::x1 )
+            {
+                // enable internal pull-up resistors for sda, scl:
+                gpio<config::twi_port>::p<config::sda_pin>::inp::set();
+                gpio<config::twi_port>::p<config::scl_pin>::inp::set();
+
+                //set SCL to 400kHz
+                TWSR = 0x00;
+                TWBR = to_integral( br );
+                //enable TWI
+                TWCR = (1<<TWEN);
+            }
+
+            inline auto status()
+            {
+                return TWSR & 0xf8;
+            }
+
+            inline auto flag()
+            {
+                return 0 != ( TWCR & (1<<TWINT) );
+            }
+
+            inline void wait()
+            {
+                while ( ! flag() )
+                    ;
+            }
+
+            inline auto expect_status( uint8_t s )
+            {
+                wait(); return status() != s;
+            }
+
+            inline void start()
+            {
+                TWCR = ( 1 << TWINT ) | ( 1 << TWSTA ) | ( 1 << TWEN );
+            }
+
+            inline void stop()
+            {
+                TWCR = ( 1 << TWINT ) | ( 1 << TWSTO ) | ( 1 << TWEN );
+            }
+
+            inline void ack()
+            {}
+
+            inline void data( uint8_t byte )
+            {
+                TWDR = byte;
+                TWCR = (1<<TWINT)|(1<<TWEN);
+            }
+
+            inline auto read( uint8_t address );
+
+            inline auto write( uint8_t address, uint8_t byte )
+            {
+                start();
+
+                if ( expect_status( 0x08 ) )
+                    return true;  // error
+
+                data( address );
+
+                if ( expect_status( 0x18 ) )
+                    return true;  // error
+
+                data( address );
+
+                if ( expect_status( 0x28 ) )
+                    return true;  // error
+
+                stop();
+
+                return false;  // ok
+            }
+        }
+
+        using detail::init;
+        using detail::read;
+        using detail::write;
+    }
+
+    namespace async
+    {
+        inline auto init();
     }
 }
 
@@ -2442,9 +2593,9 @@ struct led
 {
     using led_t = typename gpio<portid>::template p<pin>;
 
-    static inline void on()     { led_t::set::set();    }
-    static inline void off()    { led_t::set::clear();  }
-    static inline void toggle() { led_t::set::toggle(); }
+    static inline void on()     { led_t::out::set();    }
+    static inline void off()    { led_t::out::clear();  }
+    static inline void toggle() { led_t::out::toggle(); }
     static inline void enable() { led_t::dir::set();    }
 };
 
