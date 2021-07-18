@@ -187,7 +187,7 @@ Various articles, video's, books to read up on the Kalman estimator.
 [12] iLectureOnline. [Lectures in The Kalman Filter](http://www.ilectureonline.com/lectures/subject/SPECIAL%20TOPICS/26) (42 videos of 6 minutes).  
 
 ### Fixed point
-[13] Wikipedia. [https://en.wikipedia.org/wiki/Fixed-point_arithmetic](Fixed-point arithmetic).  
+[13] Wikipedia. [Fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic).  
 [14] Rick Regan. [Number of Bits in a Decimal Integer](https://www.exploringbinary.com/number-of-bits-in-a-decimal-integer/).  
 
 ### Matlab
